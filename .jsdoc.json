@@ -1,0 +1,43 @@
+{
+  "tags": {
+    "allowUnknownTags": true
+  },
+  "source": {
+    "include": [
+      "./src"
+    ],
+    "exclude": [
+      "node_modules"
+    ]
+  },
+  "opts": {
+    "template": "node_modules/kis-jsdoc-plugin/templates/markdown",
+    "encoding": "utf8",
+    "destination": "./doc/",
+    "recurse": true,
+    "includes": "public,private"
+  },
+  "plugins": [
+    "node_modules/jsdoc-escape-at",
+    "node_modules/kis-jsdoc-plugin"
+  ],
+  "templates": {
+    "markdown": {
+      "imageext": "png",
+      "tocfilename": "toc.md",
+      "tocOrder": {
+        "public": 1,
+        "internal": 2
+      },
+      "badgecolors": {
+        "public": "FF5000",
+        "model": "009663",
+        "other": "9f9f9f"
+      },
+      "externallinks": {
+        "Promise": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise",
+        "FrameworkConfiguration": "https://aurelia-1.gitbook.io/v1-docs/developer-guides/building-plugins/plugin-development"
+      }
+    }
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "compilerOptions": {
+    "allowJs": true,
+    "checkJs": true,
+    "baseUrl": "./src",
+    "declaration": true,
+    "emitDeclarationOnly": true,
+    "outDir": "dist/types",
+    "experimentalDecorators": true,
+    "forceConsistentCasingInFileNames": true,
+    "declarationMap": false
+  },
+  "include": ["src/**/*"]
+}
