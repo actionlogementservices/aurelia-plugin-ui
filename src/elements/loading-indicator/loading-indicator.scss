@@ -1,0 +1,26 @@
+.progress-bar-simulation {
+  animation: progress-simulation 30s ease-in-out;
+  animation-fill-mode: both;
+}
+
+@keyframes progress-simulation {
+  0% {
+    width: 15%;
+  }
+
+  10% {
+    width: 20%;
+  }
+
+  20% {
+    width: 60%;
+  }
+
+  50% {
+    width: 90%;
+  }
+
+  100% {
+    width: 95%;
+  }
+}

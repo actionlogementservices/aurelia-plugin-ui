@@ -1,0 +1,21 @@
+.splash {
+  position: fixed;
+  z-index: 10000;
+  opacity: 0.4;
+  background: var(--bs-light);
+}
+
+.splash .circle {
+  margin-top: 0;
+  fill: var(--bs-tertiary);
+}
+
+#lock-icon {
+  position: relative;
+  left: 60px;
+  top: 5px;
+  color: var(--bs-tertiary);
+  font-size: 32px;
+}
+
+/*# sourceMappingURL=lock.css.map */

@@ -1,0 +1,22 @@
+<template>
+  <nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item">
+        <a href="#" click.delegate="$parent.navigate(navigationInstruction)">Accueil</a>
+      </li>
+      <li
+        repeat.for="navigationInstruction of router.currentInstruction.getAllInstructions() | instructionFilter"
+        class="breadcrumb-item ${$last ? 'active' : ''}">
+        <template if.bind="$last">${navigationInstruction.config.navModel.title}</template>
+        <template if.bind="!$last">
+          <a click.delegate="$parent.navigate(navigationInstruction)">
+            ${navigationInstruction.config.navModel.title}
+          </a>
+        </template>
+      </li>
+      <li if.bind="router.isNavigating" class="breadcrumb-item">
+        <i class="bi bi-arrow-repeat"></i>
+      </li>
+    </ol>
+  </nav>
+</template>

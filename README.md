@@ -1,170 +1,535 @@
-# `@actionlogementservices/aurelia-plugin-base`
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![npm package](https://img.shields.io/npm/v/%40actionlogementservices%2Faurelia-plugin-ui)](https://www.npmjs.com/package/@actionlogementservices/aurelia-plugin-ui)
 
-This project is bootstrapped by [aurelia-cli](https://github.com/aurelia/cli).
+# `@actionlogementservices/aurelia-plugin-ui`
 
-This Aurelia plugin project has a built-in dev app (with CLI built-in bundler and RequireJS) to simplify development.
+An Aurelia plugin that provides **custom elements** and **ui services** for **aurelia v1** applications on top of **[Bootstrap 5](https://getbootstrap.com/)**.
 
-1. The local `src/` folder, is the source code for the plugin.
-2. The local `dev-app/` folder, is the code for the dev app, just like a normal app bootstrapped by aurelia-cli.
-3. You can use normal `au run` and `au test` in development just like developing an app.
-4. You can use aurelia-testing to test your plugin, just like developing an app.
-5. To ensure compatibility to other apps, always use `PLATFORM.moduleName()` wrapper in files inside `src/`. You don't need to use the wrapper in `dev-app/` folder as CLI built-in bundler supports module name without the wrapper.
+## Description
 
-Note aurelia-cli doesn't provide a plugin skeleton with Webpack setup (not yet), but this plugin can be consumed by any app using Webpack, or CLI built-in bundler, or jspm.
+This plugin provides 3 services:
 
-## How to write an Aurelia plugin
+- `DialogService`: integrates [Bootstrap modal dialog](https://getbootstrap.com/docs/5.3/components/modal/#modal-components) in your application with an aurelia ViewModel/View approach.
+- `ToastService`: integrates [Bootstrap toasts](https://getbootstrap.com/docs/5.3/components/toasts/#overview) in your application.
+- `LockService`: implements a logical screen lock to prevent user from interacting with the page.
 
-For a full length tutorial, visit [Aurelia plugin guide](https://aurelia-1.gitbook.io/v1-docs/developer-guides/building-plugins).
+And several custom elements :
 
-Here is some basics. You can create new custom element, custom attribute, value converter or binding behavior manually, or use command `au generate` to help.
-```shell
-au generate element some-name
-au generate attribute some-name
-au generate value-converter some-name
-au generate binding-behavior some-name
-```
+- `simple-select`, `filterable-select`, `badges-select`: custom elements that provides selection based on memory loaded client datasource.
+- `auto-complete`, `badges-auto-complete`, `address-auto-complete`: custom elements that provides selection based on 'on-the-fly' requests to a server datasource.
+- `input-datepicker`: custom element that integrates the [vanilla-js datepicker](https://mymth.github.io/vanillajs-datepicker/#/) with Bootstrap style.
+- `simple-table`: custom element that implements a bootstrap style table with in-memory sorting and selection.
 
-By default, the cli generates command generates files in following folders:
-```
-src/elements
-src/attributes
-src/value-converters
-src/binding-behaviors
-```
+## Installation
 
-Note the folder structure is only to help you organising the files, it's not a requirement of Aurelia. You can manually create new element (or other thing) anywhere in `src/`.
+1. **Ensure** your **aurelia v1** application is using **Bootstrap 5** and **Bootstrap icons 1**.
 
-After you added some new file, you need to register it in `src/index.js`. Like this:
-```js
-config.globalResources([
-  // ...
-  PLATFORM.moduleName('./path/to/new-file-without-ext')
-]);
-````
+1. **Install** the plugin:
 
-The usage of `PLATFORM.moduleName` wrapper is mandatory. It's needed for your plugin to be consumed by any app using webpack, CLI built-in bundler, or jspm.
+   ```node
+   npm install @actionlogementservices/aurelia-plugin-ui
+   ```
 
-## Resource import within the dev app
+1. **Register** the plugin in aurelia:
 
-In dev app, when you need to import something from the inner plugin (for example, importing a class for dependency injection), use special name `"resources"` to reference the inner plugin.
+   ```javascript
+   // in your main.js or main.ts
+   export function configure(aurelia) {
+     aurelia.use
+       .standardConfiguration()
+       .plugin(PLATFORM.moduleName('@actionlogementservices/aurelia-plugin-ui'))
+   ```
 
-```js
-import {inject} from 'aurelia-framework';
-// "resources" refers the inner plugin src/index.js
-import {MyService} from 'resources';
+## Usage
 
-@inject(MyService)
-export class App {
-  constructor(myService) {
-    this.myService = myService;
+### `DialogService`
+
+Display modal dialog with Bootstrap style.
+
+- Inject the [`DialogService`](./doc/src-core-dialog-service_dialog-service.md) in your viewmodel and use the `open` method to open the dialog.
+- Create a view and a viewmodel for your modal dialog.
+- Inject the [`DialogController`](./doc/src-core-dialog-service_dialog-controller.md) in the modal viewmodel to retrieve input parameters and use
+  - the `ok` method of the controller to pass output parameters to the caller and close the modal.
+  - the `cancel` method of the controller to close the modal without passing output parameters.
+- In the caller, retrieve asynchronously the output parameters from the result of the `open` call : see [`DialogResult`](./doc/src-core-dialog-service_dialog-result.md). If the modal was cancelled the property `wadCancelled` is true.
+
+  ```javascript
+  // the caller code, example.js
+  import { inject } from 'aurelia-framework';
+  import { DialogService } from '@actionlogementservices/aurelia-plugin-ui';
+  import { ExampleDialog } from './dialogs/example-dialog';
+
+  @inject(DialogService)
+  export class Example {
+    /** @param {DialogService} dialog */
+    constructor(dialog) {
+      this._dialog = dialog;
+    }
+    ...
+    openExampleDialog()
+      const { wasCancelled, output } = await this._dialog.open({
+        viewModel: ExampleDialog,
+        model: { inParam1: 1000 },
+        locked: true
+      });
+      const result = wasCancelled ? undefined : output.outParam1;
+    }
+  ```
+
+  ```javascript
+  // the modal code, example-dialog.js
+  import { inject } from 'aurelia-framework';
+  import { DialogController } from '@actionlogementservices/aurelia-plugin-ui';
+
+  @inject(DialogController)
+  export class ExampleDialog {
+    /** @type {Number} */
+    input;
+    /**
+    * @param {DialogController} controller
+    */
+    constructor(controller) {
+      this._controller = controller;
+    }
+    // the modal code, example-dialog.js
+    activate({ inParam1 }) {
+      this.inParam1 = inParam1;
+    }
+    ...
+    confirm() {
+      this._controller.ok({ outParam2: this.inParam1 * 2 });
+    }
+    cancel() {
+      this._controller.cancel();
+    }
+  ```
+
+  ```html
+  // the modal html, example-dialog.html
+  <template>
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Compute</h5>
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+            click.trigger="cancel()"></button>
+        </div>
+        <div class="modal-body">...</div>
+        <div class="modal-footer">
+          <button class="btn btn-primary" click.trigger="confirm()">Oui</button>
+          <button class="btn btn-secondary" click.trigger="cancel()">Non</button>
+        </div>
+      </div>
+    </div>
+  </template>
+  ```
+
+### `ToastService`
+
+Display toasts with Bootstrap style.
+
+- Inject the [`ToastService`](./doc/src-core-toast-service_toast-service.md) in your viewmodel and use the `info`, `success`, `warning` or `error` methods to display a transient toast.
+- You can specify an optional delay.
+
+  ```javascript
+  // the caller code, example.js
+  import { inject } from 'aurelia-framework';
+  import { ToastService } from '@actionlogementservices/aurelia-plugin-ui';
+  import { ExampleDialog } from './dialogs/example-dialog';
+
+  @inject(ToastService)
+  export class Example {
+    /** @param {ToastService} toast */
+    constructor(toast) {
+      this._toast = toast;
+    }
+    ...
+    showToast()
+      this._toast.info('Hello !');
+    }
+  ```
+
+### `LockService`
+
+Prevent user interaction with Bootstrap back drop.
+
+- Inject the [`LockService`](./doc/src-core-lock-service_lock-service.md) in your viewmodel and use the `lock` and `unlock` methods to display a transient toast.
+- Don't forget to call the `unlock` method even in case of exception.
+
+  ```javascript
+  // the caller code, example.js
+  import { inject } from 'aurelia-framework';
+  import { LockService } from '@actionlogementservices/aurelia-plugin-ui';
+
+  @inject(LockService)
+  export class Example {
+    /** @param {LockService} lock */
+    constructor(lock) {
+      this._lock = lock;
+    }
+    ...
+    async lockScreen() {
+      this._lock.lock();
+      await lenghtyAsyncOperation().finally(() => this._lock.unlock());
+    }
+  ```
+
+### `simple-select` custom element
+
+**Single selection** dropdown element with databound in-memory datasource, and **customizable dropdown item template**, well adapted for small number of items (typically **less than 50**).
+
+![simple-select rendering](./doc/screenshot/simple-select.png)
+
+- Prepare a datasource in your viewmodel representing an array of items.
+- Use the [`<simple-select>`](./doc/src-elements-select_simple-select.md) element in your view and data bind the `datasource` attribute.
+- Data bind the `value` attribute to your viewmodel to retrieve user selection as a single item.
+
+  ```html
+  <simple-select>class="form-select" value.bind="selectedItem" datasource.bind="itemsList"></simple-select>
+  ```
+
+- Specify an optional template for the dropdown item
+
+  ```html
+  <simple-select>
+    class="form-select" value.bind="selectedItem" datasource.bind="itemsList">
+    <template replace-part="itemTemplate">
+      <p class="fw-semibold my-1">${item.code}</p>
+      <p class="my-1">${item.name}</p>
+    </template>
+  </simple-select>
+  ```
+
+- You can specify the optional following attributes
+  | Attribute name | Role | Possible values | Default value |
+  |--- |---|--- |---|
+  | `value-key` | Property of the item used to differentiate them | Any string representing a property present on the item | `name` |
+  | `label-key` | Property of the item used to display them in the dropdown | Any string representing a property present on the item | `description` |
+  | `placeholder` | Placeholder in the select when no selection is done | Any string | |
+  | `disabled` | Disable the user interaction | `true` or `false` | `false` |
+  | `clear-selection-text` | Text displayed in the dropdown to clear the selection | Any string | `Effacer la sélection` |
+
+### `filterable-select` custom element
+
+**Single selection** dropdown element with databound in-memory datasource, **filtered by user input** and **customizable dropdown item template**, well adapted for small number of items (typically **less than 100**).
+
+![filterable-select rendering](./doc/screenshot/filterable-select.png)
+
+- Prepare a datasource in your viewmodel representing an array of items.
+- Use the [`<filterable-select>`](./doc/src-elements-select_filterable-select.md) element in your view and data bind the `datasource` attribute.
+- Data bind the `value` attribute to your viewmodel to retrieve user selection as a single item.
+
+  ```html
+  <filterable-select>
+    class="form-select" value.bind="selectedItem" datasource.bind="itemsList">
+  </filterable-select>
+  ```
+
+- Specify an optional template for the dropdown item
+
+  ```html
+  <filterable-select>
+    class="form-select" value.bind="selectedItem" datasource.bind="itemsList">
+    <template replace-part="itemTemplate">
+      <p class="fw-semibold my-1">${item.code}</p>
+      <p class="my-1">${item.name}</p>
+    </template>
+  </filterable-select>
+  ```
+
+- You can specify the optional following attributes
+  | Attribute name | Role | Possible values | Default value |
+  |--- |---|--- |---|
+  | `value-key` | Property of the item used to differentiate them | Any string representing a property present on the item | `name` |
+  | `label-key` | Property of the item used to display them in the dropdown | Any string representing a property present on the item | `description` |
+  | `placeholder` | Placeholder in the select when no selection is done | Any string | |
+  | `disabled` | Disable the user interaction | `true` or `false` | `false` |
+  | `clear-selection-text` | Text displayed in the dropdown to clear the selection | Any string | `Effacer la sélection` |
+  | `no-result-text` | Text displayed when user input filters out all items | Any string | `Aucun résultat` |
+
+### `badges-select` custom element
+
+**Multiple selections** dropdown element with databound in-memory datasource, **filtered by user input**, with **badges** representing current selection, and **customizable dropdown item template**, well adapted for small number of items (typically **less than 100**).
+
+![badges-select rendering](./doc/screenshot/badges-select.png)
+
+- Prepare a datasource in your viewmodel representing an array of items.
+- Use the [`<badges-select>`](./doc/src-elements-select_badges-select.md) element in your view and data bind the `datasource` attribute.
+- Data bind the `values` attribute to your viewmodel to retrieve user selection as an array os items.
+
+  ```html
+  <badges-select>class="form-select" values.bind="selectedItems" datasource.bind="itemsList"></badges-select>
+  ```
+
+- Specify an optional template for the dropdown item
+
+  ```html
+  <badges-select>
+    class="form-select" values.bind="selectedItems" datasource.bind="itemsList">
+    <template replace-part="itemTemplate">
+      <p class="fw-semibold my-1">${item.code}</p>
+      <p class="my-1">${item.name}</p>
+    </template>
+  </badges-select>
+  ```
+
+- You can specify the optional following attributes
+  | Attribute name | Role | Possible values | Default value |
+  |--- |---|--- |---|
+  | `value-key` | Property of the item used to differentiate them | Any string representing a property present on the item | `name` |
+  | `label-key` | Property of the item used to display them in the dropdown | Any string representing a property present on the item | `description` |
+  | `placeholder` | Placeholder in the select when no selection is done | Any string | |
+  | `disabled` | Disable the user interaction | `true` or `false` | `false` |
+  | `no-result-text` | Text displayed when user input filters out all items | Any string | `Aucun résultat` |
+
+### `auto-complete` custom element
+
+**Single selection** dropdown element with query **controller**, **filtered by user input** and **customizable dropdown item template**, well adapted for **large number of items**.
+
+![auto-complete rendering](./doc/screenshot/auto-complete.png)
+
+- Expose a controller in your viewmodel representing the logic to query the server datasource.
+
+  ```javascript
+  import { inject, NewInstance } from 'aurelia-framework';
+  import { AutoCompleteController } from '@actionlogementservices/aurelia-plugin-ui';
+
+  @inject(NewInstance.of(AutoCompleteController))
+  export class ExempleAutoComplete {
+    /** @type {AutoCompleteController<any>} */ itemsController;
+
+    /**
+    * @param {AutoCompleteController<any>} controller
+    */
+    constructor(controller) {
+      this.itemsController = controller;
+    }
+  ```
+
+- Use the [`<auto-complete>`](./doc/src-elements-auto-complete_auto-complete.md) element in your view and data bind the `controller` attribute.
+- Data bind the `value` attribute to your viewmodel to retrieve user selection as a single item.
+
+  ```html
+  <auto-complete>
+    class="form-control" value.bind="selectedItem" controller.bind="itemsController">
+  </auto-complete>
+  ```
+
+- Configure the controller in the viewmodel by passing a method with the following signature: `(text: string) => Promise<T[]>`
+
+  ```javascript
+  activate() {
+    const searchItems = this._service.searchItems.bind(this._service);
+    this.itemsController.configure(searchItems);
   }
-}
-```
+  ```
 
-## Manage dependencies
+- Pass an optional callback to transform the result of the query to a suitable item model
 
-By default, this plugin has no "dependencies" in package.json. Theoretically this plugin depends on at least `aurelia-pal` because `src/index.js` imports it. It could also depends on more core Aurelia package like `aurelia-binding` or `aurelia-templating` if you build advanced components that reference them.
+  ```javascript
+  activate() {
+    const searchItems = this._service.searchItems.bind(this._service);
+    const buildItemModel = item => {
+      if (!item) return;
+      const fullName = `${item.firstname} ${item.lastname.toUpperCase()}`;
+      return Object.assign(item, { fullName });
+    }
+    this.itemsController.configure(searchItems, buildItemModel);
+  }
+  ```
 
-Ideally you need to carefully add those `aurelia-pal` (`aurelia-binding`...) to "dependencies" in package.json. But in practice you don't have to. Because every app that consumes this plugin will have full Aurelia core packages installed.
+- Specify an optional template for the dropdown item
 
-Furthermore, there are two benefits by leaving those dependencies out of plugin's package.json.
-1. ensure this plugin doesn't bring in a duplicated Aurelia core package to consumers' app. This is mainly for app built with webpack. We had been hit with `aurelia-binding` v1 and v2 conflicts due to 3rd party plugin asks for `aurelia-binding` v1.
-2. reduce the burden for npm/yarn when installing this plugin.
+  ```html
+  <auto-complete>
+    class="form-control" value.bind="selectedItem" controller.bind="itemsController">
+    <template replace-part="itemTemplate">
+      <p class="fw-semibold my-1">${item.code}</p>
+      <p class="my-1">${item.fullName}</p>
+    </template>
+  </auto-complete>
+  ```
 
-If you are a perfectionist who could not stand leaving out dependencies, I recommend you to add `aurelia-pal` (`aurelia-binding`...) to "peerDependencies" in package.json. So at least it could not cause a duplicated Aurelia core package.
+- You can specify the optional following attributes
+  | Attribute name | Role | Possible values | Default value |
+  |--- |---|--- |---|
+  | `value-key` | Property of the item used to differentiate them | Any string representing a property present on the item | `name` |
+  | `label-key` | Property of the item used to display them in the dropdown | Any string representing a property present on the item | `description` |
+  | `placeholder` | Placeholder in the select when no selection is done | Any string | |
+  | `disabled` | Disable the user interaction | `true` or `false` | `false` |
+  | `no-result-text` | Text displayed when user input filters out all items | Any string | `Aucun résultat` |
+  | `delay` | Throttling delay in ms before requesting data | Any number > 0 | `700`
 
-If your plugin depends on other npm package, like `lodash` or `jquery`, **you have to add them to "dependencies" in package.json**.
+### `badges-auto-complete` custom element
 
-## Build Plugin
+**Multiple selections** dropdown element with query **controller**, **filtered by user input**, with **badges** representing current selection, and **customizable dropdown item template**, well adapted for **large number of items**.
 
-Run `au build-plugin`. This will transpile all files from `src/` folder to `dist/native-modules/` and `dist/commonjs/`.
+![badges-auto-complete rendering](./doc/screenshot/badges-auto-complete.png)
 
-For example, `src/index.js` will become `dist/native-modules/index.js` and `dist/commonjs/index.js`.
+- Expose a controller in your viewmodel representing the logic to query the server datasource.
 
-Note all other files in `dev-app/` folder are for the dev app, they would not appear in the published npm package.
+  ```javascript
+  import { inject, NewInstance } from 'aurelia-framework';
+  import { AutoCompleteController } from '@actionlogementservices/aurelia-plugin-ui';
 
-## Consume Plugin
+  @inject(NewInstance.of(AutoCompleteController))
+  export class ExempleAutoComplete {
+    /** @type {AutoCompleteController<any>} */ itemsController;
 
-By default, the `dist/` folder is not committed to git. (We have `/dist` in `.gitignore`). But that would not prevent you from consuming this plugin through direct git reference.
+    /**
+    * @param {AutoCompleteController<any>} controller
+    */
+    constructor(controller) {
+      this.itemsController = controller;
+    }
+  ```
 
-You can consume this plugin directly by:
-```shell
-npm i github:actionlogementservices/aurelia-plugin-base
-# or if you use bitbucket
-npm i bitbucket:actionlogementservices/aurelia-plugin-base
-# or if you use gitlab
-npm i gitlab:actionlogementservices/aurelia-plugin-base
-# or plain url
-npm i https:/github.com/actionlogementservices/aurelia-plugin-base.git
-```
+- Use the [`<badges-auto-complete>`](./doc/src-elements-auto-complete_auto-complete.md) element in your view and data bind the `controller` attribute.
+- Data bind the `values` attribute to your viewmodel to retrieve user selection as an array of items.
 
-Then load the plugin in app's `main.js` like this.
-```js
-aurelia.use.plugin('@actionlogementservices/aurelia-plugin-base');
-// for webpack user, use PLATFORM.moduleName wrapper
-aurelia.use.plugin(PLATFORM.moduleName('@actionlogementservices/aurelia-plugin-base'));
-```
+  ```html
+  <badges-auto-complete>
+    class="form-control" values.bind="selectedItem" controller.bind="itemsController">
+  </badges-auto-complete>
+  ```
 
-The missing `dist/` files will be filled up by npm through `"prepare": "npm run build"` (in `"scripts"` section of package.json).
+- Configure the controller in the viewmodel by passing a method with the following signature: `(text: string) => Promise<T[]>`
 
-Yarn has a [bug](https://github.com/yarnpkg/yarn/issues/5235) that ignores `"prepare"` script. If you want to use yarn to consume your plugin through direct git reference, remove `/dist` from `.gitignore` and commit all the files. Note you don't need to commit `dist/` files if you only use yarn to consume this plugin through published npm package (`npm i @actionlogementservices/aurelia-plugin-base`).
+  ```javascript
+  activate() {
+    const searchItems = this._service.searchItems.bind(this._service);
+    this.itemsController.configure(searchItems);
+  }
+  ```
 
-## Publish npm package
+- Pass an optional callback to transform the result of the query to a suitable item model
 
-By default, `"private"` field in package.json has been turned on, this prevents you from accidentally publish a private plugin to npm.
+  ```javascript
+  activate() {
+    const searchItems = this._service.searchItems.bind(this._service);
+    const buildItemModel = item => {
+      if (!item) return;
+      const fullName = `${item.firstname} ${item.lastname.toUpperCase()}`;
+      return Object.assign(item, { fullName });
+    }
+    this.itemsController.configure(searchItems, buildItemModel);
+  }
+  ```
 
-To publish the plugin to npm for public consumption:
+- Specify an optional template for the dropdown item
 
-1. Remove `"private": true,` from package.json.
-2. Pump up project version. This will run through `au test` (in "preversion" in package.json) first.
-```shell
-npm version patch # or minor or major
-```
-3. Push up changes to your git server
-```shell
-git push && git push --tags
-```
-4. Then publish to npm, you need to have your npm account logged in.
-```shell
-npm publish
-```
+  ```html
+  <badges-auto-complete>
+    class="form-control" values.bind="selectedItems" controller.bind="itemsController">
+    <template replace-part="itemTemplate">
+      <p class="fw-semibold my-1">${item.code}</p>
+      <p class="my-1">${item.fullName}</p>
+    </template>
+  </badges-auto-complete>
+  ```
 
-## Automate changelog, git push, and npm publish
+- You can specify the optional following attributes
+  | Attribute name | Role | Possible values | Default value |
+  |--- |---|--- |---|
+  | `value-key` | Property of the item used to differentiate them | Any string representing a property present on the item | `name` |
+  | `label-key` | Property of the item used to display them in the dropdown | Any string representing a property present on the item | `description` |
+  | `placeholder` | Placeholder in the select when no selection is done | Any string | |
+  | `disabled` | Disable the user interaction | `true` or `false` | `false` |
+  | `no-result-text` | Text displayed when user input filters out all items | Any string | `Aucun résultat` |
+  | `delay` | Throttling delay in ms before requesting data | Any number > 0 | `700`
 
-You can enable `npm version patch # or minor or major` to automatically update changelog, push commits and version tag to the git server, and publish to npm.
+### `address-auto-complete` custom element
 
-Here is one simple setup.
-1. `npm i -D standard-changelog`. We use [`standard-changelog`](https://github.com/conventional-changelog/conventional-changelog) as a minimum example to support conventional changelog.
-  * Alternatively you can use high level [standard-version](https://github.com/conventional-changelog/standard-version).
-2. Add two commands to `"scripts"` section of package.json.
-```
-"scripts": {
-  // ...
-  "version": "standard-changelog && git add CHANGELOG.md",
-  "postversion": "git push && git push --tags && npm publish"
-},
-```
-3. you can remove `&& npm publish` if your project is private
+**Single selection** dropdown element with french gouv **[Base Adresse Nationale](https://www.data.gouv.fr/fr/datasets/base-adresse-nationale/)** query **controller**, **filtered by user input**, and **customizable dropdown item template**.
 
-For more information, go to https://aurelia.io/docs/cli/cli-bundler
+![address-auto-complete rendering](./doc/screenshot/address-auto-complete.png)
 
-## Run dev app
+- Use the [`<address-auto-complete>`](./doc/src-elements-auto-complete_address-auto-complete.md) element in your view.
+- Data bind the `value` attribute to your viewmodel to retrieve user selection as a single item.
 
-Run `au run`, then open `http://localhost:9000`
+  ```html
+  <address-auto-complete>
+    class="form-control" value.bind="selectedCity" mode="zipCode">
+  </address-auto-complete>
+  ```
 
-To open browser automatically, do `au run --open`.
+- You can specify the optional following attributes
+  | Attribute name | Role | Possible values | Default value |
+  |--- |---|--- |---|
+  | `mode` | Query mode of the BAN api | either `zipCode` to get only city or `address` to get full address |`address` |
+  | `placeholder` | Placeholder in the select when no selection is done | Any string | |
+  | `disabled` | Disable the user interaction | `true` or `false` | `false` |
 
-To change dev server port, do `au run --port 8888`.
+### `input-datepicker` custom element
 
-To change dev server host, do `au run --host 127.0.0.1`
+**Single selection** calendar dropdown element based on [vanilla-js datepicker](https://mymth.github.io/vanillajs-datepicker/#/).
 
-To install new npm packages automatically, do `au run --auto-install`
+![input-datepicker rendering](./doc/screenshot/input-datepicker.png)
 
-**PS:** You could mix all the flags as well, `au run --host 127.0.0.1 --port 7070 --open`
+- Use the [`<input-datepicker>`](./doc/src-elements-input-datepicker_input-datepicker.md) element in your view.
+- Data bind the `date` attribute to your viewmodel to retrieve user selection as a single item.
 
+  ```html
+  <input-datepicker date.bind="date"></input-datepicker>
+  ```
 
-## Unit tests
+- You can specify the optional following attributes
+  | Attribute name | Role | Possible values | Default value |
+  |--- |---|--- |---|
+  | `placeholder` | Placeholder in the select when no selection is done | Any string | |
+  | `disabled` | Disable the user interaction | `true` or `false` | `false` |
+  | `readonly` | Readonly field | `true` or `false` | `false` |
+  | `autohide` | Auto hide dropdown after selection | `true` or `false` | `true` |
+  | `disabled-days` | Days of week to disable | 0 for sunday, 1 for monday, and so on | |
+  | `disabled-dates` | Specific dates to disable | Iso string dates | |
 
-Run `au test` (or `au jest`).
+### `simple-table` custom element
 
-To run in watch mode, `au test --watch` or `au jest --watch`.
+**Mutliple selection** and **scrollable** html table with custom **column template** and **in memory sorting**, well adapted for small number of items (typically **less than 100**).
+
+![simple-table rendering](./doc/screenshot/simple-table.png)
+
+- Use the [`<simple-table>`](./doc/src-elements-simple-table_simple-table.md) element in your view and define [columns](./doc/src-elements-simple-table_column.md) with `header` and `cell-key` attributes and optionally a column template.
+- Data bind the `datasource` attribute to your viewmodel to retrieve user selection as array of items.
+- Data bind the `values` attribute to your viewmodel to retrieve user selection as an array of items.
+
+  ```html
+  <simple-table datasource.bind="itemsList" values.bind="selectedItems">
+    <column header="Name" cell-key="name" sortable="true"></column>
+    <column header="Visibility" cell-key="visibility" sortable="true" width="120px">
+      <small><span class="badge text-bg-secondary">${item.visibility}</span></small>
+    </column>
+    <column header="Description" cell-key="description"></column>
+  </simple-table>
+  ```
+
+- You can specify the optional following attributes on the `simple-table` element
+  | Attribute name | Role | Possible values | Default value |
+  |--- |---|--- |---|
+  | `value-key` | Property of the item used to differentiate them | Any string representing a property present on the item | `name` |
+  | `max-rows` | Maximal number of displayed rows | Any number > 0 | `50` |
+  | `max-height` | CSS max height of the table | Any css height expression | |
+  | `selection-mode` | Selection mode | `none` or `single` or `multiple` | `none` |
+  | `fixed-row-height` | Enable/disable the fixed row height feature. When `false` text will wrap and rows will have different height | `true` or `false` | `true` |
+  | `no-result-text` | Text displayed when there is no items | Any string | `Aucun résultat` |
+  | `warning-template-text` | Warning template text shown when not all items are displayed. Must contain the `{maxRows}` token | Any string with `{maxRows}` | `Seuls les {maxRows} premiers résultats sont affichés.` |
+  | `result-text` | Text displayed after the # of items | Any string | `résultat(s).` |
+
+- You can specify the optional following attributes on the `column` element
+  | Attribute name | Role | Possible values | Default value |
+  |--- |---|--- |---|
+  | `header` | Header of the column | Any string representing a property present on the item | |
+  | `cell-key` | Property of the item used to display as cell content | Any string representing a property present on the item | |
+  | `sortable` | Is the column sortable | `true` or `false` | `false` |
+  | `sort-order` | Sorting order of the column | `true` or `false` | |
+  | `sort-type` | Sorting type |`text` or `numeric` | `text` |
+  | `width` | CSS width of the column | Any css width expression | `auto` |
+
+## Compatibility
+
+This plugin has been tested on aurelia v1 with **webpack**.
+The following peer dependencies are required: `bootstrap`, `bootstrap-icons` and `aurelia-validation`.

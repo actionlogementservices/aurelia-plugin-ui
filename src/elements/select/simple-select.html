@@ -1,0 +1,40 @@
+<template role="list" aria-haspopup="listbox">
+  <require from="./select.css"></require>
+  <div id="select-${uniqueId}" class="dropdown">
+    <!-- input field displaying label key property -->
+    <input
+      id="searchText-${uniqueId}"
+      autocomplete="off"
+      placeholder="${placeholder || ''}"
+      type="text"
+      disabled.bind="disabled"
+      class="form-select border-0 shadow-none"
+      readonly
+      data-bs-toggle="dropdown"
+      style="cursor: default"
+      role="button"
+      keydown.trigger="manageKey($event.code)" />
+    <!-- dropdown -->
+    <div id="dropDown-${uniqueId}" class="dropdown-menu dropdown-menu-scroll">
+      <button
+        if.bind="value"
+        type="button"
+        class="dropdown-item border-bottom border-top"
+        keydown.trigger="selectItem(null)"
+        mousedown.trigger="selectItem(null)">
+        <div class="text-muted">${clearSelectionText}</div>
+      </button>
+      <button
+        repeat.for="item of datasource"
+        type="button"
+        class="dropdown-item"
+        role="listitem"
+        keydown.trigger="selectItem(item)"
+        mousedown.delegate="selectItem(item)">
+        <template replaceable part="itemTemplate">
+          <compose view.bind="itemView" view-model.bind="item"></compose>
+        </template>
+      </button>
+    </div>
+  </div>
+</template>

@@ -1,0 +1,16 @@
+<template>
+  <require from="./input-datepicker.css"></require>
+
+  <input
+    name="dp_${uniqueId}"
+    placeholder="${placeholder || ''}"
+    type="text"
+    value.bind="value"
+    disabled.bind="disabled"
+    readonly.bind="readonly"
+    class="form-select border-0 shadow-none"
+    aria-autocomplete="none"
+    autocomplete="off"
+    autocorrect="off"
+    aria-haspopup="true" />
+</template>
