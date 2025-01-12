@@ -1,0 +1,15 @@
+<template>
+  <require from="./auto-complete.css"></require>
+  <auto-complete
+    class="form-control border-0 shadow-none"
+    value.bind="value"
+    label-key="firstLine"
+    placeholder.bind="placeholder"
+    disabled.bind="disabled"
+    controller.bind="addressAutoCompleteController">
+    <template replace-part="itemTemplate">
+      <p class="fw-semibold text-start m-0">${item.firstLine}</p>
+      <p if.bind="item.context" class="fw-light text-end m-0">${item.context}</p>
+    </template>
+  </auto-complete>
+</template>

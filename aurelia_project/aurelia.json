@@ -4,6 +4,7 @@
   "paths": {
     "root": "dev-app",
     "resources": "../src",
+    "core": "../src/core",
     "elements": "../src/elements",
     "attributes": "../src/attributes",
     "valueConverters": "../src/value-converters",

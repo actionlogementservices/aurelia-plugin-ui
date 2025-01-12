@@ -1,0 +1,82 @@
+@import './common.scss';
+
+//$dp-cell-today-background-color: $secondary;
+//$dp-cell-prevnext-color: lighten($secondary, 15%);
+//$dp-cell-disabled-color: $gray-500;
+
+input-datepicker.form-select {
+  padding: 0 !important;
+  background-size: 0 !important;
+
+  &.is-valid,
+  &.is-invalid {
+    background-size: 0 !important;
+
+    & input.form-select {
+      padding-right: $form-select-feedback-icon-padding-end;
+      background-position: $form-select-bg-position, $form-select-feedback-icon-position;
+      background-size: $form-select-bg-size, $form-select-feedback-icon-size;
+    }
+  }
+
+  &:focus-within {
+    border-color: $form-select-focus-border-color;
+    outline: 0;
+
+    @if $enable-shadows {
+      @include box-shadow($form-select-box-shadow, $form-select-focus-box-shadow);
+    }
+
+    @else {
+      // Avoid using mixin so we can pass custom focus shadow properly
+      box-shadow: $form-select-focus-box-shadow;
+    }
+  }
+
+}
+
+.datepicker-cell {
+  &.disabled {
+    color: $body-color !important;
+  }
+
+  &.day {
+    position: relative;
+
+    &.prev,
+    &.next {
+      color: lighten($secondary, 15%) !important;
+    }
+
+    &.disabled::before {
+      position: absolute;
+      opacity: 0.3;
+      width: 25px;
+      top: 5px;
+      content: url('data:image/svg+xml;charset=utf-8,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 16 16%27%3E%3Cpath fill=%27%23000000%27 d=%27M13.854 2.146a.5.5 0 0 1 0 .708l-11 11a.5.5 0 0 1-.708-.708l11-11a.5.5 0 0 1 .708 0%27/%3E%3C/svg%3E');
+    }
+
+    &:not(.prev):not(.next) {
+      font-weight: $font-weight-normal;
+    }
+
+    &.today {
+      color: var(--bs-dark-text-emphasis) !important;
+      background-color: transparent !important;
+      border: 2px var(--bs-secondary) solid;
+
+      &.selected {
+        color: var(--bs-white) !important;
+        background-color: var(--bs-primary) !important;
+      }
+
+      &.disabled {
+        &::before {
+          top: 3px;
+        }
+      }
+    }
+  }
+}
+
+@import '../../../node_modules/vanillajs-datepicker/sass/datepicker-bs5.scss';

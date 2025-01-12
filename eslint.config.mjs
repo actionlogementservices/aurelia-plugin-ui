@@ -111,7 +111,8 @@ export default [
       'unicorn/prefer-number-properties': 0,
       'unicorn/prefer-node-protocol': 0,
 
-      'jsdoc/check-tag-names': ['error', { definedTags: ['category'] }]
+      'jsdoc/check-tag-names': ['error', { definedTags: ['category'] }],
+      'jsdoc/valid-types': 0
     }
   }
 ];

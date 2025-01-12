@@ -1,0 +1,53 @@
+@import '../../../src/common.scss';
+
+simple-select.form-select,
+filterable-select.form-select,
+badges-select.form-select {
+  padding: 0 !important;
+  background-size: 0 !important;
+
+  &.is-valid,
+  &.is-invalid {
+    background-size: 0 !important;
+
+    & input.form-select {
+      padding-right: $form-select-feedback-icon-padding-end;
+      background-position: $form-select-bg-position, $form-select-feedback-icon-position;
+      background-size: $form-select-bg-size, $form-select-feedback-icon-size;
+    }
+  }
+
+  &:focus-within {
+    border-color: $form-select-focus-border-color;
+    outline: 0;
+
+    @if $enable-shadows {
+      @include box-shadow($form-select-box-shadow, $form-select-focus-box-shadow);
+    }
+
+    @else {
+      // Avoid using mixin so we can pass custom focus shadow properly
+      box-shadow: $form-select-focus-box-shadow;
+    }
+  }
+
+  & input.form-select {
+    padding: $form-select-padding-y $form-select-indicator-padding $form-select-padding-y $form-select-padding-x !important;
+
+    &.items-selected {
+      padding-top: 0 !important;
+    }
+  }
+}
+
+button.btn-close-badge {
+  padding: 0.1em;
+  opacity: 1;
+}
+
+div.badges-container {
+  padding-left: $form-select-padding-x;
+  padding-right: $form-select-padding-x;
+  padding-top: $form-select-padding-y;
+  max-height: 300px;
+}

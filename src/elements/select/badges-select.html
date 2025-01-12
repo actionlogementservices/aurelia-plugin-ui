@@ -1,0 +1,49 @@
+<template role="list" aria-haspopup="listbox">
+  <require from="./select.css"></require>
+  <div id="badges-select-${uniqueId}" class="dropdown">
+    <!-- badges section -->
+    <div show.bind="values.length > 0" class="badges-container container-fluid overflow-auto">
+      <span
+        repeat.for="b of values"
+        class="btn btn-sm btn-secondary me-1 mb-1"
+        title="${b[$parent.valueKey]}"
+        data-bs-placement="top">
+        <button class="btn-close btn-close-badge" aria-label="Close" click.trigger="removeItem(b)"></button>
+        ${b[$parent.labelKey]}
+      </span>
+    </div>
+    <!-- input field displaying label key property and enabling filtering -->
+    <input
+      id="searchText-${uniqueId}"
+      placeholder="${placeholder || ''}"
+      type="text"
+      disabled.bind="disabled"
+      class="form-select border-0 shadow-none ${values.length > 0 ? 'items-selected' : ''}"
+      aria-autocomplete="none"
+      autocomplete="off"
+      autocorrect="off"
+      spellcheck="false"
+      style="cursor: auto"
+      data-bs-toggle="dropdown"
+      role="button"
+      role="searchbox"
+      input.trigger="inputValueChanged($event.target.value)"
+      blur.trigger="resetInputValue()"
+      keydown.trigger="manageKey($event.code)" />
+    <!-- dropdown -->
+    <div id="dropDown-${uniqueId}" class="dropdown-menu dropdown-menu-scroll">
+      <button
+        repeat.for="item of filteredItems"
+        type="button"
+        class="dropdown-item"
+        role="listitem"
+        keydown.delegate="selectItem(item)"
+        mousedown.delegate="selectItem(item)">
+        <template replaceable part="itemTemplate">
+          <compose view.bind="itemView" view-model.bind="item"></compose>
+        </template>
+      </button>
+      <div show.bind="filteredItemsCount === 0" class="dropdown-item disabled">${noResultText}</div>
+    </div>
+  </div>
+</template>

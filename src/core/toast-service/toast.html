@@ -1,0 +1,17 @@
+<template>
+  <div
+    class="toast align-items-center ${white ? 'text-white' : ''} bg-${color} border-0"
+    role="alert"
+    aria-live="assertive"
+    aria-atomic="true">
+    <div class="d-flex">
+      <div class="toast-body p-4" innerhtml="${message}"></div>
+      <button
+        type="button"
+        class="btn-close ${white ? 'btn-close-white' : ''} me-2 m-auto"
+        data-bs-dismiss="toast"
+        aria-label="Close"></button>
+    </div>
+  </div>
+</template>
+

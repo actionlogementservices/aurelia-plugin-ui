@@ -8,7 +8,7 @@ export function configure(aurelia) {
     .feature('resources');
 
   aurelia.use.developmentLogging(environment.debug ? 'debug' : 'warn');
-
+  aurelia.use.plugin('aurelia-validation');
   if (environment.testing) {
     aurelia.use.plugin('aurelia-testing');
   }
