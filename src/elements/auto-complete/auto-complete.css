@@ -62,6 +62,8 @@ address-auto-complete.form-control input.form-control.items-selected {
 
 button.btn-close-badge {
   padding: 0.1em;
+  width: 0.7em;
+  height: 0.7em;
   opacity: 1;
 }
 

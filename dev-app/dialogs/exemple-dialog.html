@@ -1,0 +1,24 @@
+<template>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Modal dialog title</h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+          click.trigger="cancel()"></button>
+      </div>
+      <form no-submit>
+        <div class="modal-body">
+          <p>Modal dialog body...</p>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-primary" click.trigger="confirm()">Yes</button>
+          <button class="btn btn-secondary" click.trigger="cancel()">No</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</template>

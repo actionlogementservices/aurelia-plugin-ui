@@ -1,21 +1,60 @@
 .splash {
   position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
   z-index: 10000;
   opacity: 0.4;
   background: var(--bs-light);
+  background-size: cover;
+  text-align: center;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+.splash:before {
+  content: '';
+  display: inline-block;
+  height: 100%;
+  vertical-align: middle;
+  margin-right: -0.25em;
+}
+
+.splash-inner {
+  display: inline-block;
+  width: 90%;
+  max-width: 500px;
+  vertical-align: middle;
 }
 
 .splash .circle {
   margin-top: 0;
+  height: 80px;
+  width: 80px;
   fill: var(--bs-tertiary);
+}
+
+.spin {
+  animation: spin 2s infinite linear;
 }
 
 #lock-icon {
   position: relative;
   left: 60px;
   top: 5px;
-  color: var(--bs-tertiary);
+  color: var(--bs-primary);
   font-size: 32px;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 /*# sourceMappingURL=lock.css.map */

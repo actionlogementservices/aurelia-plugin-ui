@@ -5,6 +5,7 @@ import { AutoCompleteController } from 'resources/elements/auto-complete/auto-co
 import { LockService } from 'core/lock-service/lock-service';
 import { ToastService } from 'core/toast-service/toast-service';
 import { DialogService } from 'core/dialog-service/dialog-service';
+import { ExempleDialog } from './dialogs/exemple-dialog';
 
 export const wait = delay => new Promise(resolve => setTimeout(resolve, delay));
 
@@ -40,15 +41,38 @@ export class App {
       itemsList.push({ id, name, email, color });
     }
     this.itemsList = itemsList;
-    this.smallItemsList = itemsList.slice(0,20);
+    this.smallItemsList = itemsList.slice(0, 20);
   }
 
   activate() {
-    this.itemsController.configure(text => this.itemsList.filter(item => item.name.toUpperCase().includes(text.toUpperCase())))
+    this.itemsController.configure(text =>
+      this.itemsList.filter(item => item.name.toUpperCase().includes(text.toUpperCase()))
+    );
   }
 
   async lockScreen() {
     this.lock.lock();
     await wait(1000).finally(() => this.lock.unlock());
+  }
+
+  showInfo() {
+    this.toast.info('Info!');
+  }
+
+  showWarning() {
+    this.toast.warning('Warning!');
+  }
+
+  showError() {
+    this.toast.error('Error!');
+  }
+
+  showSuccess() {
+    this.toast.success('Success!');
+  }
+
+  async showDialog() {
+    const { wasCancelled, output } = await this.dialog.open({ viewModel: ExempleDialog, locked: true });
+    this.wasCancelled = wasCancelled;
   }
 }
