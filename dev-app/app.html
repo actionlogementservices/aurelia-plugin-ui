@@ -1,8 +1,4 @@
 <template>
-  <require from="bootstrap-icons/font/bootstrap-icons.css"></require>
-  <require from="bootstrap/dist/css/bootstrap.css"></require>
-  <require from="./app.css"></require>
-
   <lock locked.bind="lock.isLocked"></lock>
 
   <environment-ribbon
@@ -13,10 +9,68 @@
 
   <div class="container-fluid mt-4">
     <h1 class="text-center">Test application</h1>
+
     <div class="row">
       <div class="col">
         <div class="m-2 p-2 rounded-3 border shadow-lg">
-          <h2>simple-table</h2>
+          <h3>
+            Component
+            <code class="fw_bold text-primary">LockService</code>
+          </h3>
+          <button class="btn btn-secondary" click.trigger="lockScreen()">Lock</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col">
+        <div class="m-2 p-2 rounded-3 border shadow-lg">
+          <h3>
+            Component
+            <code class="fw_bold text-primary">ToastService</code>
+          </h3>
+          <div class="row justify-content-center">
+            <div class="col">
+              <button class="btn btn-info" click.trigger="showInfo()">Info</button>
+            </div>
+            <div class="col">
+              <button class="btn btn-warning" click.trigger="showWarning()">Warning</button>
+            </div>
+            <div class="col">
+              <button class="btn btn-danger" click.trigger="showError()">Error</button>
+            </div>
+            <div class="col">
+              <button class="btn btn-success text-white" click.trigger="showSuccess()">Success</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col">
+        <div class="m-2 p-2 rounded-3 border shadow-lg">
+          <h3>
+            Component
+            <code class="fw_bold text-primary">DialogService</code>
+          </h3>
+          <div class="d-flex justify-content-between flex-nowrap">
+            <button class="btn btn-secondary" click.trigger="showDialog()">Dialog</button>
+            <div if.bind="wasCancelled != undefined" class="fw-semibold m-0">
+              Modal dialog was ${wasCancelled ? 'was cancelled' : 'was validated' }
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col">
+        <div class="m-2 p-2 rounded-3 border shadow-lg">
+          <h3>
+            Element
+            <code class="fw_bold text-primary">simple-table</code>
+          </h3>
           <simple-table datasource.bind="itemsList" values.bind="selectedItems" selection-mode="multiple">
             <column header="Id" cell-key="id" sortable="true" sort-type="numeric" width="80px">
               <small><span class="badge text-bg-secondary">${item.id}</span></small>
@@ -39,7 +93,10 @@
     <div class="row">
       <div class="col">
         <div class="m-2 p-2 rounded-3 border shadow-lg">
-          <h2>simple-select</h2>
+          <h3>
+            Element
+            <code class="fw_bold text-primary">simple-select</code>
+          </h3>
           <simple-select
             class="form-select"
             datasource.bind="smallItemsList"
@@ -60,7 +117,10 @@
     <div class="row">
       <div class="col">
         <div class="m-2 p-2 rounded-3 border shadow-lg">
-          <h2>filterable-select</h2>
+          <h3>
+            Element
+            <code class="fw_bold text-primary">filterable-select</code>
+          </h3>
           <filterable-select
             class="form-select"
             datasource.bind="itemsList"
@@ -81,7 +141,10 @@
     <div class="row">
       <div class="col">
         <div class="m-2 p-2 rounded-3 border shadow-lg">
-          <h2>badges-select</h2>
+          <h3>
+            Element
+            <code class="fw_bold text-primary">badges-select</code>
+          </h3>
           <badges-select
             class="form-select"
             datasource.bind="itemsList"
@@ -102,7 +165,10 @@
     <div class="row">
       <div class="col">
         <div class="m-2 p-2 rounded-3 border shadow-lg">
-          <h2>auto-complete</h2>
+          <h3>
+            Element
+            <code class="fw_bold text-primary">auto-complete</code>
+          </h3>
           <auto-complete
             class="form-control"
             controller.bind="itemsController"
@@ -123,7 +189,10 @@
     <div class="row">
       <div class="col">
         <div class="m-2 p-2 rounded-3 border shadow-lg">
-          <h2>badges-auto-complete</h2>
+          <h3>
+            Element
+            <code class="fw_bold text-primary">badges-auto-complete</code>
+          </h3>
           <badges-auto-complete
             class="form-control"
             controller.bind="itemsController"
@@ -144,7 +213,10 @@
     <div class="row">
       <div class="col">
         <div class="m-2 p-2 rounded-3 border shadow-lg">
-          <h2>input-datepicker</h2>
+          <h3>
+            Element
+            <code class="fw_bold text-primary">input-datepicker</code>
+          </h3>
           <input-datepicker class="form-select" date.bind="selectedDate"></input-datepicker>
         </div>
       </div>
