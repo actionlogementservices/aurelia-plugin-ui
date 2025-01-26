@@ -1,6 +1,6 @@
 # Module `elements/auto-complete/auto-complete-controller`
 
-![category:autocomplete](https://img.shields.io/badge/category-autocomplete-blue.svg?style=flat-square)
+![category:autocomplete](https://img.shields.io/badge/category-autocomplete-3b631b.svg?style=flat-square)
 
 
 

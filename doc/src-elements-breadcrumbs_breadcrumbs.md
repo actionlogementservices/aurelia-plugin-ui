@@ -1,6 +1,6 @@
 # Module `elements/breadcrumbs/breadcrumbs`
 
-![category:element](https://img.shields.io/badge/category-element-blue.svg?style=flat-square)
+![category:element](https://img.shields.io/badge/category-element-3b631b.svg?style=flat-square)
 
 
 

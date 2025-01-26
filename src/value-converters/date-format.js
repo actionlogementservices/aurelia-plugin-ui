@@ -3,7 +3,7 @@ import { dateFormat, isValidDate } from '../core/functions';
 /** @typedef {import('types').SupportedFormat} SupportedFormat */
 
 /**
- * Implements a **value converter** to transform a date to DD/MM/YYYY format.
+ * Implements a **`dateFormat`value converter** to transform a date to DD/MM/YYYY format.
  * @category valueconverter
  */
 

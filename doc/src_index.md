@@ -1,6 +1,6 @@
 # Module `index`
 
-![category:internal](https://img.shields.io/badge/category-internal-blue.svg?style=flat-square)
+![category:public](https://img.shields.io/badge/category-public-FF5000.svg?style=flat-square)
 
 Defines the Aurelia plugin entry point.
 

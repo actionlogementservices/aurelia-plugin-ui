@@ -444,7 +444,15 @@ Prevent user interaction with Bootstrap back drop.
 
 ### `address-auto-complete` custom element
 
-**Single selection** dropdown element with french gouv **[Base Adresse Nationale](https://www.data.gouv.fr/fr/datasets/base-adresse-nationale/)** query **controller**, **filtered by user input**, and **customizable dropdown item template**.
+**Single selection** dropdown element with french gouv **[Base Adresse Nationale](https://www.data.gouv.fr/fr/datasets/base-adresse-nationale/)** query **controller**, **filtered by user input**, and **customizable dropdown item template**. This custom element requires to use `aurelia-vadation`, `aurelia-configuration`, `aurelia-fetch` and define a config.json file with the following section:
+
+```json
+{
+  "api": {
+    "address": "https://your_ban_api_instance_address"
+  }
+}
+```
 
 ![address-auto-complete rendering](./doc/screenshot/address-auto-complete.png)
 
@@ -529,7 +537,29 @@ Prevent user interaction with Bootstrap back drop.
   | `sort-type` | Sorting type |`text` or `numeric` | `text` |
   | `width` | CSS width of the column | Any css width expression | `auto` |
 
+### `input-mask` custom attribute
+
+Implements **mask feature** on html input leveraging the [npm inputmask package](https://www.npmjs.com/package/inputmask).
+
+- Use the [input-mask](./doc/src-attributes_input-mask.md) on an html input element with either `currency` or `percentage` value.
+- Define the formating options with the [numberFormat](./doc/src-value-converters_number-format.md) converter options.
+
+```html
+<input
+  type="text"
+  input-mask="currency"
+  value.one-time="amount | numberFormat"
+  value.from-view="amount | cleanInputMask" />
+```
+
 ## Compatibility
 
 This plugin has been tested on aurelia v1 with **webpack**.
-The following peer dependencies are required: `bootstrap`, `bootstrap-icons` and `aurelia-validation`.
+The following peer dependencies are required:
+
+- `bootstrap 5.3.3`,
+- `bootstrap-icons 1.11.3`,
+  and if using the `address-auto-complete` element:
+- `aurelia-fetch-client 1.8.2`,
+- `aurelia-configuration 2.0.0`.
+- `aurelia-validation 2.0.0`

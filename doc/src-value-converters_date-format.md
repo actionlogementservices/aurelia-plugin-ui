@@ -1,6 +1,6 @@
 # Module `value-converters/date-format`
 
-![category:valueconverter](https://img.shields.io/badge/category-valueconverter-blue.svg?style=flat-square)
+![category:valueconverter](https://img.shields.io/badge/category-valueconverter-085a8a.svg?style=flat-square)
 
 
 
@@ -8,7 +8,7 @@
 
 # Class `DateFormatValueConverter`
 
-Implements a **value converter** to transform a date to DD/MM/YYYY format.
+Implements a **&#x60;dateFormat&#x60;value converter** to transform a date to DD/MM/YYYY format.
 
 ## Methods
 

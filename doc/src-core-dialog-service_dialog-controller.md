@@ -1,6 +1,6 @@
 # Module `core/dialog-service/dialog-controller`
 
-![category:dialog](https://img.shields.io/badge/category-dialog-blue.svg?style=flat-square)
+![category:dialog](https://img.shields.io/badge/category-dialog-009663.svg?style=flat-square)
 
 
 

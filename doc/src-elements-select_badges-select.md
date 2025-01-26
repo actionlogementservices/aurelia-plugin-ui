@@ -1,6 +1,6 @@
 # Module `elements/select/badges-select`
 
-![category:select](https://img.shields.io/badge/category-select-blue.svg?style=flat-square)
+![category:select](https://img.shields.io/badge/category-select-3b631b.svg?style=flat-square)
 
 
 

@@ -1,6 +1,6 @@
 # Module `core/lock-service/lock-service`
 
-![category:lock](https://img.shields.io/badge/category-lock-blue.svg?style=flat-square)
+![category:lock](https://img.shields.io/badge/category-lock-009663.svg?style=flat-square)
 
 
 

@@ -1,6 +1,6 @@
 # Module `core/toast-service/toast`
 
-![category:toast](https://img.shields.io/badge/category-toast-blue.svg?style=flat-square)
+![category:toast](https://img.shields.io/badge/category-toast-009663.svg?style=flat-square)
 
 
 

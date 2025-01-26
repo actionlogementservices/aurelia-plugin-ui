@@ -1,6 +1,6 @@
 # Module `elements/simple-table/column`
 
-![category:table](https://img.shields.io/badge/category-table-blue.svg?style=flat-square)
+![category:table](https://img.shields.io/badge/category-table-3b631b.svg?style=flat-square)
 
 
 

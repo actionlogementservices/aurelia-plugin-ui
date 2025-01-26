@@ -1,7 +1,7 @@
 /**
  * Defines the Aurelia plugin entry point.
  * @module
- * @category internal
+ * @category public
  */
 
 import { PLATFORM } from 'aurelia-pal';
@@ -36,7 +36,12 @@ function configure(aurelia) {
     PLATFORM.moduleName('./elements/lock/lock'),
     PLATFORM.moduleName('./elements/input-datepicker/input-datepicker'),
 
-    PLATFORM.moduleName('./value-converters/date-format')
+    PLATFORM.moduleName('./attributes/input-mask'),
+    PLATFORM.moduleName('./attributes/no-submit'),
+
+    PLATFORM.moduleName('./value-converters/date-format'),
+    PLATFORM.moduleName('./value-converters/clean-input-mask'),
+    PLATFORM.moduleName('./value-converters/number-format')
   ]);
 }
 

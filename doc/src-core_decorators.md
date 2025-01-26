@@ -1,6 +1,6 @@
 # Module `core/decorators`
 
-![category:internal](https://img.shields.io/badge/category-internal-blue.svg?style=flat-square)
+![category:internal](https://img.shields.io/badge/category-internal-6b6b6b.svg?style=flat-square)
 
 Defines common decorators.
 

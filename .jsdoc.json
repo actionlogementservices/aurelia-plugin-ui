@@ -26,12 +26,30 @@
       "imageext": "png",
       "tocfilename": "toc.md",
       "tocOrder": {
-        "public": 1,
-        "internal": 2
+        "public": 0,
+        "dialog": 1,
+        "lock": 2,
+        "toast": 3,
+        "element": 10,
+        "select": 11,
+        "autocomplete": 12,
+        "table": 13,
+        "attribute": 20,
+        "valueconverter": 30,
+        "internal": 100
       },
       "badgecolors": {
         "public": "FF5000",
-        "model": "009663",
+        "dialog": "009663",
+        "lock": "009663",
+        "toast": "009663",
+        "element": "3b631b",
+        "select": "3b631b",
+        "autocomplete": "3b631b",
+        "table": "3b631b",
+        "attribute": "b16502",
+        "valueconverter": "085a8a",
+        "internal": "6b6b6b",
         "other": "9f9f9f"
       },
       "externallinks": {
