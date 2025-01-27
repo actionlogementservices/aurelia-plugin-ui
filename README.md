@@ -211,6 +211,7 @@ Prevent user interaction with Bootstrap back drop.
   | `label-key` | Property of the item used to display them in the dropdown | Any string representing a property present on the item | `description` |
   | `placeholder` | Placeholder in the select when no selection is done | Any string | |
   | `disabled` | Disable the user interaction | `true` or `false` | `false` |
+  | `autosize` | Autosize the dropdown width to the parent width rather than the content of the dropdown | `true` or `false` | `true` |
   | `clear-selection-text` | Text displayed in the dropdown to clear the selection | Any string | `Effacer la sélection` |
 
 ### `filterable-select` custom element
@@ -248,6 +249,7 @@ Prevent user interaction with Bootstrap back drop.
   | `label-key` | Property of the item used to display them in the dropdown | Any string representing a property present on the item | `description` |
   | `placeholder` | Placeholder in the select when no selection is done | Any string | |
   | `disabled` | Disable the user interaction | `true` or `false` | `false` |
+  | `autosize` | Autosize the dropdown width to the parent width rather than the content of the dropdown | `true` or `false` | `true` |
   | `clear-selection-text` | Text displayed in the dropdown to clear the selection | Any string | `Effacer la sélection` |
   | `no-result-text` | Text displayed when user input filters out all items | Any string | `Aucun résultat` |
 
@@ -284,6 +286,7 @@ Prevent user interaction with Bootstrap back drop.
   | `label-key` | Property of the item used to display them in the dropdown | Any string representing a property present on the item | `description` |
   | `placeholder` | Placeholder in the select when no selection is done | Any string | |
   | `disabled` | Disable the user interaction | `true` or `false` | `false` |
+  | `autosize` | Autosize the dropdown width to the parent width rather than the content of the dropdown | `true` or `false` | `true` |
   | `no-result-text` | Text displayed when user input filters out all items | Any string | `Aucun résultat` |
 
 ### `auto-complete` custom element
@@ -361,6 +364,7 @@ Prevent user interaction with Bootstrap back drop.
   | `label-key` | Property of the item used to display them in the dropdown | Any string representing a property present on the item | `description` |
   | `placeholder` | Placeholder in the select when no selection is done | Any string | |
   | `disabled` | Disable the user interaction | `true` or `false` | `false` |
+  | `autosize` | Autosize the dropdown width to the parent width rather than the content of the dropdown | `true` or `false` | `true` |
   | `no-result-text` | Text displayed when user input filters out all items | Any string | `Aucun résultat` |
   | `delay` | Throttling delay in ms before requesting data | Any number > 0 | `700`
 
@@ -439,6 +443,7 @@ Prevent user interaction with Bootstrap back drop.
   | `label-key` | Property of the item used to display them in the dropdown | Any string representing a property present on the item | `description` |
   | `placeholder` | Placeholder in the select when no selection is done | Any string | |
   | `disabled` | Disable the user interaction | `true` or `false` | `false` |
+  | `autosize` | Autosize the dropdown width to the parent width rather than the content of the dropdown | `true` or `false` | `true` |
   | `no-result-text` | Text displayed when user input filters out all items | Any string | `Aucun résultat` |
   | `delay` | Throttling delay in ms before requesting data | Any number > 0 | `700`
 
@@ -471,6 +476,7 @@ Prevent user interaction with Bootstrap back drop.
   | `mode` | Query mode of the BAN api | either `zipCode` to get only city or `address` to get full address |`address` |
   | `placeholder` | Placeholder in the select when no selection is done | Any string | |
   | `disabled` | Disable the user interaction | `true` or `false` | `false` |
+  | `autosize` | Autosize the dropdown width to the parent width rather than the content of the dropdown | `true` or `false` | `false` |
 
 ### `input-datepicker` custom element
 

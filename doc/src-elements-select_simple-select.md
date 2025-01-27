@@ -115,6 +115,7 @@ __placeholder__ | `string` | *The place holder text. @type {string}*
 __valueKey__ | `string` | *Property key used to identify item. @type {string}*
 __labelKey__ | `string` | *Property key used to display item. @type {string}*
 __disabled__ | `boolean` | *Enable/Disable the custom element to prevent user modification. @type {boolean}*
+__autosize__ | `boolean` | *Autosize width of the dropdown to the parent&#x27;s width. @type {boolean}*
 __clearSelectionText__ | `string` | *Text corresponding to &#x27;clear the selection&#x27;. @type {string}*
 __uniqueId__ | `string` | *Unique id to identify the custom element instance. @type {string}*
 ___container__ | `HTMLTemplateElement` | *Html container of the custom element. @type {HTMLTemplateElement}*

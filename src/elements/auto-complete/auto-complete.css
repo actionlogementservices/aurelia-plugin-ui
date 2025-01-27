@@ -60,6 +60,12 @@ address-auto-complete.form-control input.form-control.items-selected {
   padding-top: 0 !important;
 }
 
+badges-auto-complete.form-control div.dropdown-menu-autosize,
+auto-complete.form-control div.dropdown-menu-autosize,
+address-auto-complete.form-control div.dropdown-menu-autosize {
+  width: 100%;
+}
+
 button.btn-close-badge {
   padding: 0.1em;
   width: 0.7em;

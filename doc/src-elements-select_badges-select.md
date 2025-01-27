@@ -196,6 +196,7 @@ __placeholder__ | `string` | *The place holder text. @type {string}*
 __valueKey__ | `string` | *Property key used to identify item. @type {string}*
 __labelKey__ | `string` | *Property key used to display item. @type {string}*
 __disabled__ | `boolean` | *Enable/Disable the custom element to prevent user modification. @type {boolean}*
+__autosize__ | `boolean` | *Autosize width of the dropdown to the parent&#x27;s width. @type {boolean}*
 __noResultText__ | `string` | *Text corresponding to &#x27;no result&#x27;. @type {string}*
 __filteredItems__ | `T[]` | *List of items filtered by the user input. @type {T[]}*
 __uniqueId__ | `string` | *Unique id to identify the custom element instance. @type {string}*

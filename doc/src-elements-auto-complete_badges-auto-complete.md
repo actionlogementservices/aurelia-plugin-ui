@@ -181,6 +181,7 @@ __valueKey__ | `string` | *Property key used to identify item. @type {string}*
 __labelKey__ | `string` | *Property key used to display item. @type {string}*
 __delay__ | `number` | *Throttling delay in ms before requesting data (default 700). @type {number}*
 __disabled__ | `boolean` | *Enable/Disable the custom element to prevent user modification. @type {boolean}*
+__autosize__ | `boolean` | *Autosize width of the dropdown to the parent&#x27;s width. @type {boolean}*
 __noResultText__ | `string` | *Text corresponding to &#x27;no result&#x27;. @type {string}*
 __uniqueId__ | `string` | *Unique id to identify the custom element instance. @type {string}*
 __items__ | `(U \| T)[]` | *List of retrieved items. @type {(U | T)[]}*

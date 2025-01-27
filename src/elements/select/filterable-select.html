@@ -20,7 +20,7 @@
       blur.trigger="resetInputValue()"
       keydown.trigger="manageKey($event.code)" />
     <!-- dropdown -->
-    <div id="dropDown-${uniqueId}" class="dropdown-menu dropdown-menu-scroll">
+    <div id="dropDown-${uniqueId}" class="dropdown-menu dropdown-menu-scroll ${autosize ? 'dropdown-menu-autosize' : ''}">
       <button
         if.bind="value"
         type="button"

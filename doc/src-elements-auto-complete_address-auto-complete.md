@@ -60,5 +60,6 @@ __mode__ | `AddressMode` | *The query mode of the BAN api. @type {AddressMode}*
 __value__ | [Adresse](src-elements-auto-complete_adresse.md) | *The resulting selected address. @type {Adresse}*
 __placeholder__ | `string` | *The place holder text. @type {string}*
 __disabled__ | `boolean` | *Enable/Disable the custom element to prevent user modification. @type {boolean}*
+__autosize__ | `boolean` | *Autosize width of the dropdown to the parent&#x27;s width. @type {boolean}*
 __addressAutoCompleteController__ | `AutoCompleteController.<Adresse>` | **
 ___client__ | `HttpClient` | **

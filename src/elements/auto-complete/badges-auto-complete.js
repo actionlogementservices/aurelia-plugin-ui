@@ -50,6 +50,10 @@ export class BadgesAutoComplete {
   @bindable({ defaultBindingMode: bindingMode.toView })
   disabled = false;
 
+  /** Autosize width of the dropdown to the parent's width. @type {boolean} */
+  @bindable({ defaultBindingMode: bindingMode.toView })
+  autosize = true;
+
   /** Text corresponding to 'no result'. @type {string} */
   @bindable({ defaultBindingMode: bindingMode.toView })
   noResultText = 'Aucun résultat';
@@ -86,7 +90,6 @@ export class BadgesAutoComplete {
     this._input = this._container.querySelector(`#searchText-${this.uniqueId}`);
     this._dropdownList = this._container.querySelector(`#dropDown-${this.uniqueId}`);
     this._dropdown = Dropdown.getOrCreateInstance(this._input, { offset: [0, 4] });
-    this._dropdownList.style.width = `${this._input.clientWidth}px`;
   }
 
   /**

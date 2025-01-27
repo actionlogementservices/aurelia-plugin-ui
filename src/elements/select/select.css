@@ -46,6 +46,12 @@ badges-select.form-select input.form-select.items-selected {
   padding-top: 0 !important;
 }
 
+simple-select.form-select div.dropdown-menu-autosize,
+filterable-select.form-select div.dropdown-menu-autosize,
+badges-select.form-select div.dropdown-menu-autosize {
+  width: 100%;
+}
+
 button.btn-close-badge {
   padding: 0.1em;
   width: 0.7em;

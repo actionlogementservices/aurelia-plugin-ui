@@ -38,6 +38,10 @@ badges-select.form-select {
       padding-top: 0 !important;
     }
   }
+
+  & div.dropdown-menu-autosize {
+    width: 100%;
+  }
 }
 
 button.btn-close-badge {

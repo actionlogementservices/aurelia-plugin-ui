@@ -60,6 +60,10 @@ export class AddressAutoComplete {
   @bindable({ defaultBindingMode: bindingMode.toView })
   disabled = false;
 
+  /** Autosize width of the dropdown to the parent's width. @type {boolean} */
+  @bindable({ defaultBindingMode: bindingMode.toView })
+  autosize = false;
+
   /** @type {HttpClient} */ _client;
   /** @type {AutoCompleteController<Adresse>} */ addressAutoCompleteController;
 
