@@ -1,6 +1,6 @@
 {
   "name": "@actionlogementservices/aurelia-plugin-ui",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "An aurelia plugin repository that provides common bootstrap 5 ui components.",
   "keywords": [
     "aurelia",
