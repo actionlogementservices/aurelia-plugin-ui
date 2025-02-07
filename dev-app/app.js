@@ -40,8 +40,10 @@ export class App {
       const color = faker.color.human();
       itemsList.push({ id, name, email, color });
     }
-    this.itemsList = itemsList;
-    this.smallItemsList = itemsList.slice(0, 20);
+    setTimeout(() => {
+      this.itemsList = itemsList;
+      this.smallItemsList = itemsList.slice(0, 20);
+    }, 500);
   }
 
   activate() {
@@ -53,6 +55,22 @@ export class App {
   async lockScreen() {
     this.lock.lock();
     await wait(1000).finally(() => this.lock.unlock());
+  }
+
+  setSelectedItem() {
+    this.selectedItem = this.smallItemsList[1];
+  }
+
+  setSelectedItems() {
+    this.selectedItems = [this.smallItemsList[2], this.smallItemsList[3]];
+  }
+
+  setSelectedValue() {
+    this.selectedValue = 4;
+  }
+
+  setSelectedValues() {
+    this.selectedValues = [5, 6, 7];
   }
 
   showInfo() {
@@ -74,5 +92,9 @@ export class App {
   async showDialog() {
     const { wasCancelled, output } = await this.dialog.open({ viewModel: ExempleDialog, locked: true });
     this.wasCancelled = wasCancelled;
+  }
+
+  logSelectedItem(event) {
+    console.log(event);
   }
 }

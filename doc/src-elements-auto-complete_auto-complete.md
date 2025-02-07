@@ -117,11 +117,11 @@ __inputValue__ | `string` | *user input*
 
 ---
 
-### `valueChanged(value)`
+### `selectedItemChanged(value)`
 
 ![modifier: public](images/badges/modifier-public.png)
 
-Defines the logic triggered when &#x60;value&#x60; attribute is databound.
+Defines the logic triggered when &#x60;selected-item&#x60; attribute is databound.
 
 Parameters | Type | Description
 --- | --- | ---
@@ -146,7 +146,8 @@ __labelKey__ | `string` | *databound value*
 Name | Type | Description
 --- | --- | ---
 __controller__ | `AutoCompleteController<T,U>` | *The controller used to retrieve data. @type {AutoCompleteController&lt;T,U&gt;}*
-__value__ | `U \| T` | *Selected item @type {U | T}*
+__selectedValue__ | `string` | *Selected value @type {string}*
+__selectedItem__ | `U \| T` | *Selected item @type {U | T}*
 __placeholder__ | `string` | *The place holder text. @type {string}*
 __valueKey__ | `string` | *Property key used to identify item. @type {string}*
 __labelKey__ | `string` | *Property key used to display item. @type {string}*

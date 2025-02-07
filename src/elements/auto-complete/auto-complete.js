@@ -10,7 +10,7 @@ import {
 } from 'aurelia-framework';
 import { Dropdown } from 'bootstrap';
 
-import { generateUniqueId } from '../../core/functions';
+import { generateUniqueId, preventEventPropagation } from '../../core/functions';
 
 /** @template T,U @typedef {import('./auto-complete-controller').AutoCompleteController<T,U>} AutoCompleteController<T,U> */
 
@@ -26,9 +26,13 @@ export class AutoComplete {
   @bindable({ defaultBindingMode: bindingMode.toView })
   controller;
 
+  /** Selected value @type {string} */
+  @bindable({ defaultBindingMode: bindingMode.twoWay })
+  selectedValue;
+
   /** Selected item @type {U | T} */
   @bindable({ defaultBindingMode: bindingMode.twoWay })
-  value;
+  selectedItem;
 
   /** The place holder text. @type {string} */
   @bindable({ defaultBindingMode: bindingMode.toView })
@@ -86,6 +90,7 @@ export class AutoComplete {
   attached() {
     this.itemView = new InlineViewStrategy(`<template>\${${this.labelKey}}</template>`);
     this._input = this._container.querySelector(`#searchText-${this.uniqueId}`);
+    this._input.addEventListener('change', preventEventPropagation);
     this._dropdownList = this._container.querySelector(`#dropDown-${this.uniqueId}`);
     this._dropdown = Dropdown.getOrCreateInstance(this._input, { offset: [0, 4] });
   }
@@ -95,6 +100,7 @@ export class AutoComplete {
    */
   detached() {
     this._dropdown?.dispose();
+    this._input.removeEventListener('change', preventEventPropagation);
   }
 
   /**
@@ -117,8 +123,9 @@ export class AutoComplete {
    * @param {boolean} notify should we dispatch custom element events?
    */
   selectItem(item, notify = true) {
-    if (!this.controller || !this.valueKey || !this._input) return;
-    this.value = item;
+    if (!this.controller || !this._input) return;
+    this.selectedItem = item;
+    if (this.valueKey && this.selectedItem) this.selectedValue = this.selectedItem[this.valueKey];
     this.updatingInput = true;
     // eslint-disable-next-line unicorn/no-null
     this._input.value = item ? (item[this.labelKey] ?? null) : null;
@@ -175,7 +182,7 @@ export class AutoComplete {
    * Defines the logic triggered when user clicks outside the component.
    */
   resetInputValue() {
-    if (!this.ignoringReset) this.selectItem(this.value, false);
+    if (!this.ignoringReset) this.selectItem(this.selectedItem, false);
   }
 
   /**
@@ -185,7 +192,8 @@ export class AutoComplete {
   async inputValueChanged(inputValue) {
     if (this.updatingInput) return;
     if (inputValue === '') {
-      this.value = undefined;
+      this.selectedItem = undefined;
+      this.selectedValue = undefined;
       this.hideDropdown();
       return;
     }
@@ -194,12 +202,14 @@ export class AutoComplete {
   }
 
   /**
-   * Defines the logic triggered when `value` attribute is databound.
+   * Defines the logic triggered when `selected-item` attribute is databound.
    * @param {T} value databound value
    */
-  valueChanged(value) {
-    if (!this.controller || !this.valueKey || this.updatingInput) return;
-    this.selectItem(this.controller.buildItemModel(value), false);
+  selectedItemChanged(value) {
+    this._taskqueue.queueTask(() => {
+      if (!this.controller || this.updatingInput) return;
+      this.selectItem(this.controller.buildItemModel(value), false);
+    });
   }
 
   /**

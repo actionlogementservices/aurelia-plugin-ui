@@ -2,9 +2,9 @@
   <require from="./auto-complete.css"></require>
   <div id="badges-auto-complete-${uniqueId}" class="dropdown">
     <!-- badges section -->
-    <div show.bind="values.length > 0" class="badges-container container-fluid overflow-auto">
+    <div show.bind="selectedItems.length > 0" class="badges-container container-fluid overflow-auto">
       <span
-        repeat.for="b of values"
+        repeat.for="b of selectedItems"
         class="btn btn-sm btn-secondary me-1 mb-1"
         title="${b[$parent.valueKey]}"
         data-bs-placement="top">
@@ -18,7 +18,7 @@
       placeholder="${placeholder || ''}"
       type="text"
       disabled.bind="disabled"
-      class="form-control border-0 shadow-none ${values.length > 0 ? 'items-selected' : ''}"
+      class="form-control border-0 shadow-none ${selectedItems.length > 0 ? 'items-selected' : ''}"
       aria-autocomplete="none"
       autocomplete="off"
       autocorrect="off"

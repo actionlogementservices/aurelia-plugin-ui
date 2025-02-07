@@ -72,6 +72,32 @@ __notify__ | `boolean` | *should we dispatch custom element events?*
 
 ---
 
+### `triggerChangeEvent(values)`
+
+![modifier: public](images/badges/modifier-public.png)
+
+Triggers the &#x27;change&#x27; event of the custom element.
+Required to participate in aurelia validation system.
+
+Parameters | Type | Description
+--- | --- | ---
+__values__ | `Array.<T>` | *selected values*
+
+---
+
+### `triggerBlurEvent(values)`
+
+![modifier: public](images/badges/modifier-public.png)
+
+Triggers the &#x27;blur&#x27; event of the custom element.
+Required to participate in aurelia validation system.
+
+Parameters | Type | Description
+--- | --- | ---
+__values__ | `Array.<T>` | *selected values*
+
+---
+
 ### `manageKey(keyCode) ► boolean`
 
 ![modifier: public](images/badges/modifier-public.png)
@@ -158,11 +184,11 @@ __inputValue__ | `string` | *user input*
 
 ---
 
-### `valuesChanged()`
+### `selectedItemsChanged()`
 
 ![modifier: public](images/badges/modifier-public.png)
 
-Defines the logic triggered when &#x60;values&#x60; attribute is databound.
+Defines the logic triggered when &#x60;selected-items&#x60; attribute is databound.
 
 ---
 
@@ -190,7 +216,8 @@ Defines the logic triggered when &#x60;datasource&#x60; attribute is databound.
 
 Name | Type | Description
 --- | --- | ---
-__values__ | `T[]` | *Selected items @type {T[]}*
+__selectedValues__ | `string` | *Selected values @type {string}*
+__selectedItems__ | `T[]` | *Selected items @type {T[]}*
 __datasource__ | `T[]` | *Data source @type {T[]}*
 __placeholder__ | `string` | *The place holder text. @type {string}*
 __valueKey__ | `string` | *Property key used to identify item. @type {string}*

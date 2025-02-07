@@ -10,7 +10,7 @@ import {
 } from 'aurelia-framework';
 import { Dropdown } from 'bootstrap';
 
-import { generateUniqueId } from '../../core/functions';
+import { generateUniqueId, preventEventPropagation } from '../../core/functions';
 
 /**
  * Implements the **`filterable-select` custom element** that provides a dropdown list based on a datasource with on the fly filtering and single selection.
@@ -19,9 +19,13 @@ import { generateUniqueId } from '../../core/functions';
  */
 @inject(DOM.Element, BindingEngine, TaskQueue)
 export class FilterableSelect {
+  /** Selected value @type {string} */
+  @bindable({ defaultBindingMode: bindingMode.twoWay })
+  selectedValue;
+
   /** Selected item @type {T} */
   @bindable({ defaultBindingMode: bindingMode.twoWay })
-  value;
+  selectedItem;
 
   /** Data source @type {T[]} */
   @bindable({ defaultBindingMode: bindingMode.toView })
@@ -85,6 +89,7 @@ export class FilterableSelect {
   attached() {
     this.itemView = new InlineViewStrategy(`<template>\${${this.labelKey}}</template>`);
     this._input = this._container.querySelector(`#searchText-${this.uniqueId}`);
+    this._input.addEventListener('change', preventEventPropagation);
     this._dropdownList = this._container.querySelector(`#dropDown-${this.uniqueId}`);
     this._dropdown = Dropdown.getOrCreateInstance(this._input, { offset: [0, 4] });
   }
@@ -94,6 +99,7 @@ export class FilterableSelect {
    */
   detached() {
     this._dropdown?.dispose();
+    this._input.removeEventListener('change', preventEventPropagation);
   }
 
   /**
@@ -116,8 +122,9 @@ export class FilterableSelect {
    * @param {boolean} notify should we dispatch custom element events?
    */
   selectItem(item, notify = true) {
-    if (!this.datasource || !this.valueKey || !this._input) return;
-    this.value = item;
+    if (!this.datasource || !this._input) return;
+    this.selectedItem = item;
+    if (this.valueKey && this.selectedItem) this.selectedValue = this.selectedItem[this.valueKey];
     this.updatingInput = true;
     // eslint-disable-next-line unicorn/no-null
     this._input.value = item ? (item[this.labelKey] ?? null) : null;
@@ -191,7 +198,7 @@ export class FilterableSelect {
   resetInputValue() {
     if (!this.ignoringReset) {
       this.hideDropdown();
-      this.selectItem(this.value, false);
+      this.selectItem(this.selectedItem, false);
     }
   }
 
@@ -202,7 +209,8 @@ export class FilterableSelect {
   inputValueChanged(inputValue) {
     if (this.updatingInput) return;
     if (inputValue === '') {
-      this.value = undefined;
+      this.selectedItem = undefined;
+      this.selectedValue = undefined;
       this.resetItems();
       this.showDropdown();
       return;
@@ -217,11 +225,24 @@ export class FilterableSelect {
   }
 
   /**
-   * Defines the logic triggered when `value` attribute is databound.
+   * Defines the logic triggered when `selected-item` attribute is databound.
    */
-  valueChanged() {
-    if (!this.valueKey || this.updatingInput) return;
-    this.selectItem(this.value, false);
+  selectedItemChanged() {
+    this._taskqueue.queueTask(() => {
+      if (this.updatingInput) return;
+      this.selectItem(this.selectedItem, false);
+    });
+  }
+
+  /**
+   * Defines the logic triggered when `select-value` attribute is databound.
+   */
+  selectedValueChanged() {
+    this._taskqueue.queueTask(() => {
+      if (!this.valueKey || !this.datasource) return;
+      const selectedItem = this.datasource.find(item => item[this.valueKey] === this.selectedValue);
+      this.selectItem(selectedItem, false);
+    });
   }
 
   /**
@@ -238,6 +259,7 @@ export class FilterableSelect {
   datasourceChanged() {
     this.resetItems();
     // if value was first databound before datasource re-trigger value change
-    if (this.value) this.valueChanged();
+    if (this.selectedItem) this.selectedItemChanged();
+    else if (this.selectedValue) this.selectedValueChanged();
   }
 }

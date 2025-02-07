@@ -32,7 +32,7 @@ export class SimpleTable {
 
   /** Selected items @type {T[]} */
   @bindable({ defaultBindingMode: bindingMode.twoWay })
-  values = [];
+  selectedItems = [];
 
   /** Property key used to identify item. @type {string} */
   @bindable({ defaultBindingMode: bindingMode.toView })
@@ -146,20 +146,20 @@ export class SimpleTable {
    */
   toggleItemSelection(item, notify = true) {
     if (!this.valueKey || this.selectionMode === 'none') return true;
-    const actualSelection = this.values;
+    const actualSelection = this.selectedItems;
     const index = actualSelection.indexOf(item);
     if (index === -1) {
       // not selected => select
-      this.values = this.selectionMode === 'multiple' ? [...this.values, item] : [item];
+      this.selectedItems = this.selectionMode === 'multiple' ? [...this.selectedItems, item] : [item];
     } else {
       // selected => unselect
-      this.values.splice(index, 1);
-      this.values = [...this.values];
+      this.selectedItems.splice(index, 1);
+      this.selectedItems = [...this.selectedItems];
     }
     this.synchronizeSelection();
     if (notify) {
-      this.triggerChangeEvent(this.values);
-      this.triggerBlurEvent(this.values);
+      this.triggerChangeEvent(this.selectedItems);
+      this.triggerBlurEvent(this.selectedItems);
     }
     return true;
   }
@@ -171,14 +171,14 @@ export class SimpleTable {
    */
   toggleAllSelection(notify = true) {
     if (this.selectionMode === 'none') return false;
-    const selectionCount = this.values.length;
+    const selectionCount = this.selectedItems.length;
     // all checked => uncheck all otherwise check all
-    this.values =
+    this.selectedItems =
       selectionCount === this.items.length || this.selectionMode === 'single' ? [] : [...this.items];
     this.synchronizeSelection();
     if (notify) {
-      this.triggerChangeEvent(this.values);
-      this.triggerBlurEvent(this.values);
+      this.triggerChangeEvent(this.selectedItems);
+      this.triggerBlurEvent(this.selectedItems);
     }
     return true;
   }
@@ -207,7 +207,7 @@ export class SimpleTable {
    * Synchronizes selection from the `values` attribute.
    */
   synchronizeSelection() {
-    const selectedKeys = new Set(this.values.filter(v => !isNil(v)).map(v => v[this.valueKey]));
+    const selectedKeys = new Set(this.selectedItems.filter(v => !isNil(v)).map(v => v[this.valueKey]));
     for (const item of this.items) {
       item.selected = selectedKeys.has(item[this.valueKey]);
     }
@@ -223,16 +223,20 @@ export class SimpleTable {
   /**
    * Defines the logic triggered when `values` attribute is databound.
    */
-  valuesChanged() {
-    if (!this.valueKey) return;
-    if (!this.values) {
-      this.values = [];
-      return;
-    }
-    if (this.values.length > 1 && this.selectionMode !== 'multiple') {
-      throw new Error(`simple-table: cannot bind multiple values with selection mode ${this.selectionMode}`);
-    }
-    this.synchronizeSelection();
+  selectedItemsChanged() {
+    this._taskqueue.queueTask(() => {
+      if (!this.valueKey) return;
+      if (!this.selectedItems) {
+        this.selectedItems = [];
+        return;
+      }
+      if (this.selectedItems.length > 1 && this.selectionMode !== 'multiple') {
+        throw new Error(
+          `simple-table: cannot bind multiple values with selection mode ${this.selectionMode}`
+        );
+      }
+      this.synchronizeSelection();
+    });
   }
 
   /**

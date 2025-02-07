@@ -10,7 +10,7 @@ import {
 } from 'aurelia-framework';
 import { Dropdown } from 'bootstrap';
 
-import { generateUniqueId } from '../../core/functions';
+import { generateUniqueId, preventEventPropagation } from '../../core/functions';
 
 /**
  * Implements the **`badges-select` custom element** that provides a dropdown list based on a datasource with on the fly filtering and a multiple selection with badge rendering.
@@ -19,9 +19,13 @@ import { generateUniqueId } from '../../core/functions';
  */
 @inject(DOM.Element, BindingEngine, TaskQueue)
 export class BadgesSelect {
+  /** Selected values @type {string} */
+  @bindable({ defaultBindingMode: bindingMode.twoWay })
+  selectedValues;
+
   /** Selected items @type {T[]} */
   @bindable({ defaultBindingMode: bindingMode.twoWay })
-  values = [];
+  selectedItems = [];
 
   /** Data source @type {T[]} */
   @bindable({ defaultBindingMode: bindingMode.toView })
@@ -81,6 +85,7 @@ export class BadgesSelect {
   attached() {
     this.itemView = new InlineViewStrategy(`<template>\${${this.labelKey}}</template>`);
     this._input = this._container.querySelector(`#searchText-${this.uniqueId}`);
+    this._input.addEventListener('change', preventEventPropagation);
     this._dropdownList = this._container.querySelector(`#dropDown-${this.uniqueId}`);
     this._dropdown = Dropdown.getOrCreateInstance(this._input, { offset: [0, 4] });
   }
@@ -90,6 +95,7 @@ export class BadgesSelect {
    */
   detached() {
     this._dropdown?.dispose();
+    this._input.removeEventListener('change', preventEventPropagation);
   }
 
   /**
@@ -114,7 +120,7 @@ export class BadgesSelect {
   selectItem(item, notify = true) {
     if (!this.datasource || !this.valueKey) return;
     if (this.isItemNotSelected(item)) {
-      this.values = [...this.values, item];
+      this.selectedItems = [...this.selectedItems, item];
     }
     this.updatingInput = true;
     this.clearInputField();
@@ -122,11 +128,29 @@ export class BadgesSelect {
     this.hideDropdown();
     this.filterItems();
     if (notify) {
-      const event = DOM.createCustomEvent('change', { bubbles: true, detail: this.values });
-      this._taskqueue.queueMicroTask(() => this._container.dispatchEvent(event));
-      const event2 = DOM.createCustomEvent('blur', { bubbles: true, detail: this.values });
-      this._taskqueue.queueMicroTask(() => this._container.dispatchEvent(event2));
+      this.triggerChangeEvent(this.selectedItems);
+      this.triggerBlurEvent(this.selectedItems);
     }
+  }
+
+  /**
+   * Triggers the 'change' event of the custom element.
+   * Required to participate in aurelia validation system.
+   * @param {T[]} values selected values
+   */
+  triggerChangeEvent(values) {
+    const eventToSend = DOM.createCustomEvent('change', { bubbles: true, detail: values });
+    this._taskqueue.queueMicroTask(() => this._container.dispatchEvent(eventToSend));
+  }
+
+  /**
+   * Triggers the 'blur' event of the custom element.
+   * Required to participate in aurelia validation system.
+   * @param {T[]} values selected values
+   */
+  triggerBlurEvent(values) {
+    const eventToSend = DOM.createCustomEvent('blur', { bubbles: true, detail: values });
+    this._taskqueue.queueMicroTask(() => this._container.dispatchEvent(eventToSend));
   }
 
   /**
@@ -194,7 +218,7 @@ export class BadgesSelect {
    */
   isItemNotSelected(item) {
     if (!item) return;
-    const alreadySelectedKeys = new Set(this.values.map(v => v[this.valueKey]));
+    const alreadySelectedKeys = new Set(this.selectedItems.map(v => v[this.valueKey]));
     return !alreadySelectedKeys.has(item[this.valueKey]);
   }
 
@@ -203,12 +227,14 @@ export class BadgesSelect {
    * @param {T} item item to remove
    */
   removeItem(item) {
-    const index = this.values.indexOf(item);
+    const index = this.selectedItems.indexOf(item);
     if (index !== -1) {
-      this.values.splice(index, 1);
-      this.values = [...this.values];
+      this.selectedItems.splice(index, 1);
+      this.selectedItems = [...this.selectedItems];
     }
     this.filterItems();
+    this.triggerChangeEvent(this.selectedItems);
+    this.triggerBlurEvent(this.selectedItems);
   }
 
   /**
@@ -234,12 +260,14 @@ export class BadgesSelect {
   }
 
   /**
-   * Defines the logic triggered when `values` attribute is databound.
+   * Defines the logic triggered when `selected-items` attribute is databound.
    */
-  valuesChanged() {
-    if (!this.valueKey || this.updatingInput) return;
-    if (!this.values) this.values = [];
-    this.filterItems();
+  selectedItemsChanged() {
+    this._taskqueue.queueTask(() => {
+      if (this.updatingInput) return;
+      if (!this.selectedItems) this.selectedItems = [];
+      this.filterItems();
+    });
   }
 
   /**
@@ -256,6 +284,6 @@ export class BadgesSelect {
   datasourceChanged() {
     this.resetItems();
     // if values was first databound before datasource re-trigger values change
-    if (this.values?.length > 0) this.valuesChanged();
+    if (this.selectedItems?.length > 0) this.selectedItemsChanged();
   }
 }

@@ -10,6 +10,7 @@ export { LockService } from './core/lock-service/lock-service';
 export { DialogService } from './core/dialog-service/dialog-service';
 export { DialogController } from './core/dialog-service/dialog-controller';
 export { AutoCompleteController } from './elements/auto-complete/auto-complete-controller';
+export { Adresse } from './elements/auto-complete/adresse';
 
 /** @typedef {import('aurelia-framework').FrameworkConfiguration} FrameworkConfiguration */
 

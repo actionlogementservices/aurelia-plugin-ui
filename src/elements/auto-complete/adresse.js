@@ -21,28 +21,35 @@ export class Adresse {
   /** additional address info @type{string} */ complementAdresse;
   /** city code @type{string} */ codeCommune;
   /** old city name @type{string | undefined} */ oldCommune;
+
+  /**
+   * Applies the aurelia validation rules.
+   * @returns {Adresse} current instance.
+   */
+  applyValidationRule() {
+    ValidationRules.ensure('numero')
+      .required()
+      .maxLength(8)
+
+      .ensure('nomVoie')
+      .required()
+      .maxLength(100)
+
+      .ensure('codePostal')
+      .required()
+      .maxLength(10)
+
+      .ensure('commune')
+      .required()
+      .maxLength(100)
+
+      .ensure('complementAdresse')
+      .maxLength(100)
+
+      .ensure('paysCode')
+      .required()
+
+      .on(this);
+    return this;
+  }
 }
-
-ValidationRules.ensure('numero')
-  .required()
-  .maxLength(8)
-
-  .ensure('nomVoie')
-  .required()
-  .maxLength(100)
-
-  .ensure('codePostal')
-  .required()
-  .maxLength(10)
-
-  .ensure('commune')
-  .required()
-  .maxLength(100)
-
-  .ensure('complementAdresse')
-  .maxLength(100)
-
-  .ensure('paysCode')
-  .required()
-
-  .on(Adresse);

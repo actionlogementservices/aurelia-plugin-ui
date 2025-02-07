@@ -17,7 +17,7 @@
     <!-- dropdown -->
     <div id="dropDown-${uniqueId}" class="dropdown-menu dropdown-menu-scroll ${autosize ? 'dropdown-menu-autosize' : ''}">
       <button
-        if.bind="value"
+        if.bind="selectedItem"
         type="button"
         class="dropdown-item border-bottom border-top"
         keydown.trigger="selectItem(null)"
