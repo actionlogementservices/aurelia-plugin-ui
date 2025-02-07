@@ -7,12 +7,13 @@
     class="d-md-block"
     position="top-left"></environment-ribbon>
 
-  <div class="container-fluid mt-4">
+  <div class="container-fluid my-4 d-grid gap-4">
     <h1 class="text-center">Test application</h1>
 
+    <!-- LockService -->
     <div class="row">
       <div class="col">
-        <div class="m-2 p-2 rounded-3 border shadow-lg">
+        <div class="p-4 rounded-3 border shadow-lg">
           <h3>
             Component
             <code class="fw_bold text-primary">LockService</code>
@@ -22,9 +23,10 @@
       </div>
     </div>
 
+    <!-- ToastService -->
     <div class="row">
       <div class="col">
-        <div class="m-2 p-2 rounded-3 border shadow-lg">
+        <div class="p-4 rounded-3 border shadow-lg">
           <h3>
             Component
             <code class="fw_bold text-primary">ToastService</code>
@@ -47,9 +49,10 @@
       </div>
     </div>
 
+    <!-- DialogService -->
     <div class="row">
       <div class="col">
-        <div class="m-2 p-2 rounded-3 border shadow-lg">
+        <div class="p-4 rounded-3 border shadow-lg">
           <h3>
             Component
             <code class="fw_bold text-primary">DialogService</code>
@@ -64,14 +67,246 @@
       </div>
     </div>
 
+    <!-- Selection binding -->
     <div class="row">
       <div class="col">
-        <div class="m-2 p-2 rounded-3 border shadow-lg">
+        <div class="p-4 rounded-3 border shadow-lg">
+          <h3>Selection binding</h3>
+          <div class="row justify-content-center">
+            <div class="col">
+              <button class="btn btn-info" click.trigger="setSelectedItem()">Select item</button>
+            </div>
+            <div class="col">
+              <button class="btn btn-info" click.trigger="setSelectedItems()">Select items</button>
+            </div>
+            <div class="col">
+              <button class="btn btn-info" click.trigger="setSelectedValue()">Select value</button>
+            </div>
+            <div class="col">
+              <button class="btn btn-info" click.trigger="setSelectedValues()">Select values</button>
+            </div>
+            <div class="col">
+              <button class="btn btn-info" click.trigger="setSelectedAddress()">Select address</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- simple-select -->
+    <div class="row">
+      <div class="col">
+        <div class="p-4 rounded-3 border shadow-lg">
+          <h3>
+            Element
+            <code class="fw_bold text-primary">simple-select</code>
+          </h3>
+          <simple-select
+            class="form-select"
+            datasource.bind="smallItemsList"
+            change.delegate="logSelectedItem($event)"
+            label-key="name"
+            value-key="id"
+            selected-item.bind="selectedItem"
+            selected-value.bind="selectedValue">
+            <template replace-part="itemTemplate">
+              <div class="d-flex justify-content-between flex-nowrap">
+                <div class="fw-semibold m-0">${item.name}</div>
+                <div class="fw-light ps-2 m-0"><code>${item.id}</code></div>
+              </div>
+            </template>
+          </simple-select>
+        </div>
+      </div>
+    </div>
+
+    <!-- filterable-select -->
+    <div class="row">
+      <div class="col">
+        <div class="p-4 rounded-3 border shadow-lg">
+          <h3>
+            Element
+            <code class="fw_bold text-primary">filterable-select</code>
+          </h3>
+          <filterable-select
+            class="form-select"
+            datasource.bind="itemsList"
+            change.trigger="logSelectedItem($event)"
+            label-key="name"
+            value-key="id"
+            selected-item.bind="selectedItem"
+            selected-value.bind="selectedValue">
+            <template replace-part="itemTemplate">
+              <div class="d-flex justify-content-between flex-nowrap">
+                <div class="fw-semibold m-0">${item.name}</div>
+                <div class="fw-light ps-2 m-0"><code>${item.id}</code></div>
+              </div>
+            </template>
+          </filterable-select>
+        </div>
+      </div>
+    </div>
+
+    <!-- badges-select -->
+    <div class="row">
+      <div class="col">
+        <div class="p-4 rounded-3 border shadow-lg">
+          <h3>
+            Element
+            <code class="fw_bold text-primary">badges-select</code>
+          </h3>
+          <badges-select
+            class="form-select"
+            datasource.bind="itemsList"
+            change.trigger="logSelectedItem($event)"
+            label-key="name"
+            value-key="id"
+            selected-items.bind="selectedItems">
+            <template replace-part="itemTemplate">
+              <div class="d-flex justify-content-between flex-nowrap">
+                <div class="fw-semibold m-0">${item.name}</div>
+                <div class="fw-light ps-2 m-0"><code>${item.id}</code></div>
+              </div>
+            </template>
+          </badges-select>
+        </div>
+      </div>
+    </div>
+
+    <!--auto-complete -->
+    <div class="row">
+      <div class="col">
+        <div class="p-4 rounded-3 border shadow-lg">
+          <h3>
+            Element
+            <code class="fw_bold text-primary">auto-complete</code>
+          </h3>
+          <div class="input-group">
+            <auto-complete
+              class="form-control"
+              controller.bind="itemsController"
+              change.trigger="logSelectedItem($event)"
+              label-key="name"
+              value-key="id"
+              selected-item.bind="selectedItem"
+              selected-value.bind="selectedValue">
+              <template replace-part="itemTemplate">
+                <div class="d-flex justify-content-between flex-nowrap">
+                  <div class="fw-semibold m-0">${item.name}</div>
+                  <div class="fw-light ps-2 m-0"><code>${item.id}</code></div>
+                </div>
+              </template>
+            </auto-complete>
+            <span class="input-group-text"><i class="bi bi-search"></i></span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- badges-auto-complete -->
+    <div class="row">
+      <div class="col">
+        <div class="p-4 rounded-3 border shadow-lg">
+          <h3>
+            Element
+            <code class="fw_bold text-primary">badges-auto-complete</code>
+          </h3>
+          <div class="input-group">
+            <badges-auto-complete
+              class="form-control"
+              controller.bind="itemsController"
+              change.trigger="logSelectedItem($event)"
+              label-key="name"
+              value-key="id"
+              selected-items.bind="selectedItems">
+              <template replace-part="itemTemplate">
+                <div class="d-flex justify-content-between flex-nowrap">
+                  <div class="fw-semibold m-0">${item.name}</div>
+                  <div class="fw-light ps-2 m-0"><code>${item.id}</code></div>
+                </div>
+              </template>
+            </badges-auto-complete>
+            <span class="input-group-text"><i class="bi bi-search"></i></span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!--address-auto-complete -->
+    <div class="row">
+      <div class="col">
+        <div class="p-4 rounded-3 border shadow-lg">
+          <h3>
+            Element
+            <code class="fw_bold text-primary">address-auto-complete</code>
+          </h3>
+          <address-auto-complete
+            mode="address"
+            manual-entry.bind="true"
+            value.bind="selectedAdresse"></address-auto-complete>
+          <div class="row mt-4">
+            <dl class="row">
+              <dt class="col-12 text-primary mb-2">Elément sélectionné :</dt>
+              <dt class="col-1">Numéro :</dt>
+              <dd class="col-11"><code>${selectedAdresse.numero}</code></dd>
+              <dt class="col-1">Voie :</dt>
+              <dd class="col-11"><code>${selectedAdresse.nomVoie}</code></dd>
+              <dt class="col-1">Code postal :</dt>
+              <dd class="col-11"><code>${selectedAdresse.codePostal}</code></dd>
+              <dt class="col-1">Commune :</dt>
+              <dd class="col-11"><code>${selectedAdresse.commune}</code></dd>
+            </dl>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- input-datepicker -->
+    <div class="row">
+      <div class="col">
+        <div class="p-4 rounded-3 border shadow-lg">
+          <h3>
+            Element
+            <code class="fw_bold text-primary">input-datepicker</code>
+          </h3>
+          <div class="input-group">
+            <input-datepicker
+              class="form-select"
+              date.bind="selectedDate"
+              change.trigger="logSelectedItem($event)"></input-datepicker>
+            <span class="input-group-text"><i class="bi bi-calendar2"></i></span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col">
+        <div class="p-4 rounded-3 border shadow-lg">
+          <h3>
+            Element
+            <code class="fw_bold text-primary">input-datepicker</code>
+          </h3>
+          <input-datepicker
+            class="form-select"
+            date.bind="selectedDate"
+            change.trigger="logSelectedItem($event)"></input-datepicker>
+        </div>
+      </div>
+    </div>
+
+    <!-- simple-table -->
+    <div class="row">
+      <div class="col">
+        <div class="p-4 rounded-3 border shadow-lg">
           <h3>
             Element
             <code class="fw_bold text-primary">simple-table</code>
           </h3>
-          <simple-table datasource.bind="itemsList" values.bind="selectedItems" selection-mode="multiple">
+          <simple-table
+            datasource.bind="itemsList"
+            selected-items.bind="selectedItems"
+            selection-mode="multiple">
             <column header="Id" cell-key="id" sortable="true" sort-type="numeric" width="80px">
               <small><span class="badge text-bg-secondary">${item.id}</span></small>
             </column>
@@ -86,138 +321,6 @@
               </div>
             </column>
           </simple-table>
-        </div>
-      </div>
-    </div>
-
-    <div class="row">
-      <div class="col">
-        <div class="m-2 p-2 rounded-3 border shadow-lg">
-          <h3>
-            Element
-            <code class="fw_bold text-primary">simple-select</code>
-          </h3>
-          <simple-select
-            class="form-select"
-            datasource.bind="smallItemsList"
-            label-key="name"
-            value-key="id"
-            value.bind="selectedItem">
-            <template replace-part="itemTemplate">
-              <div class="d-flex justify-content-between flex-nowrap">
-                <div class="fw-semibold m-0">${item.name}</div>
-                <div class="fw-light ps-2 m-0"><code>${item.id}</code></div>
-              </div>
-            </template>
-          </simple-select>
-        </div>
-      </div>
-    </div>
-
-    <div class="row">
-      <div class="col">
-        <div class="m-2 p-2 rounded-3 border shadow-lg">
-          <h3>
-            Element
-            <code class="fw_bold text-primary">filterable-select</code>
-          </h3>
-          <filterable-select
-            class="form-select"
-            datasource.bind="itemsList"
-            label-key="name"
-            value-key="id"
-            value.bind="selectedItem">
-            <template replace-part="itemTemplate">
-              <div class="d-flex justify-content-between flex-nowrap">
-                <div class="fw-semibold m-0">${item.name}</div>
-                <div class="fw-light ps-2 m-0"><code>${item.id}</code></div>
-              </div>
-            </template>
-          </filterable-select>
-        </div>
-      </div>
-    </div>
-
-    <div class="row">
-      <div class="col">
-        <div class="m-2 p-2 rounded-3 border shadow-lg">
-          <h3>
-            Element
-            <code class="fw_bold text-primary">badges-select</code>
-          </h3>
-          <badges-select
-            class="form-select"
-            datasource.bind="itemsList"
-            label-key="name"
-            value-key="id"
-            values.bind="selectedItems">
-            <template replace-part="itemTemplate">
-              <div class="d-flex justify-content-between flex-nowrap">
-                <div class="fw-semibold m-0">${item.name}</div>
-                <div class="fw-light ps-2 m-0"><code>${item.id}</code></div>
-              </div>
-            </template>
-          </badges-select>
-        </div>
-      </div>
-    </div>
-
-    <div class="row">
-      <div class="col">
-        <div class="m-2 p-2 rounded-3 border shadow-lg">
-          <h3>
-            Element
-            <code class="fw_bold text-primary">auto-complete</code>
-          </h3>
-          <auto-complete
-            class="form-control"
-            controller.bind="itemsController"
-            label-key="name"
-            value-key="id"
-            value.bind="selectedItem">
-            <template replace-part="itemTemplate">
-              <div class="d-flex justify-content-between flex-nowrap">
-                <div class="fw-semibold m-0">${item.name}</div>
-                <div class="fw-light ps-2 m-0"><code>${item.id}</code></div>
-              </div>
-            </template>
-          </auto-complete>
-        </div>
-      </div>
-    </div>
-
-    <div class="row">
-      <div class="col">
-        <div class="m-2 p-2 rounded-3 border shadow-lg">
-          <h3>
-            Element
-            <code class="fw_bold text-primary">badges-auto-complete</code>
-          </h3>
-          <badges-auto-complete
-            class="form-control"
-            controller.bind="itemsController"
-            label-key="name"
-            value-key="id"
-            values.bind="selectedItems">
-            <template replace-part="itemTemplate">
-              <div class="d-flex justify-content-between flex-nowrap">
-                <div class="fw-semibold m-0">${item.name}</div>
-                <div class="fw-light ps-2 m-0"><code>${item.id}</code></div>
-              </div>
-            </template>
-          </badges-auto-complete>
-        </div>
-      </div>
-    </div>
-
-    <div class="row">
-      <div class="col">
-        <div class="m-2 p-2 rounded-3 border shadow-lg">
-          <h3>
-            Element
-            <code class="fw_bold text-primary">input-datepicker</code>
-          </h3>
-          <input-datepicker class="form-select" date.bind="selectedDate"></input-datepicker>
         </div>
       </div>
     </div>

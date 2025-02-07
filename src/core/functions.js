@@ -112,3 +112,11 @@ export const isValidDate = (value, format = 'YYYY-MM-DD') => {
   const date = new Date(year, month, day);
   return { valid: date.getFullYear() === year && date.getMonth() === month && date.getDate() === day, date };
 };
+
+/**
+ * Prevents a DOM event to be propagated.
+ * @param {Event} event event
+ */
+export function preventEventPropagation(event) {
+  event.stopPropagation();
+}

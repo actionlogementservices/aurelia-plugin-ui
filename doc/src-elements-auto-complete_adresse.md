@@ -10,6 +10,20 @@
 
 Implements the BAN (Base Adresse Nationale) model.
 
+## Methods
+
+### `applyValidationRule() ► Adresse`
+
+![modifier: public](images/badges/modifier-public.png)
+
+Applies the aurelia validation rules.
+
+Parameters | Type | Description
+--- | --- | ---
+__*return*__ | [Adresse](src-elements-auto-complete_adresse.md) | *current instance.*
+
+---
+
 ## Members
 
 Name | Type | Description

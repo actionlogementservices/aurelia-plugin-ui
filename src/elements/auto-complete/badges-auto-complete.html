@@ -2,13 +2,10 @@
   <require from="./auto-complete.css"></require>
   <div id="badges-auto-complete-${uniqueId}" class="dropdown">
     <!-- badges section -->
-    <div show.bind="values.length > 0" class="badges-container container-fluid overflow-auto">
-      <span
-        repeat.for="b of values"
-        class="btn btn-sm btn-secondary me-1 mb-1"
-        title="${b[$parent.valueKey]}"
-        data-bs-placement="top">
-        <button class="btn-close btn-close-badge" aria-label="Close" click.trigger="removeItem(b)"></button>
+    <div show.bind="selectedItems.length > 0" class="badges-container container-fluid overflow-auto">
+      <span repeat.for="b of selectedItems"
+        class="badge bg-secondary m-1 p-2 d-inline-flex align-items-center justify-content-center">
+        <i class="bi bi-x-lg fs-6 me-2" role="button" click.trigger="removeItem(b)"></i>
         ${b[$parent.labelKey]}
       </span>
     </div>
@@ -18,7 +15,7 @@
       placeholder="${placeholder || ''}"
       type="text"
       disabled.bind="disabled"
-      class="form-control border-0 shadow-none ${values.length > 0 ? 'items-selected' : ''}"
+      class="form-control border-0 shadow-none ${selectedItems.length > 0 ? 'items-selected' : ''}"
       aria-autocomplete="none"
       autocomplete="off"
       autocorrect="off"

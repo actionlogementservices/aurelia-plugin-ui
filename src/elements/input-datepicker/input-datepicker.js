@@ -4,7 +4,7 @@ import { Datepicker } from 'vanillajs-datepicker';
 // @ts-ignore
 import locale from 'vanillajs-datepicker/js/i18n/locales/fr';
 
-import { generateUniqueId, isValidDateTimeISOString } from '../../core/functions';
+import { generateUniqueId, isValidDateTimeISOString, preventEventPropagation } from '../../core/functions';
 
 /**
  * Implements the **`input-datepicker` custom element** that provides a dropdown calendar to select a single date.
@@ -66,6 +66,7 @@ export class InputDatepicker {
     if (!this._input) throw new Error('Template html datepicker invalide !');
     // attach an event handler to detect when date is changed in the underlying vanillajs component
     this._input.addEventListener('changeDate', this.internalComponentDateChanged.bind(this));
+    this._input.addEventListener('change', preventEventPropagation);
     // create the underlying vanillajs component
     this._datepicker = new Datepicker(this._input, {
       buttonClass: 'btn btn-secondary',
@@ -89,6 +90,7 @@ export class InputDatepicker {
    */
   detached() {
     this._input?.removeEventListener('changeDate', this.internalComponentDateChanged);
+    this._input.removeEventListener('change', preventEventPropagation);
     this._datepicker?.destroy();
   }
 

@@ -18,31 +18,48 @@ export class Adresse {
   /** city @type{string} */ commune;
   /** departement & region @type{string} */ context;
   /** full adress @type{string} */ label;
-  /** additional address info @type{string} */ complementAdresse;
+  /** additional address info @type{string} */ complement;
   /** city code @type{string} */ codeCommune;
   /** old city name @type{string | undefined} */ oldCommune;
+
+  // /**
+  //  * Applies the aurelia validation rules.
+  //  * @returns {Adresse} current instance.
+  //  */
+  // applyValidationRule() {
+  //   ValidationRules.ensure(x => x.numero)
+  //     .required()
+  //     .maxLength(8)
+  //     .ensure(x => x.nomVoie)
+  //     .required()
+  //     .maxLength(100)
+  //     .ensure(x => x.codePostal)
+  //     .required()
+  //     .maxLength(10)
+  //     .ensure(x => x.commune)
+  //     .required()
+  //     .maxLength(100)
+  //     .ensure(x => x.complement)
+  //     .maxLength(100)
+  //     .on(this);
+  //   return this;
+  // }
+
+  constructor() {
+    ValidationRules.ensure(x => x.numero)
+      .required()
+      .maxLength(8)
+      .ensure(x => x.nomVoie)
+      .required()
+      .maxLength(100)
+      .ensure(x => x.codePostal)
+      .required()
+      .maxLength(10)
+      .ensure(x => x.commune)
+      .required()
+      .maxLength(100)
+      .ensure(x => x.complement)
+      .maxLength(100)
+      .on(this);
+  }
 }
-
-ValidationRules.ensure('numero')
-  .required()
-  .maxLength(8)
-
-  .ensure('nomVoie')
-  .required()
-  .maxLength(100)
-
-  .ensure('codePostal')
-  .required()
-  .maxLength(10)
-
-  .ensure('commune')
-  .required()
-  .maxLength(100)
-
-  .ensure('complementAdresse')
-  .maxLength(100)
-
-  .ensure('paysCode')
-  .required()
-
-  .on(Adresse);

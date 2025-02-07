@@ -1,17 +1,26 @@
 import { inject, NewInstance } from 'aurelia-framework';
 import { faker } from '@faker-js/faker';
+import { Validator, ValidationControllerFactory } from 'aurelia-validation';
 
 import { AutoCompleteController } from 'resources/elements/auto-complete/auto-complete-controller';
 import { LockService } from 'core/lock-service/lock-service';
 import { ToastService } from 'core/toast-service/toast-service';
 import { DialogService } from 'core/dialog-service/dialog-service';
 import { ExempleDialog } from './dialogs/exemple-dialog';
+import { Adresse } from 'resources/elements/auto-complete/adresse';
 
 export const wait = delay => new Promise(resolve => setTimeout(resolve, delay));
 
 /** @typedef {{ id: number, name: string; email: string; color: string }} Item */
 
-@inject(NewInstance.of(AutoCompleteController), ToastService, LockService, DialogService)
+@inject(
+  NewInstance.of(AutoCompleteController),
+  ToastService,
+  LockService,
+  DialogService,
+  Validator,
+  ValidationControllerFactory
+)
 export class App {
   /** @type {AutoCompleteController<Item> } */ controller;
   /** @type {Item[]} */ itemsList;
@@ -19,6 +28,7 @@ export class App {
   /** @type {Item[]} */ selectedItems;
   /** @type {Item} */ selectedItem;
   /** @type {string} */ selectedDate;
+  /** @type {any} */ selectedAdresse;
 
   /**
    * @param {AutoCompleteController} controller
@@ -40,8 +50,10 @@ export class App {
       const color = faker.color.human();
       itemsList.push({ id, name, email, color });
     }
-    this.itemsList = itemsList;
-    this.smallItemsList = itemsList.slice(0, 20);
+    setTimeout(() => {
+      this.itemsList = itemsList;
+      this.smallItemsList = itemsList.slice(0, 20);
+    }, 500);
   }
 
   activate() {
@@ -53,6 +65,31 @@ export class App {
   async lockScreen() {
     this.lock.lock();
     await wait(1000).finally(() => this.lock.unlock());
+  }
+
+  setSelectedItem() {
+    this.selectedItem = this.smallItemsList[1];
+  }
+
+  setSelectedItems() {
+    this.selectedItems = [this.smallItemsList[2], this.smallItemsList[3]];
+  }
+
+  setSelectedValue() {
+    this.selectedValue = 4;
+  }
+
+  setSelectedValues() {
+    this.selectedValues = [5, 6, 7];
+  }
+
+  setSelectedAddress() {
+    this.selectedAdresse = Adresse.fromObject({
+      numero: '100',
+      nomVoie: 'Avenue des Champs Elysées',
+      codePostal: '75008',
+      commune: 'Paris'
+    });
   }
 
   showInfo() {
@@ -74,5 +111,9 @@ export class App {
   async showDialog() {
     const { wasCancelled, output } = await this.dialog.open({ viewModel: ExempleDialog, locked: true });
     this.wasCancelled = wasCancelled;
+  }
+
+  logSelectedItem(event) {
+    console.log(event);
   }
 }

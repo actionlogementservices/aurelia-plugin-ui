@@ -125,11 +125,19 @@ __inputValue__ | `string` | *user input*
 
 ---
 
-### `valueChanged()`
+### `selectedItemChanged()`
 
 ![modifier: public](images/badges/modifier-public.png)
 
-Defines the logic triggered when &#x60;value&#x60; attribute is databound.
+Defines the logic triggered when &#x60;selected-item&#x60; attribute is databound.
+
+---
+
+### `selectedValueChanged()`
+
+![modifier: public](images/badges/modifier-public.png)
+
+Defines the logic triggered when &#x60;select-value&#x60; attribute is databound.
 
 ---
 
@@ -157,7 +165,8 @@ Defines the logic triggered when &#x60;datasource&#x60; attribute is databound.
 
 Name | Type | Description
 --- | --- | ---
-__value__ | `T` | *Selected item @type {T}*
+__selectedValue__ | `string` | *Selected value @type {string}*
+__selectedItem__ | `T` | *Selected item @type {T}*
 __datasource__ | `T[]` | *Data source @type {T[]}*
 __placeholder__ | `string` | *The place holder text. @type {string}*
 __valueKey__ | `string` | *Property key used to identify item. @type {string}*

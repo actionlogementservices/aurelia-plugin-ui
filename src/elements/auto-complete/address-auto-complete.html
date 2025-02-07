@@ -1,15 +1,97 @@
 <template>
   <require from="./auto-complete.css"></require>
-  <auto-complete
-    class="form-control border-0 shadow-none"
-    value.bind="value"
-    label-key="firstLine"
-    placeholder.bind="placeholder"
-    disabled.bind="disabled"
-    controller.bind="addressAutoCompleteController">
-    <template replace-part="itemTemplate">
-      <p class="fw-semibold text-start m-0">${item.firstLine}</p>
-      <p if.bind="item.context" class="fw-light text-end m-0">${item.context}</p>
-    </template>
-  </auto-complete>
+  <div class.bind="showIcon ? 'input-group' : ''">
+    <auto-complete
+      class="form-control"
+      selected-item.bind="value"
+      label-key="firstLine"
+      placeholder.bind="placeholder"
+      disabled.bind="disabled || addressNotListed"
+      controller.bind="addressAutoCompleteController">
+      <template replace-part="itemTemplate">
+        <p class="fw-semibold text-start m-0">${item.firstLine}</p>
+        <p if.bind="item.context" class="fw-light text-end m-0">${item.context}</p>
+      </template>
+    </auto-complete>
+    <span if.bind="showIcon" class="input-group-text"><i class="bi bi-search"></i></span>
+  </div>
+  <div class="row" if.bind="isManualEntry">
+    <div class="row mt-2">
+      <div class="col">
+        <div class="form-check">
+          <input
+            id="check-${uniqueId}"
+            class="form-check-input"
+            type="checkbox"
+            checked.bind="addressNotListed"
+            disabled.bind="disabled" />
+          <label class="form-check-label" for="check-${uniqueId}">L'adresse n'est pas référencée</label>
+        </div>
+      </div>
+    </div>
+    <div if.bind="addressNotListed">
+      <div class="row">
+        <div class="col">
+          <div class="form-group">
+            <label for="input-adresse-numeroVoie" class="col-sm-6 col-form-label">
+              N°
+              <span class="text-danger">*</span>
+            </label>
+            <input
+              id="input-adresse-numeroVoie"
+              type="text"
+              class="form-control"
+              value.bind="value.numero"
+              aria-autocomplete="none"
+              autocomplete="none"
+              autocorrect="off"
+              spellcheck="false" />
+          </div>
+        </div>
+      </div>
+      <div class="row" if.bind="addressNotListed">
+        <div class="col">
+          <div class="form-group">
+            <label for="input-adresse-libelleVoie" class="col-sm-6 col-form-label">
+              Nom de la voie
+              <span class="text-danger">*</span>
+            </label>
+            <input
+              id="input-adresse-libelleVoie"
+              type="text"
+              class="form-control"
+              value.bind="value.nomVoie"
+              aria-autocomplete="none"
+              autocomplete="none"
+              autocorrect="off"
+              spellcheck="false" />
+          </div>
+        </div>
+      </div>
+      <div class="row" if.bind="addressNotListed">
+        <div class="col">
+          <div class="form-group">
+            <label for="input-adresse-commune" class="col-auto col-form-label">
+              Commune
+              <span class="text-danger">*</span>
+            </label>
+            <div class.bind="showIcon ? 'input-group' : ''">
+              <auto-complete
+                class="form-control"
+                selected-item.bind="addressCity"
+                label-key="firstLine"
+                placeholder.bind="placeholder"
+                controller.bind="zipCodeAutoCompleteController">
+                <template replace-part="itemTemplate">
+                  <p class="fw-semibold text-start m-0">${item.firstLine}</p>
+                  <p if.bind="item.context" class="fw-light text-end m-0">${item.context}</p>
+                </template>
+              </auto-complete>
+              <span if.bind="showIcon" class="input-group-text"><i class="bi bi-search"></i></span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </template>

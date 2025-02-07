@@ -10,7 +10,7 @@ import {
 } from 'aurelia-framework';
 import { Dropdown } from 'bootstrap';
 
-import { generateUniqueId } from '../../core/functions';
+import { generateUniqueId, preventEventPropagation } from '../../core/functions';
 
 /** @template T,U @typedef {import('./auto-complete-controller').AutoCompleteController<T,U>} AutoCompleteController<T,U> */
 
@@ -26,9 +26,13 @@ export class BadgesAutoComplete {
   @bindable({ defaultBindingMode: bindingMode.toView })
   controller;
 
+  /** Selected values @type {string} */
+  @bindable({ defaultBindingMode: bindingMode.twoWay })
+  selectedValues;
+
   /** Selected items @type {(U | T)[]} */
   @bindable({ defaultBindingMode: bindingMode.twoWay })
-  values = [];
+  selectedItems = [];
 
   /** The place holder text. @type {string} */
   @bindable({ defaultBindingMode: bindingMode.toView })
@@ -88,6 +92,7 @@ export class BadgesAutoComplete {
   attached() {
     this.itemView = new InlineViewStrategy(`<template>\${${this.labelKey}}</template>`);
     this._input = this._container.querySelector(`#searchText-${this.uniqueId}`);
+    this._input.addEventListener('change', preventEventPropagation);
     this._dropdownList = this._container.querySelector(`#dropDown-${this.uniqueId}`);
     this._dropdown = Dropdown.getOrCreateInstance(this._input, { offset: [0, 4] });
   }
@@ -97,6 +102,7 @@ export class BadgesAutoComplete {
    */
   detached() {
     this._dropdown?.dispose();
+    this._input.removeEventListener('change', preventEventPropagation);
   }
 
   /**
@@ -122,18 +128,36 @@ export class BadgesAutoComplete {
   selectItem(item, notify = true) {
     if (!this.controller || !this.valueKey || !this._input) return;
     if (this.isItemNotSelected(item)) {
-      this.values = [...this.values, item];
+      this.selectedItems = [...this.selectedItems, item];
     }
     this.updatingInput = true;
     this.clearInputField();
     this.updatingInput = false;
     this.hideDropdown();
     if (notify) {
-      const event = DOM.createCustomEvent('change', { bubbles: true, detail: this.values });
-      this._taskqueue.queueMicroTask(() => this._container.dispatchEvent(event));
-      const event2 = DOM.createCustomEvent('blur', { bubbles: true, detail: this.values });
-      this._taskqueue.queueMicroTask(() => this._container.dispatchEvent(event2));
+      this.triggerChangeEvent(this.selectedItems);
+      this.triggerBlurEvent(this.selectedItems);
     }
+  }
+
+  /**
+   * Triggers the 'change' event of the custom element.
+   * Required to participate in aurelia validation system.
+   * @param {(U | T)[]} values selected values
+   */
+  triggerChangeEvent(values) {
+    const eventToSend = DOM.createCustomEvent('change', { bubbles: true, detail: values });
+    this._taskqueue.queueMicroTask(() => this._container.dispatchEvent(eventToSend));
+  }
+
+  /**
+   * Triggers the 'blur' event of the custom element.
+   * Required to participate in aurelia validation system.
+   * @param {(U | T)[]} values selected values
+   */
+  triggerBlurEvent(values) {
+    const eventToSend = DOM.createCustomEvent('blur', { bubbles: true, detail: values });
+    this._taskqueue.queueMicroTask(() => this._container.dispatchEvent(eventToSend));
   }
 
   /**
@@ -195,7 +219,7 @@ export class BadgesAutoComplete {
    */
   isItemNotSelected(item) {
     if (!item) return;
-    const alreadySelectedKeys = new Set(this.values.map(v => v[this.valueKey]));
+    const alreadySelectedKeys = new Set(this.selectedItems.map(v => v[this.valueKey]));
     return !alreadySelectedKeys.has(item[this.valueKey]);
   }
 
@@ -204,11 +228,13 @@ export class BadgesAutoComplete {
    * @param {U | T} item item to remove
    */
   removeItem(item) {
-    const index = this.values.indexOf(item);
+    const index = this.selectedItems.indexOf(item);
     if (index !== -1) {
-      this.values.splice(index, 1);
-      this.values = [...this.values];
+      this.selectedItems.splice(index, 1);
+      this.selectedItems = [...this.selectedItems];
     }
+    this.triggerChangeEvent(this.selectedItems);
+    this.triggerBlurEvent(this.selectedItems);
   }
 
   /**
@@ -233,11 +259,13 @@ export class BadgesAutoComplete {
   }
 
   /**
-   * Defines the logic triggered when `values` attribute is databound.
+   * Defines the logic triggered when `selected-items` attribute is databound.
    */
-  valuesChanged() {
-    if (!this.controller || !this.valueKey || this.updatingInput) return;
-    if (!this.values) this.values = [];
+  selectedItemsChanged() {
+    this._taskqueue.queueTask(() => {
+      if (!this.controller || !this.valueKey || this.updatingInput) return;
+      if (!this.selectedItems) this.selectedItems = [];
+    });
   }
 
   /**

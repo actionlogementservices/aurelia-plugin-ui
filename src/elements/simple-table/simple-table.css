@@ -5,7 +5,7 @@ simple-table table tbody {
 }
 
 simple-table thead tr,
-tbody tr {
+simple-table tbody tr {
   display: table;
   width: 100%;
   table-layout: fixed;

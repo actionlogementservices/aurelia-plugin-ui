@@ -6,6 +6,20 @@ Defines common functions.
 
 [Source file](..\src\core\functions.js)
 
+## Functions
+
+### `preventEventPropagation(event)`
+
+![modifier: public](images/badges/modifier-public.png) ![modifier: static](images/badges/modifier-static.png)
+
+Prevents a DOM event to be propagated.
+
+Parameters | Type | Description
+--- | --- | ---
+__event__ | `Event` | *event*
+
+---
+
 ## Constants
 
 ### `wait`
