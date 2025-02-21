@@ -5,11 +5,9 @@
     <div show.bind="selectedItems.length > 0" class="badges-container container-fluid overflow-auto">
       <span
         repeat.for="b of selectedItems"
-        class="btn btn-sm btn-secondary me-1 mb-1"
-        title="${b[$parent.valueKey]}"
-        data-bs-placement="top">
-        <button class="btn-close btn-close-badge" aria-label="Close" click.trigger="removeItem(b)"></button>
+        class="badge bg-primary m-1 p-2 d-inline-flex align-items-center justify-content-center">
         ${b[$parent.labelKey]}
+        <i class="bi bi-x-lg fs-6 ms-2" role="button" click.trigger="removeItem(b)"></i>
       </span>
     </div>
     <!-- input field displaying label key property and enabling filtering -->

@@ -3,6 +3,7 @@ filterable-select.form-select,
 badges-select.form-select {
   padding: 0 !important;
   background-size: 0 !important;
+  box-shadow: none !important;
 }
 simple-select.form-select.is-valid,
 simple-select.form-select.is-invalid,
@@ -52,14 +53,7 @@ badges-select.form-select div.dropdown-menu-autosize {
   width: 100%;
 }
 
-button.btn-close-badge {
-  padding: 0.1em;
-  width: 0.7em;
-  height: 0.7em;
-  opacity: 1;
-}
-
-div.badges-container {
+badges-select div.badges-container {
   padding-left: 0.75rem;
   padding-right: 0.75rem;
   padding-top: 0.375rem;

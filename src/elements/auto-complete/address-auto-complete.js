@@ -1,7 +1,7 @@
-import { inject, Factory, bindable, bindingMode, NewInstance } from 'aurelia-framework';
+import { inject, Factory, bindable, bindingMode, NewInstance, observable } from 'aurelia-framework';
 import { HttpClient } from 'aurelia-fetch-client';
 import { AureliaConfiguration } from 'aurelia-configuration';
-
+import { generateUniqueId } from '../../core/functions';
 import { Adresse } from './adresse';
 import { AutoCompleteController } from './auto-complete-controller';
 
@@ -42,8 +42,11 @@ const options = {
  * Implements the **`address-auto-complete` custom element** that provides auto completion upon the BAN (*Base Adresse Nationale*) api.
  * @category autocomplete
  */
-@inject(AureliaConfiguration, Factory.of(HttpClient), NewInstance.of(AutoCompleteController))
+@inject(AureliaConfiguration, Factory.of(HttpClient), NewInstance.of(AutoCompleteController), NewInstance.of(AutoCompleteController))
 export class AddressAutoComplete {
+  /** Unique id to identify the custom element instance. @type {string} */
+  uniqueId = generateUniqueId();
+
   /** The query mode of the BAN api. @type {AddressMode} */
   @bindable({ defaultBindingMode: bindingMode.toView })
   mode = 'address';
@@ -51,6 +54,14 @@ export class AddressAutoComplete {
   /** The resulting selected address. @type {Adresse} */
   @bindable({ defaultBindingMode: bindingMode.twoWay })
   value;
+
+  /** @type {Adresse} */
+  @observable
+  addressCity;
+
+  @observable
+  /** @type {boolean} */
+  addressNotListed;
 
   /** The place holder text. @type {string} */
   @bindable({ defaultBindingMode: bindingMode.toView })
@@ -64,22 +75,33 @@ export class AddressAutoComplete {
   @bindable({ defaultBindingMode: bindingMode.toView })
   autosize = false;
 
+  /** @type {boolean} */
+  @bindable({ defaultBindingMode: bindingMode.toView })
+  manualEntry = false;
+
+  /** @type {boolean} */
+  @bindable({ defaultBindingMode: bindingMode.toView })
+  showIcon = true;
+
   /** @type {HttpClient} */ _client;
   /** @type {AutoCompleteController<Adresse>} */ addressAutoCompleteController;
+  /** @type {AutoCompleteController<Adresse>} */ zipCodeAutoCompleteController;
 
   /**
    * Creates an instance of the `address-auto-complete` custom element.
    * @param {AureliaConfiguration} configuration application configuration
    * @param {HttpClientFactory} createHttpClient http client factory
-   * @param {AutoCompleteController} controller autocomplete controller that retrieves data on the fly
+   * @param {AutoCompleteController} addressController autocomplete controller that retrieves data on the fly
+   * @param {AutoCompleteController} zipCodeController autocomplete controller that retrieves data on the fly
    */
-  constructor(configuration, createHttpClient, controller) {
+  constructor(configuration, createHttpClient, addressController, zipCodeController) {
     this._client = createHttpClient();
     const url = configuration.get('api.address');
     this._client.configure(httpClientConfiguration =>
       httpClientConfiguration.withBaseUrl(url).withDefaults({ headers: { Accept: 'application/json' } })
     );
-    this.addressAutoCompleteController = controller;
+    this.addressAutoCompleteController = addressController;
+    this.zipCodeAutoCompleteController = zipCodeController;
     this.setMode();
   }
 
@@ -91,9 +113,18 @@ export class AddressAutoComplete {
    * Defines the query mode.
    */
   setMode() {
-    const { requestFactory, buildItemModel } = options[this.mode];
+    this.configureAutoComplete(this.mode, this.addressAutoCompleteController);
+    this.configureAutoComplete('zipCode', this.zipCodeAutoCompleteController);
+  }
+
+  configureAutoComplete(mode, controller) {
+    const { requestFactory, buildItemModel } = options[mode];
     const search = requestFactory(this.searchAdresse.bind(this));
-    this.addressAutoCompleteController.configure(search, buildItemModel);
+    controller.configure(search, buildItemModel);
+  }
+
+  get isManualEntry() {
+    return this.manualEntry && this.mode === 'address';
   }
 
   /**
@@ -131,5 +162,17 @@ export class AddressAutoComplete {
         label: banAddress.label
       });
     });
+  }
+
+  addressCityChanged(newValue, oldValue) {
+    this.value.codePostal = newValue?.codePostal;
+    this.value.codeCommune = newValue?.codeCommune;
+    this.value.commune = newValue?.commune;
+  }
+
+  addressNotListedChanged() {
+    this.value = Object.assign(new Adresse(), { complement: this.value?.complement });
+    // @ts-ignore
+    this.addressCity = Adresse.fromObject({});
   }
 }

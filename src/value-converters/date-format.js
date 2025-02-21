@@ -14,8 +14,10 @@ export class DateFormatValueConverter {
    * @param {SupportedFormat} [format] display format, by default french: `DD/MM/YYYY`
    * @returns {string | undefined} the date in ISO 8601 format
    */
-  fromView(value, format = 'DD/MM/YYYY') {
-    const { valid, date } = isValidDate(value, format);
+  fromView(value, format) {
+    const defaultFormat = 'DD/MM/YYYY';
+    const formatToUse = format || defaultFormat;
+    const { valid, date } = isValidDate(value, formatToUse);
     if (!valid) return value;
     return date.toISOString();
   }
@@ -25,10 +27,12 @@ export class DateFormatValueConverter {
    * @param {SupportedFormat} [displayFormat] display format, by default french: `DD/MM/YYYY`
    * @returns {string | undefined} the date in the specified display format
    */
-  toView(value, displayFormat = 'DD/MM/YYYY') {
+  toView(value, displayFormat) {
+    const defaultFormat = 'DD/MM/YYYY';
+    const formatToUse = displayFormat || defaultFormat;
     const { valid, date } = isValidDate(value, 'YYYY-MM-DD');
     if (!valid) return value;
-    const outputFormat = dateFormat[displayFormat]?.output;
+    const outputFormat = dateFormat[formatToUse]?.output;
     return new Intl.DateTimeFormat(outputFormat?.culture, outputFormat?.options).format(date);
   }
 }

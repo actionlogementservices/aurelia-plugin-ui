@@ -7,13 +7,13 @@
     class="d-md-block"
     position="top-left"></environment-ribbon>
 
-  <div class="container-fluid mt-4">
+  <div class="container-fluid m-4 d-grid gap-4">
     <h1 class="text-center">Test application</h1>
 
     <!-- LockService -->
     <div class="row">
       <div class="col">
-        <div class="m-2 p-2 rounded-3 border shadow-lg">
+        <div class="p-4 rounded-3 border shadow-lg">
           <h3>
             Component
             <code class="fw_bold text-primary">LockService</code>
@@ -26,7 +26,7 @@
     <!-- ToastService -->
     <div class="row">
       <div class="col">
-        <div class="m-2 p-2 rounded-3 border shadow-lg">
+        <div class="p-4 rounded-3 border shadow-lg">
           <h3>
             Component
             <code class="fw_bold text-primary">ToastService</code>
@@ -52,7 +52,7 @@
     <!-- DialogService -->
     <div class="row">
       <div class="col">
-        <div class="m-2 p-2 rounded-3 border shadow-lg">
+        <div class="p-4 rounded-3 border shadow-lg">
           <h3>
             Component
             <code class="fw_bold text-primary">DialogService</code>
@@ -85,6 +85,9 @@
             <div class="col">
               <button class="btn btn-info" click.trigger="setSelectedValues()">Select values</button>
             </div>
+            <div class="col">
+              <button class="btn btn-info" click.trigger="setSelectedAddress()">Select address</button>
+            </div>
           </div>
         </div>
       </div>
@@ -93,7 +96,7 @@
     <!-- simple-select -->
     <div class="row">
       <div class="col">
-        <div class="m-2 p-2 rounded-3 border shadow-lg">
+        <div class="p-4 rounded-3 border shadow-lg">
           <h3>
             Element
             <code class="fw_bold text-primary">simple-select</code>
@@ -120,7 +123,7 @@
     <!-- filterable-select -->
     <div class="row">
       <div class="col">
-        <div class="m-2 p-2 rounded-3 border shadow-lg">
+        <div class="p-4 rounded-3 border shadow-lg">
           <h3>
             Element
             <code class="fw_bold text-primary">filterable-select</code>
@@ -147,7 +150,7 @@
     <!-- badges-select -->
     <div class="row">
       <div class="col">
-        <div class="m-2 p-2 rounded-3 border shadow-lg">
+        <div class="p-4 rounded-3 border shadow-lg">
           <h3>
             Element
             <code class="fw_bold text-primary">badges-select</code>
@@ -173,26 +176,29 @@
     <!--auto-complete -->
     <div class="row">
       <div class="col">
-        <div class="m-2 p-2 rounded-3 border shadow-lg">
+        <div class="p-4 rounded-3 border shadow-lg">
           <h3>
             Element
             <code class="fw_bold text-primary">auto-complete</code>
           </h3>
-          <auto-complete
-            class="form-control"
-            controller.bind="itemsController"
-            change.trigger="logSelectedItem($event)"
-            label-key="name"
-            value-key="id"
-            selected-item.bind="selectedItem"
-            selected-value.bind="selectedValue">
-            <template replace-part="itemTemplate">
-              <div class="d-flex justify-content-between flex-nowrap">
-                <div class="fw-semibold m-0">${item.name}</div>
-                <div class="fw-light ps-2 m-0"><code>${item.id}</code></div>
-              </div>
-            </template>
-          </auto-complete>
+          <div class="input-group">
+            <auto-complete
+              class="form-control"
+              controller.bind="itemsController"
+              change.trigger="logSelectedItem($event)"
+              label-key="name"
+              value-key="id"
+              selected-item.bind="selectedItem"
+              selected-value.bind="selectedValue">
+              <template replace-part="itemTemplate">
+                <div class="d-flex justify-content-between flex-nowrap">
+                  <div class="fw-semibold m-0">${item.name}</div>
+                  <div class="fw-light ps-2 m-0"><code>${item.id}</code></div>
+                </div>
+              </template>
+            </auto-complete>
+            <span class="input-group-text"><i class="bi bi-search"></i></span>
+          </div>
         </div>
       </div>
     </div>
@@ -200,25 +206,57 @@
     <!-- badges-auto-complete -->
     <div class="row">
       <div class="col">
-        <div class="m-2 p-2 rounded-3 border shadow-lg">
+        <div class="p-4 rounded-3 border shadow-lg">
           <h3>
             Element
             <code class="fw_bold text-primary">badges-auto-complete</code>
           </h3>
-          <badges-auto-complete
-            class="form-control"
-            controller.bind="itemsController"
-            change.trigger="logSelectedItem($event)"
-            label-key="name"
-            value-key="id"
-            selected-items.bind="selectedItems">
-            <template replace-part="itemTemplate">
-              <div class="d-flex justify-content-between flex-nowrap">
-                <div class="fw-semibold m-0">${item.name}</div>
-                <div class="fw-light ps-2 m-0"><code>${item.id}</code></div>
-              </div>
-            </template>
-          </badges-auto-complete>
+          <div class="input-group">
+            <badges-auto-complete
+              class="form-control"
+              controller.bind="itemsController"
+              change.trigger="logSelectedItem($event)"
+              label-key="name"
+              value-key="id"
+              selected-items.bind="selectedItems">
+              <template replace-part="itemTemplate">
+                <div class="d-flex justify-content-between flex-nowrap">
+                  <div class="fw-semibold m-0">${item.name}</div>
+                  <div class="fw-light ps-2 m-0"><code>${item.id}</code></div>
+                </div>
+              </template>
+            </badges-auto-complete>
+            <span class="input-group-text"><i class="bi bi-search"></i></span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!--address-auto-complete -->
+    <div class="row">
+      <div class="col">
+        <div class="p-4 rounded-3 border shadow-lg">
+          <h3>
+            Element
+            <code class="fw_bold text-primary">address-auto-complete</code>
+          </h3>
+          <address-auto-complete
+            mode="address"
+            manual-entry.bind="true"
+            value.bind="selectedAdresse"></address-auto-complete>
+          <div class="row mt-4">
+            <dl class="row">
+              <dt class="col-12 text-primary mb-2">Elément sélectionné :</dt>
+              <dt class="col-1">Numéro :</dt>
+              <dd class="col-11"><code>${selectedAdresse.numero}</code></dd>
+              <dt class="col-1">Voie :</dt>
+              <dd class="col-11"><code>${selectedAdresse.nomVoie}</code></dd>
+              <dt class="col-1">Code postal :</dt>
+              <dd class="col-11"><code>${selectedAdresse.codePostal}</code></dd>
+              <dt class="col-1">Commune :</dt>
+              <dd class="col-11"><code>${selectedAdresse.commune}</code></dd>
+            </dl>
+          </div>
         </div>
       </div>
     </div>
@@ -226,15 +264,18 @@
     <!-- input-datepicker -->
     <div class="row">
       <div class="col">
-        <div class="m-2 p-2 rounded-3 border shadow-lg">
+        <div class="p-4 rounded-3 border shadow-lg">
           <h3>
             Element
             <code class="fw_bold text-primary">input-datepicker</code>
           </h3>
-          <input-datepicker
-            class="form-select"
-            date.bind="selectedDate"
-            change.trigger="logSelectedItem($event)"></input-datepicker>
+          <div class="input-group">
+            <input-datepicker
+              class="form-select"
+              date.bind="selectedDate"
+              change.trigger="logSelectedItem($event)"></input-datepicker>
+            <span class="input-group-text"><i class="bi bi-calendar2"></i></span>
+          </div>
         </div>
       </div>
     </div>

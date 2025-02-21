@@ -56,14 +56,8 @@ address-auto-complete.form-control {
   }
 }
 
-button.btn-close-badge {
-  padding: 0.1em;
-  opacity: 1;
-}
-
-div.badges-container {
+badges-auto-complete div.badges-container {
   padding-left: $input-padding-x;
   padding-right: $input-padding-x;
   padding-top: $input-padding-y;
-  max-height: 300px;
 }

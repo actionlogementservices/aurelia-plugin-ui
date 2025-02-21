@@ -4,7 +4,7 @@
 //$dp-cell-prevnext-color: lighten($secondary, 15%);
 //$dp-cell-disabled-color: $gray-500;
 
-input-datepicker.form-select {
+input-datepicker.form-control {
   padding: 0 !important;
   background-size: 0 !important;
 
@@ -12,7 +12,7 @@ input-datepicker.form-select {
   &.is-invalid {
     background-size: 0 !important;
 
-    & input.form-select {
+    & input.form-control {
       padding-right: $form-select-feedback-icon-padding-end;
       background-position: $form-select-bg-position, $form-select-feedback-icon-position;
       background-size: $form-select-bg-size, $form-select-feedback-icon-size;

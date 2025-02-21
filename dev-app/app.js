@@ -6,12 +6,13 @@ import { LockService } from 'core/lock-service/lock-service';
 import { ToastService } from 'core/toast-service/toast-service';
 import { DialogService } from 'core/dialog-service/dialog-service';
 import { ExempleDialog } from './dialogs/exemple-dialog';
+import { Adresse } from 'resources/elements/auto-complete/adresse';
 
 export const wait = delay => new Promise(resolve => setTimeout(resolve, delay));
 
 /** @typedef {{ id: number, name: string; email: string; color: string }} Item */
 
-@inject(NewInstance.of(AutoCompleteController), ToastService, LockService, DialogService)
+@inject(NewInstance.of(AutoCompleteController), ToastService, LockService, DialogService, Validator, ValidationControllerFactory)
 export class App {
   /** @type {AutoCompleteController<Item> } */ controller;
   /** @type {Item[]} */ itemsList;
@@ -19,6 +20,8 @@ export class App {
   /** @type {Item[]} */ selectedItems;
   /** @type {Item} */ selectedItem;
   /** @type {string} */ selectedDate;
+  /** @type {any} */ selectedAdresse;
+
 
   /**
    * @param {AutoCompleteController} controller
@@ -71,6 +74,15 @@ export class App {
 
   setSelectedValues() {
     this.selectedValues = [5, 6, 7];
+  }
+
+  setSelectedAddress() {
+    this.selectedAdresse = Adresse.fromObject({
+      numero : '100',
+      nomVoie : 'Avenue des Champs Elysées',
+      codePostal : '75008',
+      commune : 'Paris'
+    });
   }
 
   showInfo() {

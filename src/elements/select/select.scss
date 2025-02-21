@@ -44,14 +44,8 @@ badges-select.form-select {
   }
 }
 
-button.btn-close-badge {
-  padding: 0.1em;
-  opacity: 1;
-}
-
-div.badges-container {
+badges-select div.badges-container {
   padding-left: $form-select-padding-x;
   padding-right: $form-select-padding-x;
   padding-top: $form-select-padding-y;
-  max-height: 300px;
 }
