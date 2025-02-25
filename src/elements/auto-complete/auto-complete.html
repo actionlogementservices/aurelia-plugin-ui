@@ -1,25 +1,22 @@
 <template role="list" aria-haspopup="listbox">
   <require from="./auto-complete.css"></require>
-  <div id="auto-complete-${uniqueId}" class="dropdown">
-    <!-- input field displaying label key property and enabling auto completion -->
-    <input
+  <input
       id="searchText-${uniqueId}"
       placeholder="${placeholder || ''}"
       type="text"
       disabled.bind="disabled"
       class="form-control border-0 shadow-none"
       aria-autocomplete="none"
-      autocomplete="off"
+      autocomplete="none"
       autocorrect="off"
       spellcheck="false"
       data-bs-toggle="dropdown"
-      style="cursor: auto"
-      role="button"
       role="searchbox"
       input.trigger="inputValueChanged($event.target.value) & debounce:delay"
       click.trigger="hideDropdown()"
       blur.trigger="resetInputValue()"
       keydown.trigger="manageKey($event.code)" />
+  <div id="auto-complete-${uniqueId}" class="dropdown">
     <!-- dropdown -->
     <div id="dropDown-${uniqueId}" class="dropdown-menu dropdown-menu-scroll ${autosize ? 'dropdown-menu-autosize' : ''}"">
       <button

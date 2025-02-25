@@ -186,17 +186,17 @@ Prevent user interaction with Bootstrap back drop.
 
 - Prepare a datasource in your viewmodel representing an array of items.
 - Use the [`<simple-select>`](./doc/src-elements-select_simple-select.md) element in your view and data bind the `datasource` attribute.
-- Data bind the `value` attribute to your viewmodel to retrieve user selection as a single item.
+- Data bind the `select-item` attribute to your viewmodel to retrieve user selection as a single item.
 
   ```html
-  <simple-select>class="form-select" value.bind="selectedItem" datasource.bind="itemsList"></simple-select>
+  <simple-select>class="form-select" select-item.bind="selectedItem" datasource.bind="itemsList"></simple-select>
   ```
 
 - Specify an optional template for the dropdown item
 
   ```html
   <simple-select>
-    class="form-select" value.bind="selectedItem" datasource.bind="itemsList">
+    class="form-select" select-item.bind="selectedItem" datasource.bind="itemsList">
     <template replace-part="itemTemplate">
       <p class="fw-semibold my-1">${item.code}</p>
       <p class="my-1">${item.name}</p>
@@ -222,11 +222,11 @@ Prevent user interaction with Bootstrap back drop.
 
 - Prepare a datasource in your viewmodel representing an array of items.
 - Use the [`<filterable-select>`](./doc/src-elements-select_filterable-select.md) element in your view and data bind the `datasource` attribute.
-- Data bind the `value` attribute to your viewmodel to retrieve user selection as a single item.
+- Data bind the `select-item` attribute to your viewmodel to retrieve user selection as a single item.
 
   ```html
   <filterable-select>
-    class="form-select" value.bind="selectedItem" datasource.bind="itemsList">
+    class="form-select" select-item.bind="selectedItem" datasource.bind="itemsList">
   </filterable-select>
   ```
 
@@ -234,7 +234,7 @@ Prevent user interaction with Bootstrap back drop.
 
   ```html
   <filterable-select>
-    class="form-select" value.bind="selectedItem" datasource.bind="itemsList">
+    class="form-select" select-item.bind="selectedItem" datasource.bind="itemsList">
     <template replace-part="itemTemplate">
       <p class="fw-semibold my-1">${item.code}</p>
       <p class="my-1">${item.name}</p>
@@ -314,11 +314,11 @@ Prevent user interaction with Bootstrap back drop.
   ```
 
 - Use the [`<auto-complete>`](./doc/src-elements-auto-complete_auto-complete.md) element in your view and data bind the `controller` attribute.
-- Data bind the `value` attribute to your viewmodel to retrieve user selection as a single item.
+- Data bind the `select-item` attribute to your viewmodel to retrieve user selection as a single item.
 
   ```html
   <auto-complete>
-    class="form-control" value.bind="selectedItem" controller.bind="itemsController">
+    class="form-control" select-item.bind="selectedItem" controller.bind="itemsController">
   </auto-complete>
   ```
 
@@ -349,7 +349,7 @@ Prevent user interaction with Bootstrap back drop.
 
   ```html
   <auto-complete>
-    class="form-control" value.bind="selectedItem" controller.bind="itemsController">
+    class="form-control" select-item.bind="selectedItem" controller.bind="itemsController">
     <template replace-part="itemTemplate">
       <p class="fw-semibold my-1">${item.code}</p>
       <p class="my-1">${item.fullName}</p>
@@ -462,11 +462,11 @@ Prevent user interaction with Bootstrap back drop.
 ![address-auto-complete rendering](./doc/screenshot/address-auto-complete.png)
 
 - Use the [`<address-auto-complete>`](./doc/src-elements-auto-complete_address-auto-complete.md) element in your view.
-- Data bind the `value` attribute to your viewmodel to retrieve user selection as a single item.
+- Data bind the `select-item` attribute to your viewmodel to retrieve user selection as a single item.
 
   ```html
   <address-auto-complete>
-    class="form-control" value.bind="selectedCity" mode="zipCode">
+    class="form-control" select-item.bind="selectedCity" mode="zipCode">
   </address-auto-complete>
   ```
 

@@ -53,6 +53,11 @@ badges-auto-complete.form-control input.form-control,
 auto-complete.form-control input.form-control,
 address-auto-complete.form-control input.form-control {
   padding: 0.375rem 0.75rem !important;
+  cursor: auto;
+}
+auto-complete.form-control input.form-control,
+address-auto-complete.form-control input.form-control {
+  border-radius: inherit !important;
 }
 badges-auto-complete.form-control input.form-control.items-selected,
 auto-complete.form-control input.form-control.items-selected,
@@ -66,14 +71,7 @@ address-auto-complete.form-control div.dropdown-menu-autosize {
   width: 100%;
 }
 
-button.btn-close-badge {
-  padding: 0.1em;
-  width: 0.7em;
-  height: 0.7em;
-  opacity: 1;
-}
-
-div.badges-container {
+badges-auto-complete div.badges-container {
   padding-left: 0.75rem;
   padding-right: 0.75rem;
   padding-top: 0.375rem;

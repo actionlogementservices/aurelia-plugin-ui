@@ -72,6 +72,32 @@ __notify__ | `boolean` | *should we dispatch custom element events?*
 
 ---
 
+### `triggerChangeEvent(values)`
+
+![modifier: public](images/badges/modifier-public.png)
+
+Triggers the &#x27;change&#x27; event of the custom element.
+Required to participate in aurelia validation system.
+
+Parameters | Type | Description
+--- | --- | ---
+__values__ | `(U \| T)[]` | *selected values*
+
+---
+
+### `triggerBlurEvent(values)`
+
+![modifier: public](images/badges/modifier-public.png)
+
+Triggers the &#x27;blur&#x27; event of the custom element.
+Required to participate in aurelia validation system.
+
+Parameters | Type | Description
+--- | --- | ---
+__values__ | `(U \| T)[]` | *selected values*
+
+---
+
 ### `manageKey(keyCode) ► boolean`
 
 ![modifier: public](images/badges/modifier-public.png)
@@ -150,11 +176,11 @@ __inputValue__ | `string` | *user input*
 
 ---
 
-### `valuesChanged()`
+### `selectedItemsChanged()`
 
 ![modifier: public](images/badges/modifier-public.png)
 
-Defines the logic triggered when &#x60;values&#x60; attribute is databound.
+Defines the logic triggered when &#x60;selected-items&#x60; attribute is databound.
 
 ---
 
@@ -175,7 +201,8 @@ __labelKey__ | `string` | *databound value*
 Name | Type | Description
 --- | --- | ---
 __controller__ | `AutoCompleteController<T,U>` | *The controller used to retrieve data. @type {AutoCompleteController&lt;T,U&gt;}*
-__values__ | `(U \| T)[]` | *Selected items @type {(U | T)[]}*
+__selectedValues__ | `string` | *Selected values @type {string}*
+__selectedItems__ | `(U \| T)[]` | *Selected items @type {(U | T)[]}*
 __placeholder__ | `string` | *The place holder text. @type {string}*
 __valueKey__ | `string` | *Property key used to identify item. @type {string}*
 __labelKey__ | `string` | *Property key used to display item. @type {string}*

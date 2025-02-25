@@ -145,7 +145,7 @@ Defines the logic triggered when &#x60;datasource&#x60; attribute is databound.
 
 ---
 
-### `valuesChanged()`
+### `selectedItemsChanged()`
 
 ![modifier: public](images/badges/modifier-public.png)
 
@@ -158,7 +158,7 @@ Defines the logic triggered when &#x60;values&#x60; attribute is databound.
 Name | Type | Description
 --- | --- | ---
 __columns__ | `Column[]` | *Columns description @type {Column[]}*
-__values__ | `T[]` | *Selected items @type {T[]}*
+__selectedItems__ | `T[]` | *Selected items @type {T[]}*
 __valueKey__ | `string` | *Property key used to identify item. @type {string}*
 __datasource__ | `T[] \| { items: T[], totalCount: number }` | *Data source @type {T[] | { items: T[], totalCount: number }}*
 __maxRows__ | `number` | *Maximal number of displayed rows. @type {number}*
