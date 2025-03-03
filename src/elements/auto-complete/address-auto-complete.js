@@ -103,11 +103,6 @@ export class AddressAutoComplete {
     );
     this.addressAutoCompleteController = addressController;
     this.zipCodeAutoCompleteController = zipCodeController;
-    this.setMode();
-  }
-
-  modeChanged() {
-    this.setMode();
   }
 
   /**
@@ -183,6 +178,7 @@ export class AddressAutoComplete {
   }
 
   bind() {
+    this.setMode();
     if (this.value?.isAddressNotListed) {
       this.addressCity = Object.assign(new Adresse(), this.value);
     }
