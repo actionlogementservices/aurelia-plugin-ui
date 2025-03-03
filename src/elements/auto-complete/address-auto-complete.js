@@ -106,10 +106,6 @@ export class AddressAutoComplete {
     this.setMode();
   }
 
-  modeChanged() {
-    this.setMode();
-  }
-
   /**
    * Defines the query mode.
    */
@@ -183,6 +179,7 @@ export class AddressAutoComplete {
   }
 
   bind() {
+    this.setMode();
     if (this.value?.isAddressNotListed) {
       this.addressCity = Object.assign(new Adresse(), this.value);
     }
