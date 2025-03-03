@@ -42,7 +42,12 @@ const options = {
  * Implements the **`address-auto-complete` custom element** that provides auto completion upon the BAN (*Base Adresse Nationale*) api.
  * @category autocomplete
  */
-@inject(AureliaConfiguration, Factory.of(HttpClient), NewInstance.of(AutoCompleteController), NewInstance.of(AutoCompleteController))
+@inject(
+  AureliaConfiguration,
+  Factory.of(HttpClient),
+  NewInstance.of(AutoCompleteController),
+  NewInstance.of(AutoCompleteController)
+)
 export class AddressAutoComplete {
   /** Unique id to identify the custom element instance. @type {string} */
   uniqueId = generateUniqueId();
@@ -58,10 +63,6 @@ export class AddressAutoComplete {
   /** @type {Adresse} */
   @observable
   addressCity;
-
-  @observable
-  /** @type {boolean} */
-  addressNotListed;
 
   /** The place holder text. @type {string} */
   @bindable({ defaultBindingMode: bindingMode.toView })
@@ -123,7 +124,7 @@ export class AddressAutoComplete {
     controller.configure(search, buildItemModel);
   }
 
-  get isManualEntry() {
+  get isManualEntryEnabled() {
     return this.manualEntry && this.mode === 'address';
   }
 
@@ -165,14 +166,25 @@ export class AddressAutoComplete {
   }
 
   addressCityChanged(newValue, oldValue) {
-    this.value.codePostal = newValue?.codePostal;
-    this.value.codeCommune = newValue?.codeCommune;
-    this.value.commune = newValue?.commune;
+    Object.assign(this.value, {
+      codePostal: newValue?.codePostal,
+      codeCommune: newValue?.codeCommune,
+      commune: newValue?.commune
+    });
   }
 
   addressNotListedChanged() {
-    this.value = Object.assign(new Adresse(), { complement: this.value?.complement });
+    this.value = Object.assign(new Adresse(), {
+      complement: this.value?.complement,
+      isAddressNotListed: this.value?.isAddressNotListed
+    });
     // @ts-ignore
     this.addressCity = Adresse.fromObject({});
+  }
+
+  bind() {
+    if (this.value?.isAddressNotListed) {
+      this.addressCity = Object.assign(new Adresse(), this.value);
+    }
   }
 }
