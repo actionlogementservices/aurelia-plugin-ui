@@ -21,6 +21,7 @@ export class Adresse {
   /** additional address info @type{string} */ complement;
   /** city code @type{string} */ codeCommune;
   /** old city name @type{string | undefined} */ oldCommune;
+  /** @type{boolean} */ isAddressNotListed;
 
   // /**
   //  * Applies the aurelia validation rules.

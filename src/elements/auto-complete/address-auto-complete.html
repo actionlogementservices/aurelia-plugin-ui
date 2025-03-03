@@ -6,7 +6,7 @@
       selected-item.bind="value"
       label-key="firstLine"
       placeholder.bind="placeholder"
-      disabled.bind="disabled || addressNotListed"
+      disabled.bind="disabled || value.isAddressNotListed"
       controller.bind="addressAutoCompleteController">
       <template replace-part="itemTemplate">
         <p class="fw-semibold text-start m-0">${item.firstLine}</p>
@@ -15,7 +15,7 @@
     </auto-complete>
     <span if.bind="showIcon" class="input-group-text"><i class="bi bi-search"></i></span>
   </div>
-  <div class="row" if.bind="isManualEntry">
+  <div class="row" if.bind="isManualEntryEnabled">
     <div class="row mt-2">
       <div class="col">
         <div class="form-check">
@@ -23,13 +23,14 @@
             id="check-${uniqueId}"
             class="form-check-input"
             type="checkbox"
-            checked.bind="addressNotListed"
+            checked.bind="value.isAddressNotListed"
+            change.trigger="addressNotListedChanged()"
             disabled.bind="disabled" />
           <label class="form-check-label" for="check-${uniqueId}">L'adresse n'est pas référencée</label>
         </div>
       </div>
     </div>
-    <div if.bind="addressNotListed">
+    <div show.bind="value.isAddressNotListed">
       <div class="row">
         <div class="col">
           <div class="form-group">
@@ -49,7 +50,7 @@
           </div>
         </div>
       </div>
-      <div class="row" if.bind="addressNotListed">
+      <div class="row">
         <div class="col">
           <div class="form-group">
             <label for="input-adresse-libelleVoie" class="col-sm-6 col-form-label">
@@ -68,7 +69,7 @@
           </div>
         </div>
       </div>
-      <div class="row" if.bind="addressNotListed">
+      <div class="row">
         <div class="col">
           <div class="form-group">
             <label for="input-adresse-commune" class="col-auto col-form-label">
