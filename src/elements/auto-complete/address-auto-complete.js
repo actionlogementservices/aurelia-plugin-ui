@@ -103,7 +103,6 @@ export class AddressAutoComplete {
     );
     this.addressAutoCompleteController = addressController;
     this.zipCodeAutoCompleteController = zipCodeController;
-    this.setMode();
   }
 
   /**
