@@ -2,6 +2,7 @@
   <require from="./auto-complete.css"></require>
   <div class.bind="showIcon ? 'input-group' : ''">
     <auto-complete
+      id="ac-${uniqueId}"
       class="form-control"
       selected-item.bind="value"
       label-key="firstLine"
@@ -34,12 +35,12 @@
       <div class="row">
         <div class="col">
           <div class="form-group">
-            <label for="input-adresse-numeroVoie" class="col-sm-6 col-form-label">
+            <label for="input-adresse-numeroVoie-${uniqueId}" class="col-sm-6 col-form-label">
               N°
               <span class="text-danger">*</span>
             </label>
             <input
-              id="input-adresse-numeroVoie"
+              id="input-adresse-numeroVoie-${uniqueId}"
               type="text"
               class="form-control"
               value.bind="value.numero"
@@ -53,12 +54,12 @@
       <div class="row">
         <div class="col">
           <div class="form-group">
-            <label for="input-adresse-libelleVoie" class="col-sm-6 col-form-label">
+            <label for="input-adresse-libelleVoie-${uniqueId}" class="col-sm-6 col-form-label">
               Nom de la voie
               <span class="text-danger">*</span>
             </label>
             <input
-              id="input-adresse-libelleVoie"
+              id="input-adresse-libelleVoie-${uniqueId}"
               type="text"
               class="form-control"
               value.bind="value.nomVoie"
@@ -72,12 +73,13 @@
       <div class="row">
         <div class="col">
           <div class="form-group">
-            <label for="input-adresse-commune" class="col-auto col-form-label">
+            <label for="ac-adresse-commune-${uniqueId}" class="col-auto col-form-label">
               Commune
               <span class="text-danger">*</span>
             </label>
             <div class.bind="showIcon ? 'input-group' : ''">
               <auto-complete
+                id="ac-adresse-commune-${uniqueId}"
                 class="form-control"
                 selected-item.bind="addressCity"
                 label-key="firstLine"

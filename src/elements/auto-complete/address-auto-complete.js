@@ -1,4 +1,4 @@
-import { inject, Factory, bindable, bindingMode, NewInstance, observable } from 'aurelia-framework';
+import { inject, Factory, bindable, bindingMode, NewInstance, observable, TaskQueue } from 'aurelia-framework';
 import { HttpClient } from 'aurelia-fetch-client';
 import { AureliaConfiguration } from 'aurelia-configuration';
 import { generateUniqueId } from '../../core/functions';
@@ -44,6 +44,7 @@ const options = {
  */
 @inject(
   AureliaConfiguration,
+  TaskQueue,
   Factory.of(HttpClient),
   NewInstance.of(AutoCompleteController),
   NewInstance.of(AutoCompleteController)
@@ -91,12 +92,14 @@ export class AddressAutoComplete {
   /**
    * Creates an instance of the `address-auto-complete` custom element.
    * @param {AureliaConfiguration} configuration application configuration
+   * @param {TaskQueue} taskqueue aurelia asynchronous task queue
    * @param {HttpClientFactory} createHttpClient http client factory
    * @param {AutoCompleteController} addressController autocomplete controller that retrieves data on the fly
    * @param {AutoCompleteController} zipCodeController autocomplete controller that retrieves data on the fly
    */
-  constructor(configuration, createHttpClient, addressController, zipCodeController) {
+  constructor(configuration, taskqueue, createHttpClient, addressController, zipCodeController) {
     this._client = createHttpClient();
+    this._taskqueue = taskqueue;
     const url = configuration.get('api.address');
     this._client.configure(httpClientConfiguration =>
       httpClientConfiguration.withBaseUrl(url).withDefaults({ headers: { Accept: 'application/json' } })
@@ -169,13 +172,14 @@ export class AddressAutoComplete {
   }
 
   addressNotListedChanged() {
-    this.value.numero = undefined;
-    this.value.nomVoie = undefined;
-    this.value.codeCommune = undefined;
-    this.value.codePostal = undefined;
-    this.value.commune = undefined;
-    // @ts-ignore
-    this.addressCity = new Adresse();
+    this._taskqueue.queueTask(() => {
+      this.value = Object.assign(new Adresse(), {
+        complemet: this.value?.complement,
+        isAddressNotListed: this.value?.isAddressNotListed
+      });
+      // @ts-ignore
+      this.addressCity = new Adresse();
+    });
   }
 
   bind() {
