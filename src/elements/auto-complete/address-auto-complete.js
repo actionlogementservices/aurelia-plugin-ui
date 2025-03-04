@@ -169,12 +169,13 @@ export class AddressAutoComplete {
   }
 
   addressNotListedChanged() {
-    this.value = Object.assign(new Adresse(), {
-      complement: this.value?.complement,
-      isAddressNotListed: this.value?.isAddressNotListed
-    });
+    this.value.numero = undefined;
+    this.value.nomVoie = undefined;
+    this.value.codeCommune = undefined;
+    this.value.codePostal = undefined;
+    this.value.commune = undefined;
     // @ts-ignore
-    this.addressCity = Adresse.fromObject({});
+    this.addressCity = new Adresse();
   }
 
   bind() {

@@ -192,7 +192,8 @@ export class AutoComplete {
   async inputValueChanged(inputValue) {
     if (this.updatingInput) return;
     if (inputValue === '') {
-      this.selectedItem = undefined;
+      // @ts-ignore
+      this.selectedItem = {};
       this.selectedValue = undefined;
       this.hideDropdown();
       return;
