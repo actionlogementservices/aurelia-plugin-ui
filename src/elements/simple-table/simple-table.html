@@ -29,9 +29,12 @@
           repeat.for="column of columns"
           width="${column.width}"
           scope="col"
-          click.trigger="sortDisplayedItems(column)">
-          ${column.header}
-          <i role="button" if.bind="column.sortable" class="bi bi-${column.sortIcon}"></i>
+          class="align-middle">
+          <a if.bind="column.sortable" role="button" click.trigger="sortDisplayedItems(column)">
+            ${column.header}
+            <i role="button" class="bi bi-${column.sortIcon}"></i>
+          </a>
+          <span if.bind="!column.sortable">${column.header}</span>
         </th>
       </tr>
     </thead>

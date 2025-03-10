@@ -1,18 +1,27 @@
-simple-table table tbody {
-  display: block;
-  max-height: 420px;
-  overflow-y: auto;
+simple-table > column {
+  display: none;
 }
 
-simple-table thead tr,
-simple-table tbody tr {
+simple-table table thead tr,
+simple-table table tbody tr {
   display: table;
   width: 100%;
   table-layout: fixed;
 }
 
-simple-table thead {
+simple-table table thead {
   width: calc(100% - 1em);
+}
+
+simple-table table thead th a {
+  text-decoration: inherit;
+  color: inherit;
+}
+
+simple-table table tbody {
+  display: block;
+  max-height: 420px;
+  overflow-y: auto;
 }
 
 simple-table table td.fixed-height {
