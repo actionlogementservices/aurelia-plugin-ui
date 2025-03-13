@@ -59,7 +59,7 @@ export class Column {
 
   /** CSS width of the column. @type {string} */
   @bindable({ defaultBindingMode: bindingMode.toView })
-  width = 'auto';
+  width;
 
   /** Cell template. @type {InlineViewStrategy} */ cellTemplate;
 

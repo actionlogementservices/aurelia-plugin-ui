@@ -2,15 +2,14 @@ simple-table > column {
   display: none;
 }
 
-simple-table table thead tr,
-simple-table table tbody tr {
-  display: table;
-  width: 100%;
-  table-layout: fixed;
+simple-table div.table-wrapper {
+  overflow-y: auto;
 }
 
-simple-table table thead {
-  width: calc(100% - 1em);
+simple-table table thead th {
+  position: sticky;
+  top: 0;
+  z-index: 2;
 }
 
 simple-table table thead th a {
@@ -18,10 +17,15 @@ simple-table table thead th a {
   color: inherit;
 }
 
-simple-table table tbody {
-  display: block;
-  max-height: 420px;
-  overflow-y: auto;
+simple-table table thead th,
+simple-table table tbody td {
+  width: auto;
+}
+
+simple-table table thead th.selection,
+simple-table table tbody td.selection {
+  width: 40px;
+  text-align: center;
 }
 
 simple-table table td.fixed-height {
