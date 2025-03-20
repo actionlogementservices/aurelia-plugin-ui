@@ -48,7 +48,7 @@ export class App {
       const name = faker.person.fullName();
       const email = faker.internet.email();
       const color = faker.color.human();
-      itemsList.push({ id, name, email, color });
+      itemsList.push({ id, name, email, color, showItemDetails: (item) => this.showItemDetails(item) });
     }
     setTimeout(() => {
       this.itemsList = itemsList;
@@ -115,5 +115,9 @@ export class App {
 
   logSelectedItem(event) {
     console.log(event);
+  }
+
+  showItemDetails(data){
+    console.log(data);
   }
 }

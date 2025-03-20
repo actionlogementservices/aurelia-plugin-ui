@@ -59,7 +59,11 @@ export class Column {
 
   /** CSS width of the column. @type {string} */
   @bindable({ defaultBindingMode: bindingMode.toView })
-  width = 'auto';
+  width;
+
+  /** Is the column visible. @type {boolean} */
+  @bindable({ defaultBindingMode: bindingMode.toView })
+  visible = true;
 
   /** Cell template. @type {InlineViewStrategy} */ cellTemplate;
 
@@ -88,13 +92,13 @@ export class Column {
   @computedFrom('sortOrder')
   get sortIcon() {
     if (this.sortOrder === 'asc' && this.sortType === 'text')
-      return 'sort-alpha-up align-middle text-secondary fs-5';
+      return 'sort-alpha-up align-middle text-secondary fs-6';
     if (this.sortOrder === 'desc' && this.sortType === 'text')
-      return 'sort-alpha-down-alt align-middle text-secondary fs-5';
+      return 'sort-alpha-down-alt align-middle text-secondary fs-6';
     if (this.sortOrder === 'asc' && this.sortType === 'numeric')
-      return 'sort-numeric-up align-middle text-secondary fs-5';
+      return 'sort-numeric-up align-middle text-secondary fs-6';
     if (this.sortOrder === 'desc' && this.sortType === 'numeric')
-      return 'sort-numeric-down-alt align-middle text-secondary fs-5';
-    return 'sort-up-alt align-middle text-light fs-5';
+      return 'sort-numeric-down-alt align-middle text-secondary fs-6';
+    return 'sort-up-alt align-middle text-light fs-6';
   }
 }

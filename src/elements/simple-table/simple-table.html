@@ -2,59 +2,67 @@
   <require from="./simple-table.css"></require>
   <!-- where columns definition will be projected -->
   <slot></slot>
-
-  <table id="grid-${uniqueId}" class="table table-hover">
-    <thead>
-      <!-- results count -->
-      <tr if.bind="items.length > 0" class="table-info">
-        <th colspan="100%">
-          <div>
-            <small>${totalCount} ${resultText}</small>
-            <span if.bind="!allItemsDisplayed" class="ms-3">
-              <i class="bi bi-exclamation-square text-secondary align-middle"></i>
-              <small class="fw-lighter fst-italic">${notDisplayedWarningText}</small>
-            </span>
-          </div>
-        </th>
-      </tr>
-      <!-- column headers -->
-      <tr>
-        <!-- optional tick header -->
-        <th if.bind="selectionMode != 'none'" width="30px" click.trigger="toggleAllSelection()">
-          <i
-            role="button"
-            class="bi bi-${selectionMode == 'single' ? 'check' : 'check-all'} text-light fs-5"></i>
-        </th>
-        <th
-          repeat.for="column of columns"
-          width="${column.width}"
-          scope="col"
-          click.trigger="sortDisplayedItems(column)">
-          ${column.header}
-          <i role="button" if.bind="column.sortable" class="bi bi-${column.sortIcon}"></i>
-        </th>
-      </tr>
-    </thead>
-    <tbody css="max-height: ${maxHeight}">
-      <!-- rows -->
-      <tr
-        repeat.for="item of items"
-        click.trigger="toggleItemSelection(item)"
-        class="${item.selected ? 'table-secondary' : ''}">
-        <!-- optional tick cell -->
-        <td if.bind="selectionMode != 'none'" width="30px" class="py-1 align-middle">
-          <i role="button" if.bind="item.selected" class="bi bi-check-lg text-secondary fs-5"></i>
-        </td>
-        <td
-          repeat.for="column of columns"
-          width="${column.width}"
-          class="${fixedRowHeight ? 'fixed-height' : ''}">
-          <compose if.bind="column.cellTemplate" view.bind="column.cellTemplate" containerless></compose>
-          ${ (!column.cellTemplate && column.cellKey) ? item[column.cellKey] : '' }
-        </td>
-      </tr>
-      <!-- no result text -->
-      <tr if.bind="items.length == 0" class="table-info"><td colspan="100%">${noResultText}</td></tr>
-    </tbody>
-  </table>
+  <div class="table-wrapper" css="max-height: ${maxHeight}">
+    <table id="grid-${uniqueId}" class="table table-hover">
+      <thead>
+        <!-- results count -->
+        <tr if.bind="items.length > 0" class="table-info">
+          <th colspan="100%">
+            <div>
+              <small>${totalCount} ${resultText}</small>
+              <span if.bind="!allItemsDisplayed" class="ms-3">
+                <i class="bi bi-exclamation-square text-secondary align-middle"></i>
+                <small class="fw-lighter fst-italic">${notDisplayedWarningText}</small>
+              </span>
+            </div>
+          </th>
+        </tr>
+        <!-- column headers -->
+        <tr>
+          <!-- optional tick header -->
+          <th if.bind="selectionMode != 'none'" class="selection">
+            <i
+              role="button"
+              click.trigger="toggleAllSelection()"
+              if.bind="selectionMode == 'multiple'"
+              class="bi bi-check-all fs-5 ${items.length == selectedItems.length ? 'text-secondary' : 'text-light'} "></i>
+          </th>
+          <th
+            repeat.for="column of columns"
+            if.bind="column.visible == true"
+            css="width: ${column.width}"
+            scope="col"
+            class="align-middle">
+            <a if.bind="column.sortable" role="button" click.trigger="sortDisplayedItems(column)">
+              ${column.header}
+              <i role="button" class="bi bi-${column.sortIcon}"></i>
+            </a>
+            <span if.bind="!column.sortable">${column.header}</span>
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- rows -->
+        <tr
+          repeat.for="item of items"
+          click.trigger="toggleItemSelection(item)"
+          class="align-middle ${item.selected ? 'table-secondary' : ''} ${selectionMode != 'none' ? 'selection' : ''}">
+          <!-- optional tick cell -->
+          <td if.bind="selectionMode != 'none'" class="py-0 align-middle selection">
+            <i role="button" if.bind="item.selected" class="bi bi-check text-secondary fs-5"></i>
+          </td>
+          <td
+            repeat.for="column of columns"
+            if.bind="column.visible == true"
+            css="max-width: ${column.width}"
+            class="${fixedRowHeight ? 'fixed-height' : ''}">
+            <compose if.bind="column.cellTemplate" view.bind="column.cellTemplate" containerless></compose>
+            ${ (!column.cellTemplate && column.cellKey) ? item[column.cellKey] : '' }
+          </td>
+        </tr>
+        <!-- no result text -->
+        <tr if.bind="items.length == 0" class="table-info"><td colspan="100%">${noResultText}</td></tr>
+      </tbody>
+    </table>
+  </div>
 </template>

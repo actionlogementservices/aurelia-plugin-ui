@@ -280,21 +280,6 @@
       </div>
     </div>
 
-    <div class="row">
-      <div class="col">
-        <div class="p-4 rounded-3 border shadow-lg">
-          <h3>
-            Element
-            <code class="fw_bold text-primary">input-datepicker</code>
-          </h3>
-          <input-datepicker
-            class="form-select"
-            date.bind="selectedDate"
-            change.trigger="logSelectedItem($event)"></input-datepicker>
-        </div>
-      </div>
-    </div>
-
     <!-- simple-table -->
     <div class="row">
       <div class="col">
@@ -319,6 +304,9 @@
                   class="ps-2 m-0"
                   style="height: 20px; width: 20px; background-color: ${item.color};"></div>
               </div>
+            </column>
+            <column header="Action">
+              <button class="btn btn-secondary" click.trigger="item.showItemDetails(item)">Details</button>
             </column>
           </simple-table>
         </div>
