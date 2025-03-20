@@ -17,6 +17,10 @@ simple-table table thead th a {
   color: inherit;
 }
 
+simple-table table tbody tr.selection {
+  cursor: pointer;
+}
+
 simple-table table thead th,
 simple-table table tbody td {
   width: auto;

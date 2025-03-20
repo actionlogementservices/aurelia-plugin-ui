@@ -24,10 +24,12 @@
             <i
               role="button"
               click.trigger="toggleAllSelection()"
-              class="bi bi-${selectionMode == 'single' ? 'check' : 'check-all'} text-light fs-5"></i>
+              if.bind="selectionMode == 'multiple'"
+              class="bi bi-check-all fs-5 ${items.length == selectedItems.length ? 'text-secondary' : 'text-light'} "></i>
           </th>
           <th
             repeat.for="column of columns"
+            if.bind="column.visible == true"
             css="width: ${column.width}"
             scope="col"
             class="align-middle">
@@ -44,13 +46,14 @@
         <tr
           repeat.for="item of items"
           click.trigger="toggleItemSelection(item)"
-          class="${item.selected ? 'table-secondary' : ''}">
+          class="align-middle ${item.selected ? 'table-secondary' : ''} ${selectionMode != 'none' ? 'selection' : ''}">
           <!-- optional tick cell -->
-          <td if.bind="selectionMode != 'none'" class="py-1 align-middle selection">
-            <i role="button" if.bind="item.selected" class="bi bi-check-lg text-secondary fs-5"></i>
+          <td if.bind="selectionMode != 'none'" class="py-0 align-middle selection">
+            <i role="button" if.bind="item.selected" class="bi bi-check text-secondary fs-5"></i>
           </td>
           <td
             repeat.for="column of columns"
+            if.bind="column.visible == true"
             css="max-width: ${column.width}"
             class="${fixedRowHeight ? 'fixed-height' : ''}">
             <compose if.bind="column.cellTemplate" view.bind="column.cellTemplate" containerless></compose>

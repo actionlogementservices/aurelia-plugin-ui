@@ -61,6 +61,10 @@ export class Column {
   @bindable({ defaultBindingMode: bindingMode.toView })
   width;
 
+  /** Is the column visible. @type {boolean} */
+  @bindable({ defaultBindingMode: bindingMode.toView })
+  visible = true;
+
   /** Cell template. @type {InlineViewStrategy} */ cellTemplate;
 
   /**
