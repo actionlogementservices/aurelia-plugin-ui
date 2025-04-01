@@ -296,7 +296,7 @@
               <small><span class="badge text-bg-secondary">${item.id}</span></small>
             </column>
             <column header="Name" cell-key="name" sortable="true"></column>
-            <column header="Email" cell-key="email"></column>
+            <column header="Email" cell-key="email" sortable="true"></column>
             <column header="Color" cell-key="color" width="120px">
               <div class="d-flex justify-content-between flex-nowrap">
                 <div class="fw-semibold m-0">${item.color}</div>
@@ -305,7 +305,7 @@
                   style="height: 20px; width: 20px; background-color: ${item.color};"></div>
               </div>
             </column>
-            <column header="Action">
+            <column>
               <button class="btn btn-secondary" click.trigger="item.showItemDetails(item)">Details</button>
             </column>
           </simple-table>

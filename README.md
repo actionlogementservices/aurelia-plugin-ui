@@ -186,17 +186,19 @@ Prevent user interaction with Bootstrap back drop.
 
 - Prepare a datasource in your viewmodel representing an array of items.
 - Use the [`<simple-select>`](./doc/src-elements-select_simple-select.md) element in your view and data bind the `datasource` attribute.
-- Data bind the `select-item` attribute to your viewmodel to retrieve user selection as a single item.
+- Data bind the `selected-item` attribute to your viewmodel to retrieve user selection as a single item.
 
   ```html
-  <simple-select>class="form-select" select-item.bind="selectedItem" datasource.bind="itemsList"></simple-select>
+  <simple-select
+    class="form-select"
+    selected-item.bind="selectedItem"
+    datasource.bind="itemsList"></simple-select>
   ```
 
 - Specify an optional template for the dropdown item
 
   ```html
-  <simple-select>
-    class="form-select" select-item.bind="selectedItem" datasource.bind="itemsList">
+  <simple-select class="form-select" selected-item.bind="selectedItem" datasource.bind="itemsList">
     <template replace-part="itemTemplate">
       <p class="fw-semibold my-1">${item.code}</p>
       <p class="my-1">${item.name}</p>
@@ -204,7 +206,17 @@ Prevent user interaction with Bootstrap back drop.
   </simple-select>
   ```
 
-- You can specify the optional following attributes
+- You can also retreive user selection with an item property using `selected-value` and `value-key` attributes.
+
+  ```html
+  <simple-select
+    class="form-select"
+    value-key="code"
+    selected-value.bind="selectedValue"
+    datasource.bind="itemsList"></simple-select>
+  ```
+
+- You can specify the optional following attributes :
   | Attribute name | Role | Possible values | Default value |
   |--- |---|--- |---|
   | `value-key` | Property of the item used to differentiate them | Any string representing a property present on the item | `name` |
@@ -222,19 +234,19 @@ Prevent user interaction with Bootstrap back drop.
 
 - Prepare a datasource in your viewmodel representing an array of items.
 - Use the [`<filterable-select>`](./doc/src-elements-select_filterable-select.md) element in your view and data bind the `datasource` attribute.
-- Data bind the `select-item` attribute to your viewmodel to retrieve user selection as a single item.
+- Data bind the `selected-item` attribute to your viewmodel to retrieve user selection as a single item.
 
   ```html
-  <filterable-select>
-    class="form-select" select-item.bind="selectedItem" datasource.bind="itemsList">
-  </filterable-select>
+  <filterable-select
+    class="form-select"
+    selected-item.bind="selectedItem"
+    datasource.bind="itemsList"></filterable-select>
   ```
 
 - Specify an optional template for the dropdown item
 
   ```html
-  <filterable-select>
-    class="form-select" select-item.bind="selectedItem" datasource.bind="itemsList">
+  <filterable-select class="form-select" selected-item.bind="selectedItem" datasource.bind="itemsList">
     <template replace-part="itemTemplate">
       <p class="fw-semibold my-1">${item.code}</p>
       <p class="my-1">${item.name}</p>
@@ -242,7 +254,17 @@ Prevent user interaction with Bootstrap back drop.
   </filterable-select>
   ```
 
-- You can specify the optional following attributes
+- You can also retreive user selection with an item property using `selected-value` and `value-key` attributes.
+
+  ```html
+  <filterable-select
+    class="form-select"
+    value-key="code"
+    selected-value.bind="selectedValue"
+    datasource.bind="itemsList"></filterable-select>
+  ```
+
+- You can specify the optional following attributes :
   | Attribute name | Role | Possible values | Default value |
   |--- |---|--- |---|
   | `value-key` | Property of the item used to differentiate them | Any string representing a property present on the item | `name` |
@@ -264,14 +286,16 @@ Prevent user interaction with Bootstrap back drop.
 - Data bind the `values` attribute to your viewmodel to retrieve user selection as an array os items.
 
   ```html
-  <badges-select>class="form-select" values.bind="selectedItems" datasource.bind="itemsList"></badges-select>
+  <badges-select
+    class="form-select"
+    selected-items.bind="selectedItems"
+    datasource.bind="itemsList"></badges-select>
   ```
 
 - Specify an optional template for the dropdown item
 
   ```html
-  <badges-select>
-    class="form-select" values.bind="selectedItems" datasource.bind="itemsList">
+  <badges-select class="form-select" values.bind="selectedItems" datasource.bind="itemsList">
     <template replace-part="itemTemplate">
       <p class="fw-semibold my-1">${item.code}</p>
       <p class="my-1">${item.name}</p>
@@ -279,7 +303,17 @@ Prevent user interaction with Bootstrap back drop.
   </badges-select>
   ```
 
-- You can specify the optional following attributes
+- You can also retreive user selection with an item property using `selected-value` and `value-key` attributes.
+
+  ```html
+  <badges-select
+    class="form-select"
+    value-key="code"
+    selected-values.bind="selectedValue"
+    datasource.bind="itemsList"></badges-select>
+  ```
+
+- You can specify the optional following attributes :
   | Attribute name | Role | Possible values | Default value |
   |--- |---|--- |---|
   | `value-key` | Property of the item used to differentiate them | Any string representing a property present on the item | `name` |
@@ -314,12 +348,13 @@ Prevent user interaction with Bootstrap back drop.
   ```
 
 - Use the [`<auto-complete>`](./doc/src-elements-auto-complete_auto-complete.md) element in your view and data bind the `controller` attribute.
-- Data bind the `select-item` attribute to your viewmodel to retrieve user selection as a single item.
+- Data bind the `selected-item` attribute to your viewmodel to retrieve user selection as a single item.
 
   ```html
-  <auto-complete>
-    class="form-control" select-item.bind="selectedItem" controller.bind="itemsController">
-  </auto-complete>
+  <auto-complete
+    class="form-control"
+    selected-item.bind="selectedItem"
+    controller.bind="itemsController"></auto-complete>
   ```
 
 - Configure the controller in the viewmodel by passing a method with the following signature: `(text: string) => Promise<T[]>`
@@ -348,8 +383,7 @@ Prevent user interaction with Bootstrap back drop.
 - Specify an optional template for the dropdown item
 
   ```html
-  <auto-complete>
-    class="form-control" select-item.bind="selectedItem" controller.bind="itemsController">
+  <auto-complete class="form-control" selected-item.bind="selectedItem" controller.bind="itemsController">
     <template replace-part="itemTemplate">
       <p class="fw-semibold my-1">${item.code}</p>
       <p class="my-1">${item.fullName}</p>
@@ -357,7 +391,17 @@ Prevent user interaction with Bootstrap back drop.
   </auto-complete>
   ```
 
-- You can specify the optional following attributes
+- You can also retreive user selection with an item property using `selected-value` and `value-key` attributes.
+
+  ```html
+  <auto-complete
+    class="form-control"
+    value-key="code"
+    selected-value.bind="selectedValue"
+    controller.bind="itemsController"></auto-complete>
+  ```
+
+- You can specify the optional following attributes :
   | Attribute name | Role | Possible values | Default value |
   |--- |---|--- |---|
   | `value-key` | Property of the item used to differentiate them | Any string representing a property present on the item | `name` |
@@ -396,9 +440,10 @@ Prevent user interaction with Bootstrap back drop.
 - Data bind the `values` attribute to your viewmodel to retrieve user selection as an array of items.
 
   ```html
-  <badges-auto-complete>
-    class="form-control" values.bind="selectedItem" controller.bind="itemsController">
-  </badges-auto-complete>
+  <badges-auto-complete
+    class="form-control"
+    values.bind="selectedItem"
+    controller.bind="itemsController"></badges-auto-complete>
   ```
 
 - Configure the controller in the viewmodel by passing a method with the following signature: `(text: string) => Promise<T[]>`
@@ -427,8 +472,7 @@ Prevent user interaction with Bootstrap back drop.
 - Specify an optional template for the dropdown item
 
   ```html
-  <badges-auto-complete>
-    class="form-control" values.bind="selectedItems" controller.bind="itemsController">
+  <badges-auto-complete class="form-control" values.bind="selectedItems" controller.bind="itemsController">
     <template replace-part="itemTemplate">
       <p class="fw-semibold my-1">${item.code}</p>
       <p class="my-1">${item.fullName}</p>
@@ -436,7 +480,17 @@ Prevent user interaction with Bootstrap back drop.
   </badges-auto-complete>
   ```
 
-- You can specify the optional following attributes
+- You can also retreive user selection with an item property using `selected-value` and `value-key` attributes.
+
+  ```html
+  <badges-auto-complete
+    class="form-control"
+    value-key="code"
+    selected-value.bind="selectedValue"
+    controller.bind="itemsController"></badges-auto-complete>
+  ```
+
+- You can specify the optional following attributes :
   | Attribute name | Role | Possible values | Default value |
   |--- |---|--- |---|
   | `value-key` | Property of the item used to differentiate them | Any string representing a property present on the item | `name` |
@@ -462,21 +516,28 @@ Prevent user interaction with Bootstrap back drop.
 ![address-auto-complete rendering](./doc/screenshot/address-auto-complete.png)
 
 - Use the [`<address-auto-complete>`](./doc/src-elements-auto-complete_address-auto-complete.md) element in your view.
-- Data bind the `select-item` attribute to your viewmodel to retrieve user selection as a single item.
+- Data bind the `value` attribute to your viewmodel to retrieve user selection as a single item.
 
   ```html
-  <address-auto-complete>
-    class="form-control" select-item.bind="selectedCity" mode="zipCode">
-  </address-auto-complete>
+  <address-auto-complete value.bind="selectedAddress"></address-auto-complete>
   ```
 
-- You can specify the optional following attributes
+- You can specify the optional following attributes :
   | Attribute name | Role | Possible values | Default value |
   |--- |---|--- |---|
   | `mode` | Query mode of the BAN api | either `zipCode` to get only city or `address` to get full address |`address` |
+  | `manual-entry` | Allow user to fill the address manualy if not found. Works only with `mode="address"` | `true` or `false` | `false` |
   | `placeholder` | Placeholder in the select when no selection is done | Any string | |
   | `disabled` | Disable the user interaction | `true` or `false` | `false` |
   | `autosize` | Autosize the dropdown width to the parent width rather than the content of the dropdown | `true` or `false` | `false` |
+
+- When manual entry option is enabled :
+
+  ```html
+  <address-auto-complete value.bind="selectedAddress" manual-entry="true"></address-auto-complete>
+  ```
+
+  ![address-auto-complete rendering](./doc/screenshot/address-auto-complete-2.png)
 
 ### `input-datepicker` custom element
 
@@ -491,7 +552,7 @@ Prevent user interaction with Bootstrap back drop.
   <input-datepicker date.bind="date"></input-datepicker>
   ```
 
-- You can specify the optional following attributes
+- You can specify the optional following attributes :
   | Attribute name | Role | Possible values | Default value |
   |--- |---|--- |---|
   | `placeholder` | Placeholder in the select when no selection is done | Any string | |
@@ -512,28 +573,42 @@ Prevent user interaction with Bootstrap back drop.
 - Data bind the `values` attribute to your viewmodel to retrieve user selection as an array of items.
 
   ```html
-  <simple-table datasource.bind="itemsList" values.bind="selectedItems">
-    <column header="Name" cell-key="name" sortable="true"></column>
-    <column header="Visibility" cell-key="visibility" sortable="true" width="120px">
-      <small><span class="badge text-bg-secondary">${item.visibility}</span></small>
+  <simple-table
+    datasource.bind="itemsList"
+    selected-items.bind="selectedItems"
+    selection-mode="multiple"
+    value-key="Id">
+    <column header="Id" cell-key="id" sortable="true" sort-type="numeric" width="80px">
+      <small><span class="badge text-bg-secondary">${item.id}</span></small>
     </column>
-    <column header="Description" cell-key="description"></column>
+    <column header="Name" cell-key="name" sortable="true"></column>
+    <column header="Email" cell-key="email" sortable="true"></column>
+    <column header="Color" cell-key="color" width="120px">
+      <div class="d-flex justify-content-between flex-nowrap">
+        <div class="fw-semibold m-0">${item.color}</div>
+        <div class="ps-2 m-0" style="height: 20px; width: 20px; background-color: ${item.color};"></div>
+      </div>
+    </column>
+    <column>
+      <button class="btn btn-secondary" click.trigger="item.showItemDetails(item)">Details</button>
+    </column>
   </simple-table>
   ```
 
-- You can specify the optional following attributes on the `simple-table` element
+- You can specify the optional following attributes on the `simple-table` element :
   | Attribute name | Role | Possible values | Default value |
   |--- |---|--- |---|
   | `value-key` | Property of the item used to differentiate them | Any string representing a property present on the item | `name` |
   | `max-rows` | Maximal number of displayed rows | Any number > 0 | `50` |
-  | `max-height` | CSS max height of the table | Any css height expression | |
+  | `max-height` | CSS max height of the table | Any css height expression | `500px` |
   | `selection-mode` | Selection mode | `none` or `single` or `multiple` | `none` |
+  | `selected-items` | Selected items | Array of objects | `[]` |
   | `fixed-row-height` | Enable/disable the fixed row height feature. When `false` text will wrap and rows will have different height | `true` or `false` | `true` |
   | `no-result-text` | Text displayed when there is no items | Any string | `Aucun résultat` |
   | `warning-template-text` | Warning template text shown when not all items are displayed. Must contain the `{maxRows}` token | Any string with `{maxRows}` | `Seuls les {maxRows} premiers résultats sont affichés.` |
   | `result-text` | Text displayed after the # of items | Any string | `résultat(s).` |
 
-- You can specify the optional following attributes on the `column` element
+- You can specify the optional following attributes on the `column` element :
   | Attribute name | Role | Possible values | Default value |
   |--- |---|--- |---|
   | `header` | Header of the column | Any string representing a property present on the item | |

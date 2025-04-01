@@ -29,7 +29,6 @@
           </th>
           <th
             repeat.for="column of columns"
-            if.bind="column.visible == true"
             css="width: ${column.width}"
             scope="col"
             class="align-middle">
@@ -53,7 +52,6 @@
           </td>
           <td
             repeat.for="column of columns"
-            if.bind="column.visible == true"
             css="max-width: ${column.width}"
             class="${fixedRowHeight ? 'fixed-height' : ''}">
             <compose if.bind="column.cellTemplate" view.bind="column.cellTemplate" containerless></compose>
