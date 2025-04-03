@@ -206,7 +206,7 @@ Prevent user interaction with Bootstrap back drop.
   </simple-select>
   ```
 
-- You can also retreive user selection with an item property using `selected-value` and `value-key` attributes.
+- You can also retrieve user selection with an item property using `selected-value` and `value-key` attributes.
 
   ```html
   <simple-select
@@ -254,7 +254,7 @@ Prevent user interaction with Bootstrap back drop.
   </filterable-select>
   ```
 
-- You can also retreive user selection with an item property using `selected-value` and `value-key` attributes.
+- You can also retrieve user selection with an item property using `selected-value` and `value-key` attributes.
 
   ```html
   <filterable-select
@@ -303,7 +303,7 @@ Prevent user interaction with Bootstrap back drop.
   </badges-select>
   ```
 
-- You can also retreive user selection with an item property using `selected-value` and `value-key` attributes.
+- You can also retrieve user selection with an item property using `selected-value` and `value-key` attributes.
 
   ```html
   <badges-select
@@ -391,7 +391,7 @@ Prevent user interaction with Bootstrap back drop.
   </auto-complete>
   ```
 
-- You can also retreive user selection with an item property using `selected-value` and `value-key` attributes.
+- You can also retrieve user selection with an item property using `selected-value` and `value-key` attributes.
 
   ```html
   <auto-complete
@@ -480,7 +480,7 @@ Prevent user interaction with Bootstrap back drop.
   </badges-auto-complete>
   ```
 
-- You can also retreive user selection with an item property using `selected-value` and `value-key` attributes.
+- You can also retrieve user selection with an item property using `selected-value` and `value-key` attributes.
 
   ```html
   <badges-auto-complete
