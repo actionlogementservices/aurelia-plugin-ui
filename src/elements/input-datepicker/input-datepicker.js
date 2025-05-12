@@ -1,5 +1,6 @@
 import { DOM, inject, bindable, bindingMode, TaskQueue } from 'aurelia-framework';
 
+// @ts-ignore
 import { Datepicker } from 'vanillajs-datepicker';
 
 import localeFr from './locale-fr.js';
