@@ -1,8 +1,8 @@
 import { DOM, inject, bindable, bindingMode, TaskQueue } from 'aurelia-framework';
-// @ts-ignore
+
 import { Datepicker } from 'vanillajs-datepicker';
-// @ts-ignore
-import locale from 'vanillajs-datepicker/js/i18n/locales/fr';
+
+import localeFr from './locale-fr.js';
 
 import { generateUniqueId, isValidDateTimeISOString, preventEventPropagation } from '../../core/functions';
 
@@ -54,8 +54,7 @@ export class InputDatepicker {
   constructor(element, taskqueue) {
     this._container = element;
     this._taskqueue = taskqueue;
-    locale.fr.daysMin = ['di', 'lu', 'ma', 'me', 'je', 've', 'sa'];
-    Object.assign(Datepicker.locales, locale);
+    Object.assign(Datepicker.locales, localeFr);
   }
 
   /**
