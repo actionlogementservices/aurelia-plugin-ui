@@ -37,3 +37,9 @@ simple-table table td.fixed-height {
   overflow: hidden;
   white-space: nowrap;
 }
+
+simple-table table td.fixed-height:has(> button) {
+  text-overflow: initial;
+  overflow: visible;
+  white-space: normal;
+}
