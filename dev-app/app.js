@@ -109,7 +109,7 @@ export class App {
   }
 
   async showDialog() {
-    const { wasCancelled, output } = await this.dialog.open({ viewModel: ExempleDialog, locked: true });
+    const { wasCancelled, output } = await this.dialog.open({ viewModel: ExempleDialog, locked: true, fullscreen: false });
     this.wasCancelled = wasCancelled;
   }
 
