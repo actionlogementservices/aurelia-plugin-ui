@@ -23,10 +23,13 @@ export class DialogRenderer {
   /**
    * Opens the modal dialog.
    * @param {boolean} locked prevents close when clicked outside
+   * @param {boolean} fullscreen open in fullscreen mode
    * @returns {Promise<void>} await closing
    */
-  async open(locked = false) {
+  async open(locked = false, fullscreen = false) {
     this._modal = new Modal(this._hostDiv, { backdrop: locked ? 'static' : true });
+    if (fullscreen)
+      this._hostDiv.querySelector('.modal-dialog').classList.add('modal-fullscreen');
     this._modal.show();
     return new Promise((resolve, _reject) => {
       this._hostDiv.addEventListener('hidden.bs.modal', () => {

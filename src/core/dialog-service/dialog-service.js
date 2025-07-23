@@ -30,7 +30,7 @@ export class DialogService {
    * @param {DialogServiceParameter} parameter input parameters
    * @returns {Promise<DialogResult>} modal dialog result
    */
-  async open({ viewModel, view, model, locked }) {
+  async open({ viewModel, view, model, locked, fullscreen }) {
     const host = this._renderer.createHost();
     /** @type {CompositionContext} */
     const compositionContext = {
@@ -46,7 +46,7 @@ export class DialogService {
 
     const viewModelController = await this._compositionEngine.compose(compositionContext);
     viewModelController.attached();
-    await this._renderer.open(locked);
+    await this._renderer.open(locked, fullscreen);
     // @ts-ignore
     viewModelController.view.unbind();
     // @ts-ignore

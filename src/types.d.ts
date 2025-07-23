@@ -5,6 +5,7 @@ export type DialogServiceParameter = {
   view?: any;
   model?: any;
   locked?: boolean;
+  fullscreen?: boolean;
 };
 
 export type DataSource = {

@@ -70,7 +70,8 @@ Display modal dialog with Bootstrap style.
       const { wasCancelled, output } = await this._dialog.open({
         viewModel: ExampleDialog,
         model: { inParam1: 1000 },
-        locked: true
+        locked: true,
+        fullscreen: true
       });
       const result = wasCancelled ? undefined : output.outParam1;
     }
