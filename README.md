@@ -44,9 +44,9 @@ And several custom elements :
 
 ### `DialogService`
 
-Display modal dialog with Bootstrap style.
+Display modal dialog or offcanvas with Bootstrap style.
 
-- Inject the [`DialogService`](./doc/src-core-dialog-service_dialog-service.md) in your viewmodel and use the `open` method to open the dialog.
+- Inject the [`DialogService`](./doc/src-core-dialog-service_dialog-service.md) in your viewmodel and use the `open` method to open the dialog. You can pass the `mode` parameter with the `offcanvas` value to the open method in order to select an offcanvas rendering rather than a modal one.
 - Create a view and a viewmodel for your modal dialog.
 - Inject the [`DialogController`](./doc/src-core-dialog-service_dialog-controller.md) in the modal viewmodel to retrieve input parameters and use
   - the `ok` method of the controller to pass output parameters to the caller and close the modal.
@@ -70,6 +70,7 @@ Display modal dialog with Bootstrap style.
       const { wasCancelled, output } = await this._dialog.open({
         viewModel: ExampleDialog,
         model: { inParam1: 1000 },
+        mode: 'modal',
         locked: true,
         fullscreen: true
       });
@@ -127,7 +128,41 @@ Display modal dialog with Bootstrap style.
       </div>
     </div>
   </template>
+
+  // or in case of offcanvas,
+  <template>
+    <div class="offcanvas-header">
+      <h5 class="offcanvas-title">Offcanvas title</h5>
+      <button
+        type="button"
+        class="btn-close"
+        data-bs-dismiss="offcanvas"
+        aria-label="Close"
+        click.trigger="cancel()"></button>
+    </div>
+    <div class="offcanvas-body">
+      <div class="d-flex flex-align-start flex-column h-100">
+        <div class="h-100 mb-auto overflow-y-auto p-2">
+          Offcanvas body...
+        </div>
+        <div class="d-flex justify-content-center">
+          <div class="align-self-center p-2">
+            <button class="btn btn-primary" click.trigger="confirm()">Validate</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </template>
   ```
+
+- You can specify the optional following parameters to the open method :
+  | Attribute name | Role | Possible values | Default value |
+  |--- |---|--- |---|
+  | `mode` | The rendering mode of the dialog: either a boostrap **modal** or a bootstrap **offcanvas** |`modal` or `offcanvas` | `modal` |
+  | `locked` | Prevents the modal to be closed by clicking outside | `true` or `false` | `false` |
+  | `fullscreen` | Fullscreen modal. Only for `modal` mode | `true` or `false` | `false` |
+  | `position` | Position of the offcanvas. Only for `offcanvas` mode| `start`, `end`, `top`, `bottom` | `end` |
+
 
 ### `ToastService`
 

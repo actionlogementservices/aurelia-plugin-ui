@@ -2,7 +2,7 @@ import { inject, Container, CompositionEngine, ViewSlot } from 'aurelia-framewor
 import { DialogRenderer } from './dialog-renderer';
 import { DialogResult } from './dialog-result';
 
-/** @typedef {import('types').DialogServiceParameter} DialogServiceParameter */
+/** @typedef {import('types').DialogServiceParameters} DialogServiceParameters */
 /** @typedef {import('aurelia-framework').CompositionContext} CompositionContext */
 
 /**
@@ -27,11 +27,12 @@ export class DialogService {
 
   /**
    * Opens the modal dialog.
-   * @param {DialogServiceParameter} parameter input parameters
+   * @param {DialogServiceParameters} parameters input parameters
    * @returns {Promise<DialogResult>} modal dialog result
    */
-  async open({ viewModel, view, model, locked, fullscreen }) {
-    const host = this._renderer.createHost();
+  async open(parameters) {
+    const { viewModel, view, model, mode, locked, fullscreen, position } = parameters;
+    const host = this._renderer.createHost({ mode, locked, fullscreen, position });
     /** @type {CompositionContext} */
     const compositionContext = {
       model,
@@ -43,10 +44,9 @@ export class DialogService {
       viewResources: undefined,
       viewSlot: new ViewSlot(host, true)
     };
-
     const viewModelController = await this._compositionEngine.compose(compositionContext);
     viewModelController.attached();
-    await this._renderer.open(locked, fullscreen);
+    await this._renderer.open({ mode, locked, fullscreen, position });
     // @ts-ignore
     viewModelController.view.unbind();
     // @ts-ignore
