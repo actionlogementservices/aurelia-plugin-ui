@@ -1,0 +1,21 @@
+<template>
+  <div class="offcanvas-header">
+    <h5 class="offcanvas-title">Offcanvas title</h5>
+    <button
+      type="button"
+      class="btn-close"
+      data-bs-dismiss="offcanvas"
+      aria-label="Close"
+      click.trigger="cancel()"></button>
+  </div>
+  <div class="offcanvas-body">
+    <div class="d-flex flex-align-start flex-column h-100">
+      <div class="h-100 mb-auto overflow-y-auto p-2">Offcanvas body...</div>
+      <div class="d-flex justify-content-center">
+        <div class="align-self-center p-2">
+          <button class="btn btn-primary" click.trigger="confirm()">Validate</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>

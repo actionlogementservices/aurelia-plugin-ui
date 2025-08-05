@@ -1,12 +1,17 @@
 declare type Mandatory<T, K extends keyof T> = Required<Pick<T, K>> & Omit<T, K>;
 
-export type DialogServiceParameter = {
+export type DialogRendererOptions = {
+  mode?: 'modal' | 'offcanvas';
+  locked?: boolean;
+  fullscreen?: boolean;
+  position?: 'start' | 'end' | 'top' | 'bottom';
+};
+
+export type DialogServiceParameters = {
   viewModel: any;
   view?: any;
   model?: any;
-  locked?: boolean;
-  fullscreen?: boolean;
-};
+} & DialogRendererOptions;
 
 export type DataSource = {
   data: any[];
@@ -58,8 +63,7 @@ declare type DateFormatValidator = {
   output?: {
     culture: Intl.LocalesArgument;
     options: Intl.DateTimeFormatOptions;
-  }
-
+  };
 };
 
 /**

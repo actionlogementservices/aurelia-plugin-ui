@@ -1,4 +1,4 @@
-import { inject, NewInstance } from 'aurelia-framework';
+import { computedFrom, inject, NewInstance } from 'aurelia-framework';
 import { faker } from '@faker-js/faker';
 import { Validator, ValidationControllerFactory } from 'aurelia-validation';
 
@@ -29,6 +29,11 @@ export class App {
   /** @type {Item} */ selectedItem;
   /** @type {string} */ selectedDate;
   /** @type {any} */ selectedAdresse;
+  /** @type {'modal' | 'offcanvas'} */ selectedDialogMode = 'modal';
+  /** @type {'start' | 'end' | 'top' | 'bottom'} */ selectedOffcanvasPosition = 'end';
+  /** @type {string} */ dialogStatus = 'Dialog not opened';
+  /** @type {boolean} */ dialogFullscreen = false;
+  /** @type {boolean} */ dialogLocked = false;
 
   /**
    * @param {AutoCompleteController} controller
@@ -48,7 +53,7 @@ export class App {
       const name = faker.person.fullName();
       const email = faker.internet.email();
       const color = faker.color.human();
-      itemsList.push({ id, name, email, color, showItemDetails: (item) => this.showItemDetails(item) });
+      itemsList.push({ id, name, email, color, showItemDetails: item => this.showItemDetails(item) });
     }
     setTimeout(() => {
       this.itemsList = itemsList;
@@ -109,15 +114,27 @@ export class App {
   }
 
   async showDialog() {
-    const { wasCancelled, output } = await this.dialog.open({ viewModel: ExempleDialog, locked: true, fullscreen: false });
-    this.wasCancelled = wasCancelled;
+    const { wasCancelled, output } = await this.dialog.open({
+      viewModel: ExempleDialog,
+      view: this.isDialogModalMode ? './exemple-dialog.html' : './exemple-offcanvas.html',
+      mode: this.selectedDialogMode,
+      position: this.selectedOffcanvasPosition,
+      fullscreen: this.dialogFullscreen,
+      locked: this.dialogLocked
+    });
+    this.dialogStatus = wasCancelled ? 'Dialog cancelled' : 'Dialog validated';
   }
 
   logSelectedItem(event) {
     console.log(event);
   }
 
-  showItemDetails(data){
+  showItemDetails(data) {
     console.log(data);
+  }
+
+  @computedFrom('selectedDialogMode')
+  get isDialogModalMode() {
+    return this.selectedDialogMode === 'modal';
   }
 }
