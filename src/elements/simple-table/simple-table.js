@@ -54,6 +54,10 @@ export class SimpleTable {
   @bindable({ defaultBindingMode: bindingMode.toView })
   selectionMode = 'none';
 
+  /** Enable/Disable the row count header. @type {boolean} */
+  @bindable({ defaultBindingMode: bindingMode.toView })
+  noRowCountHeader = false;
+
   /** Enable/Disable the fixed row height feature. @type {boolean} */
   @bindable({ defaultBindingMode: bindingMode.toView })
   fixedRowHeight = true;
