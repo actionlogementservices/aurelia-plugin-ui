@@ -640,6 +640,7 @@ Prevent user interaction with Bootstrap back drop.
   | `selection-mode` | Selection mode | `none` or `single` or `multiple` | `none` |
   | `selected-items` | Selected items | Array of objects | `[]` |
   | `fixed-row-height` | Enable/disable the fixed row height feature. When `false` text will wrap and rows will have different height | `true` or `false` | `true` |
+  | `no-row-count-header`| Enable/disable the row count header | `true` or `false` | `false` |
   | `no-result-text` | Text displayed when there is no items | Any string | `Aucun résultat` |
   | `warning-template-text` | Warning template text shown when not all items are displayed. Must contain the `{maxRows}` token | Any string with `{maxRows}` | `Seuls les {maxRows} premiers résultats sont affichés.` |
   | `result-text` | Text displayed after the # of items | Any string | `résultat(s).` |

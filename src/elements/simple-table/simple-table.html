@@ -6,7 +6,7 @@
     <table id="grid-${uniqueId}" class="table table-hover">
       <thead>
         <!-- results count -->
-        <tr if.bind="items.length > 0" class="table-info">
+        <tr if.bind="items.length > 0 && !noRowCountHeader" class="table-info">
           <th colspan="100%">
             <div>
               <small>${totalCount} ${resultText}</small>
