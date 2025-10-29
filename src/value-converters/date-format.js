@@ -15,12 +15,13 @@ export class DateFormatValueConverter {
    * @returns {string | undefined} the date in ISO 8601 format
    */
   fromView(value, format) {
-    const defaultFormat = 'DD/MM/YYYY';
-    const formatToUse = format || defaultFormat;
+    if (!value) return undefined;
+    const formatToUse = format || 'DD/MM/YYYY';
     const { valid, date } = isValidDate(value, formatToUse);
-    if (!valid) return value;
+    if (!valid || !date) return value;
     return date.toISOString();
   }
+
   /**
    * Converts the value of the javascript model to the html view.
    * @param {string} value value from javascript model, expected to be in ISO 8601 format
@@ -28,11 +29,17 @@ export class DateFormatValueConverter {
    * @returns {string | undefined} the date in the specified display format
    */
   toView(value, displayFormat) {
-    const defaultFormat = 'DD/MM/YYYY';
-    const formatToUse = displayFormat || defaultFormat;
-    const { valid, date } = isValidDate(value, 'YYYY-MM-DD');
-    if (!valid) return value;
+    if (!value) return undefined;
+    const date = new Date(value);
+    if (isNaN(date.getTime())) return value;
+    const formatToUse = displayFormat || 'DD/MM/YYYY';
     const outputFormat = dateFormat[formatToUse]?.output;
-    return new Intl.DateTimeFormat(outputFormat?.culture, outputFormat?.options).format(date);
+    if (!outputFormat) return value;
+    try {
+      const formatter = new Intl.DateTimeFormat(outputFormat.culture, { ...outputFormat.options });
+      return formatter.format(date);
+    } catch {
+      return value;
+    }
   }
 }
