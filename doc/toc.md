@@ -6,10 +6,10 @@
   * [index](src_index.md) - _Defines the Aurelia plugin entry point._
 
 * ![category:dialog](https://img.shields.io/badge/category-dialog-009663.svg?style=flat-square)
-  * [core/dialog-service/dialog-controller](src-core-dialog-service_dialog-controller.md) - _Controls the modal dialog system._
-  * [core/dialog-service/dialog-renderer](src-core-dialog-service_dialog-renderer.md) - _Renders the modal dialog in bootstrap 5._
+  * [core/dialog-service/dialog-controller](src-core-dialog-service_dialog-controller.md) - _Controls the dialog system._
+  * [core/dialog-service/dialog-renderer](src-core-dialog-service_dialog-renderer.md) - _Renders the  modal or offcanvas dialog in bootstrap 5._
   * [core/dialog-service/dialog-result](src-core-dialog-service_dialog-result.md) - _Defines the output of the modal dialog._
-  * [core/dialog-service/dialog-service](src-core-dialog-service_dialog-service.md) - _Implements the modal dialog service._
+  * [core/dialog-service/dialog-service](src-core-dialog-service_dialog-service.md) - _Implements the dialog service._
 
 * ![category:lock](https://img.shields.io/badge/category-lock-009663.svg?style=flat-square)
   * [core/lock-service/lock-service](src-core-lock-service_lock-service.md) - _Implements the lock service._

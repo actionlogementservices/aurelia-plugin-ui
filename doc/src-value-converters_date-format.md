@@ -4,7 +4,7 @@
 
 
 
-[Source file](..\src\value-converters\date-format.js)
+[Source file](../src/value-converters/date-format.js)
 
 # Class `DateFormatValueConverter`
 

@@ -4,7 +4,7 @@
 
 
 
-[Source file](..\src\attributes\no-submit.js)
+[Source file](../src/attributes/no-submit.js)
 
 # Class `NoSubmitCustomAttribute`
 

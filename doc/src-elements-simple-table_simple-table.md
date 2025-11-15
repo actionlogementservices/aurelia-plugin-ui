@@ -4,7 +4,7 @@
 
 
 
-[Source file](..\src\elements\simple-table\simple-table.js)
+[Source file](../src/elements/simple-table/simple-table.js)
 
 ## Functions
 
@@ -164,6 +164,7 @@ __datasource__ | `T[] \| { items: T[], totalCount: number }` | *Data source @typ
 __maxRows__ | `number` | *Maximal number of displayed rows. @type {number}*
 __maxHeight__ | `string` | *CSS max height of the table. @type {string}*
 __selectionMode__ | `'none' \| 'single' \| 'multiple'` | *Selection mode. @type {&#x27;none&#x27; | &#x27;single&#x27; | &#x27;multiple&#x27;}*
+__noRowCountHeader__ | `boolean` | *Enable/Disable the row count header. @type {boolean}*
 __fixedRowHeight__ | `boolean` | *Enable/Disable the fixed row height feature. @type {boolean}*
 __noResultText__ | `string` | *Text corresponding to &#x27;no result&#x27;. @type {string}*
 __resultText__ | `string` | *Text corresponding to &#x27;result(s)&#x27;. @type {string}*

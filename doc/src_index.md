@@ -4,7 +4,7 @@
 
 Defines the Aurelia plugin entry point.
 
-[Source file](..\src\index.js)
+[Source file](../src/index.js)
 
 ## Functions
 

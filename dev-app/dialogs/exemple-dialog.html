@@ -12,7 +12,49 @@
       </div>
       <form no-submit>
         <div class="modal-body">
-          <p>Modal dialog body...</p>
+          <div class="d-flex align-items-center gap-2">
+            <div class="form-floating">
+              <select id="select-dialog-mode" class="form-select me-auto" value.bind="selectedDialogMode">
+                <option value="modal">Modal</option>
+                <option value="offcanvas">Offcanvas</option>
+              </select>
+              <label for="select-dialog-mode">Mode</label>
+            </div>
+            <div class="form-check" if.bind="isDialogModalMode">
+              <input
+                id="check-fullscreen"
+                class="form-check-input"
+                type="checkbox"
+                name="check-fullscreen"
+                checked.bind="dialogFullscreen" />
+              <label class="form-check-label" for="check-fullscreen">Fullscreen</label>
+            </div>
+            <div class="form-floating" if.bind="!isDialogModalMode">
+              <select
+                id="select-offcanvas-position"
+                class="form-select me-auto"
+                value.bind="selectedOffcanvasPosition">
+                <option value="start">Start</option>
+                <option value="end">End</option>
+                <option value="top">Top</option>
+                <option value="bottom">Bottom</option>
+              </select>
+              <label for="select-offcanvas-position" class="col-form-label">Position</label>
+            </div>
+            <div class="form-check">
+              <input
+                id="check-lock"
+                class="form-check-input"
+                type="checkbox"
+                name="check-lock"
+                checked.bind="dialogLocked" />
+              <label class="form-check-label" for="check-lock">Locked</label>
+            </div>
+            <div>
+              <button class="btn btn-secondary" click.trigger="showDialog()">Dialog</button>
+            </div>
+            <div class="fw-semibold m-0">${dialogStatus}</div>
+          </div>
         </div>
         <div class="modal-footer">
           <button class="btn btn-primary" click.trigger="confirm()">Yes</button>

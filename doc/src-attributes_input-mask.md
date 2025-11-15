@@ -4,7 +4,7 @@
 
 
 
-[Source file](..\src\attributes\input-mask.js)
+[Source file](../src/attributes/input-mask.js)
 
 # Class `InputMaskCustomAttribute`
 

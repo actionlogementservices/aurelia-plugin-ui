@@ -4,7 +4,7 @@
 
 
 
-[Source file](..\src\elements\environment-ribbon\environment-ribbon.js)
+[Source file](../src/elements/environment-ribbon/environment-ribbon.js)
 
 # Class `EnvironmentRibbonCustomElement`
 

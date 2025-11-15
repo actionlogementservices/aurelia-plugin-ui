@@ -4,7 +4,7 @@
 
 
 
-[Source file](..\src\elements\simple-table\column.js)
+[Source file](../src/elements/simple-table/column.js)
 
 ## Functions
 

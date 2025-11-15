@@ -4,7 +4,7 @@
 
 
 
-[Source file](..\src\elements\lock\lock.js)
+[Source file](../src/elements/lock/lock.js)
 
 # Class `LockCustomElement`
 

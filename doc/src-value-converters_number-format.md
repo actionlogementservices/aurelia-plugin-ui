@@ -4,7 +4,7 @@
 
 
 
-[Source file](..\src\value-converters\number-format.js)
+[Source file](../src/value-converters/number-format.js)
 
 # Class `NumberFormatValueConverter`
 

@@ -4,7 +4,7 @@
 
 
 
-[Source file](..\src\value-converters\clean-input-mask.js)
+[Source file](../src/value-converters/clean-input-mask.js)
 
 # Class `CleanInputMaskValueConverter`
 

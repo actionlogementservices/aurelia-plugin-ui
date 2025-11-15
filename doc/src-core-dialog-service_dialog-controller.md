@@ -4,11 +4,11 @@
 
 
 
-[Source file](..\src\core\dialog-service\dialog-controller.js)
+[Source file](../src/core/dialog-service/dialog-controller.js)
 
 # Class `DialogController`
 
-Controls the modal dialog system.
+Controls the dialog system.
 
 ## Constructors
 
@@ -19,8 +19,8 @@ Creates an instance of the DialogController class.
 
 Parameters | Type | Description
 --- | --- | ---
-__renderer__ | [DialogRenderer](src-core-dialog-service_dialog-renderer.md) | *modal dialog renderer*
-__result__ | [DialogResult](src-core-dialog-service_dialog-result.md) | *modal dialog result*
+__renderer__ | [DialogRenderer](src-core-dialog-service_dialog-renderer.md) | *dialog renderer*
+__result__ | [DialogResult](src-core-dialog-service_dialog-result.md) | *dialog result*
 
 ---
 
@@ -30,11 +30,11 @@ __result__ | [DialogResult](src-core-dialog-service_dialog-result.md) | *modal d
 
 ![modifier: public](images/badges/modifier-public.png)
 
-Confirms input and closes the modal dialog.
+Confirms input and closes the dialog.
 
 Parameters | Type | Description
 --- | --- | ---
-__output__ | `any` | *output of the modal dialog*
+__output__ | `any` | *output of the dialog*
 
 ---
 
@@ -42,10 +42,10 @@ __output__ | `any` | *output of the modal dialog*
 
 ![modifier: public](images/badges/modifier-public.png)
 
-Cancels input and closes the modal dialog.
+Cancels input and closes the dialog.
 
 Parameters | Type | Description
 --- | --- | ---
-__output__ | `any` | *output of the modal dialog*
+__output__ | `any` | *output of the dialog*
 
 ---

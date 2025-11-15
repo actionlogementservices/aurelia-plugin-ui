@@ -4,7 +4,7 @@
 
 
 
-[Source file](..\src\elements\select\badges-select.js)
+[Source file](../src/elements/select/badges-select.js)
 
 # Class `BadgesSelect`
 

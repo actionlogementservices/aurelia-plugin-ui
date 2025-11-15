@@ -4,7 +4,7 @@
 
 Defines the common sorting functions.
 
-[Source file](..\src\core\sorting.js)
+[Source file](../src/core/sorting.js)
 
 ## Constants
 

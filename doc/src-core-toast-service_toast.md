@@ -4,7 +4,7 @@
 
 
 
-[Source file](..\src\core\toast-service\toast.js)
+[Source file](../src/core/toast-service/toast.js)
 
 # Class `Toast`
 

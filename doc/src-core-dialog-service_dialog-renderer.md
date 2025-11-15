@@ -4,35 +4,36 @@
 
 
 
-[Source file](..\src\core\dialog-service\dialog-renderer.js)
+[Source file](../src/core/dialog-service/dialog-renderer.js)
 
 # Class `DialogRenderer`
 
-Renders the modal dialog in bootstrap 5.
+Renders the  modal or offcanvas dialog in bootstrap 5.
 
 ## Methods
 
-### `createHost() ► HTMLDivElement`
+### `createHost(options) ► HTMLDivElement`
 
 ![modifier: public](images/badges/modifier-public.png)
 
-Creates the div container of the modal dialog
+Creates the div container of the dialog instance.
 
 Parameters | Type | Description
 --- | --- | ---
-__*return*__ | `HTMLDivElement` | *div element*
+__options__ | `DialogRendererOptions` | *dialog rendering options*
+__*return*__ | `HTMLDivElement` | *html div element*
 
 ---
 
-### `open(locked) ► Promise.<void>`
+### `open(options) ► Promise.<void>`
 
 ![modifier: public](images/badges/modifier-public.png)
 
-Opens the modal dialog.
+Opens the dialog instance.
 
 Parameters | Type | Description
 --- | --- | ---
-__locked__ | `boolean` | *prevents close when clicked outside*
+__options__ | `DialogRendererOptions` | *dialog rendering options*
 __*return*__ | `Promise.<void>` | *await closing*
 
 ---
@@ -41,7 +42,7 @@ __*return*__ | `Promise.<void>` | *await closing*
 
 ![modifier: public](images/badges/modifier-public.png)
 
-Hides the modal dialog.
+Closes the dialog instance.
 
 ---
 
@@ -49,7 +50,19 @@ Hides the modal dialog.
 
 ![modifier: public](images/badges/modifier-public.png)
 
-Destroy the modal dialog and associated resources.
+Destroys the dialog instance and associated resources.
+
+---
+
+### `getHost() ► HTMLDivElement`
+
+![modifier: public](images/badges/modifier-public.png)
+
+Get the html div element that hosts the dialog instance.
+
+Parameters | Type | Description
+--- | --- | ---
+__*return*__ | `HTMLDivElement` | *html div element*
 
 ---
 
@@ -57,4 +70,5 @@ Destroy the modal dialog and associated resources.
 
 Name | Type | Description
 --- | --- | ---
-___hostDiv__ | `HTMLDivElement` | **
+___hostDiv__ | `HTMLDivElement` | *html div element used as host of the dialog @type {HTMLDivElement}*
+___modal__ | `Offcanvas \| Modal` | *javascript bs object @type {Offcanvas | Modal}*

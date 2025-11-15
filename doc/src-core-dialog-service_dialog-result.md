@@ -4,7 +4,7 @@
 
 
 
-[Source file](..\src\core\dialog-service\dialog-result.js)
+[Source file](../src/core/dialog-service/dialog-result.js)
 
 # Class `DialogResult`
 
