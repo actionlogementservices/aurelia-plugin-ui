@@ -4,7 +4,7 @@
 
 Defines common decorators.
 
-[Source file](..\src\core\decorators.js)
+[Source file](../src/core/decorators.js)
 
 ## Functions
 

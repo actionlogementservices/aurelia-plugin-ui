@@ -4,7 +4,7 @@
 
 
 
-[Source file](..\src\core\lock-service\lock-service.js)
+[Source file](../src/core/lock-service/lock-service.js)
 
 # Class `LockService`
 

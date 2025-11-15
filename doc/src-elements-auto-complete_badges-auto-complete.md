@@ -4,7 +4,7 @@
 
 
 
-[Source file](..\src\elements\auto-complete\badges-auto-complete.js)
+[Source file](../src/elements/auto-complete/badges-auto-complete.js)
 
 # Class `BadgesAutoComplete`
 

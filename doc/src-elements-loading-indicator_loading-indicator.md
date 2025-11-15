@@ -4,7 +4,7 @@
 
 
 
-[Source file](..\src\elements\loading-indicator\loading-indicator.js)
+[Source file](../src/elements/loading-indicator/loading-indicator.js)
 
 # Class `LoadingIndicatorCustomElement`
 

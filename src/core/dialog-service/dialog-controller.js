@@ -3,15 +3,15 @@ import { DialogRenderer } from './dialog-renderer';
 import { DialogResult } from './dialog-result';
 
 /**
- * Controls the modal dialog system.
+ * Controls the dialog system.
  * @category dialog
  */
 @inject(DialogRenderer, DialogResult)
 export class DialogController {
   /**
    * Creates an instance of the DialogController class.
-   * @param {DialogRenderer} renderer modal dialog renderer
-   * @param {DialogResult} result modal dialog result
+   * @param {DialogRenderer} renderer dialog renderer
+   * @param {DialogResult} result dialog result
    */
   constructor(renderer, result) {
     this._renderer = renderer;
@@ -19,8 +19,8 @@ export class DialogController {
   }
 
   /**
-   * Confirms input and closes the modal dialog.
-   * @param {any | undefined} output output of the modal dialog
+   * Confirms input and closes the dialog.
+   * @param {any | undefined} output output of the dialog
    */
   ok(output) {
     this._result.update(output, false);
@@ -28,8 +28,8 @@ export class DialogController {
   }
 
   /**
-   * Cancels input and closes the modal dialog.
-   * @param {any | undefined} output output of the modal dialog
+   * Cancels input and closes the dialog.
+   * @param {any | undefined} output output of the dialog
    */
   cancel(output) {
     this._result.update(output, true);

@@ -4,7 +4,7 @@
 
 
 
-[Source file](..\src\elements\auto-complete\auto-complete-controller.js)
+[Source file](../src/elements/auto-complete/auto-complete-controller.js)
 
 # Class `AutoCompleteController`
 

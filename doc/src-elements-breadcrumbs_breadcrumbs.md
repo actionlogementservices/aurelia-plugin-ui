@@ -4,7 +4,7 @@
 
 
 
-[Source file](..\src\elements\breadcrumbs\breadcrumbs.js)
+[Source file](../src/elements/breadcrumbs/breadcrumbs.js)
 
 # Class `Breadcrumbs`
 

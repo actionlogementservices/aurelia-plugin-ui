@@ -4,7 +4,7 @@
 
 Defines common functions.
 
-[Source file](..\src\core\functions.js)
+[Source file](../src/core/functions.js)
 
 ## Functions
 

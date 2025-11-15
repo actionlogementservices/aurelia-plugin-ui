@@ -4,7 +4,7 @@
 
 
 
-[Source file](..\src\elements\select\simple-select.js)
+[Source file](../src/elements/select/simple-select.js)
 
 # Class `SimpleSelect`
 

@@ -4,7 +4,7 @@
 
 
 
-[Source file](..\src\elements\input-datepicker\input-datepicker.js)
+[Source file](../src/elements/input-datepicker/input-datepicker.js)
 
 # Class `InputDatepicker`
 

@@ -4,7 +4,7 @@
 
 
 
-[Source file](..\src\elements\select\filterable-select.js)
+[Source file](../src/elements/select/filterable-select.js)
 
 # Class `FilterableSelect`
 
