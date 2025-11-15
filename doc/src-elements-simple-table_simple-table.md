@@ -6,20 +6,6 @@
 
 [Source file](../src/elements/simple-table/simple-table.js)
 
-## Functions
-
-### `setTooltipsIfApplicable(event)`
-
-![modifier: private](images/badges/modifier-private.png)
-
-Sets the tooltip on fixed-height td if applicable.
-
-Parameters | Type | Description
---- | --- | ---
-__event__ | `MouseEvent` | *mouse enter event*
-
----
-
 # Class `SimpleTable`
 
 Implements the **&#x60;simple-table&#x60; custom element** that provides a simple grid with customizable columns.
@@ -137,6 +123,22 @@ Synchronizes selection from the &#x60;values&#x60; attribute.
 
 ---
 
+### `removeSelectionTooltips()`
+
+![modifier: public](images/badges/modifier-public.png)
+
+Removes bootstrap tooltips on cells.
+
+---
+
+### `addSelectionTooltips()`
+
+![modifier: public](images/badges/modifier-public.png)
+
+Adds bootstrap tooltips on cells.
+
+---
+
 ### `datasourceChanged()`
 
 ![modifier: public](images/badges/modifier-public.png)
@@ -175,3 +177,4 @@ __totalCount__ | `number` | *The total count of items including not displayed on
 __allItemsDisplayed__ | `undefined` | *Are all items displayed?*
 __notDisplayedWarningText__ | `undefined` | *Warning text regarding items not displayed.*
 ___container__ | `HTMLTemplateElement` | *Html container of the custom element. @type {HTMLTemplateElement}*
+___tooltips__ | `Tooltip[]` | *Cells tooltips @type {Tooltip[]}*

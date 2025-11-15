@@ -651,9 +651,22 @@ Prevent user interaction with Bootstrap back drop.
   | `header` | Header of the column | Any string representing a property present on the item | |
   | `cell-key` | Property of the item used to display as cell content | Any string representing a property present on the item | |
   | `sortable` | Is the column sortable | `true` or `false` | `false` |
-  | `sort-order` | Sorting order of the column | `true` or `false` | |
+  | `sort-order` | Sorting order of the column | `asc` or `desc` | |
   | `sort-type` | Sorting type |`text` or `numeric` | `text` |
   | `width` | CSS width of the column | Any css width expression | `auto` |
+
+#### Tooltips
+
+- If cells are too small to render completly (i.e. ellipsis is shown), Bootstrap tooltips will be automatically created on these cells.
+- If you use data-bs-* attribute on a column template, Bootstrap tootips will also be automatically created.
+    ```html
+    <column header="Id" cell-key="id">
+      <span data-bs-toggle="tooltip" data-bs-title="${item && item.name ? item.name : ' '}">
+        ${item.id}
+      </span>
+    </column>
+    ```
+    > Be sure to **always return a non empty string** for the title to avoid Bootstrap error.
 
 ### `input-mask` custom attribute
 

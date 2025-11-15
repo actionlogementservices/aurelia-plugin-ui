@@ -1,6 +1,9 @@
 {
   "compilerOptions": {
-    "lib": ["es2022"],
+    "lib": [
+      "es2022"
+    ],
+    "downlevelIteration": true,
     "allowJs": true,
     "checkJs": true,
     "baseUrl": "./src",
@@ -11,5 +14,7 @@
     "forceConsistentCasingInFileNames": true,
     "declarationMap": false
   },
-  "include": ["src/**/*"]
+  "include": [
+    "src/**/*"
+  ]
 }
