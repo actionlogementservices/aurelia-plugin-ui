@@ -312,10 +312,18 @@
             selected-items.bind="selectedItems"
             selection-mode="multiple">
             <column header="Id" cell-key="id" sortable="true" sort-type="numeric" width="80px">
-              <small><span class="badge text-bg-secondary">${item.id}</span></small>
+              <small>
+                <span
+                  class="badge text-bg-secondary"
+                  data-bs-toggle="tooltip"
+                  data-bs-placement="right"
+                  data-bs-title="${item && item.name ? item.name : ' '}">
+                  ${item.id}
+                </span>
+              </small>
             </column>
             <column header="Name" cell-key="name" sortable="true"></column>
-            <column header="Email" cell-key="email" sortable="true"></column>
+            <column header="Email" cell-key="email" sortable="true" width="220px"></column>
             <column header="Color" cell-key="color" width="120px">
               <div class="d-flex justify-content-between flex-nowrap">
                 <div class="fw-semibold m-0">${item.color}</div>

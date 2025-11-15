@@ -7,20 +7,6 @@ import { sortPerKey } from '../../core/sorting';
 /** @typedef {import('./column').Column} Column */
 
 /**
- * Sets the tooltip on fixed-height td if applicable.
- * @param {MouseEvent} event mouse enter event
- */
-function setTooltipsIfApplicable(event) {
-  const td = /** @type {HTMLTableCellElement} */ (event.target);
-  if (!td.classList?.contains('fixed-height')) return;
-  if (td.offsetWidth < td.scrollWidth) {
-    Tooltip.getOrCreateInstance(td, { title: td.textContent });
-    return;
-  }
-  Tooltip.getInstance(td)?.dispose();
-}
-
-/**
  * Implements the **`simple-table` custom element** that provides a simple grid with customizable columns.
  * @template T type of items of the data source
  * @category table
@@ -78,6 +64,7 @@ export class SimpleTable {
   /** Html container of the custom element. @type {HTMLTemplateElement} */ _container;
   /** Displayed items. @type {(T & {selected?: boolean})[]} */ items = [];
   /** The total count of items including not displayed one. @type {number} */ totalCount = 0;
+  /** Cells tooltips @type {Tooltip[]} */ _tooltips;
 
   /**
    * Creates an instance of the `simple-table` custom element.
@@ -94,14 +81,13 @@ export class SimpleTable {
    */
   attached() {
     this.setDisplayedItems();
-    if (this.fixedRowHeight) this._container.addEventListener('mouseenter', setTooltipsIfApplicable, true);
   }
 
   /**
    * Defines the logic triggered when the component is removed from the DOM.
    */
   detached() {
-    if (this.fixedRowHeight) this._container.removeEventListener('mouseenter', setTooltipsIfApplicable);
+    if (this._tooltips) [...this._tooltips].map(tooltip => tooltip?.dispose());
   }
 
   /**
@@ -110,11 +96,13 @@ export class SimpleTable {
   setDisplayedItems() {
     this.totalCount = 0;
     this.items = [];
+    this.removeSelectionTooltips();
     if (!this.datasource) return; // the datasource is empty
     if (Array.isArray(this.datasource)) {
       // the datasource is a simple array of items
       this.totalCount = this.datasource.length;
       this.items = this.datasource.slice(0, this.maxRows);
+      this.addSelectionTooltips();
       return;
     }
     const { items, totalCount } = this.datasource;
@@ -122,6 +110,7 @@ export class SimpleTable {
       // the datasource is a { items, totalCount } object
       this.totalCount = totalCount;
       this.items = items.slice(0, this.maxRows);
+      this.addSelectionTooltips();
     }
   }
 
@@ -138,8 +127,10 @@ export class SimpleTable {
     // apply sort order to selected column.
     const sortOrder = isNil(columnToSort.sortOrder) || columnToSort.sortOrder === 'desc' ? 'asc' : 'desc';
     columnToSort.sortOrder = sortOrder;
+    this.removeSelectionTooltips();
     // order items
     this.items = this.items.sort(sortPerKey(sortOrder, columnToSort.sortType, columnToSort.cellKey));
+    this.addSelectionTooltips();
   }
 
   /**
@@ -215,6 +206,39 @@ export class SimpleTable {
     for (const item of this.items) {
       item.selected = selectedKeys.has(item[this.valueKey]);
     }
+  }
+
+  /**
+   * Removes bootstrap tooltips on cells.
+   */
+  removeSelectionTooltips() {
+    this._taskqueue.queueTask(() => {
+      if (this._tooltips) [...this._tooltips].map(tooltip => tooltip?.dispose());
+    });
+  }
+
+  /**
+   * Adds bootstrap tooltips on cells.
+   */
+  addSelectionTooltips() {
+    this._taskqueue.queueTask(() => {
+      // elements with data-bs-toggle tooltip attributes
+      const withBsTooltipsElements = this._container.querySelectorAll('[data-bs-toggle="tooltip"]');
+      const withBsTooltips = [...withBsTooltipsElements].map(element => new Tooltip(element));
+      // td with ellipsis
+      const tdElements = this._container.querySelectorAll('td.fixed-height');
+      const tdEllipsisTooltips = [...tdElements]
+        .filter(td => td.scrollWidth > td.clientWidth)
+        .map(
+          td =>
+            new Tooltip(td, {
+              title: td.textContent,
+              placement: 'right',
+              fallbackPlacements: ['left', 'top']
+            })
+        );
+      this._tooltips = [...withBsTooltips, ...tdEllipsisTooltips];
+    });
   }
 
   /**
