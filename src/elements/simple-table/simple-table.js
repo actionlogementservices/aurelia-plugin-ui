@@ -28,6 +28,10 @@ export class SimpleTable {
   @bindable({ defaultBindingMode: bindingMode.toView })
   datasource;
 
+  /** Enable/Disable the custom element to prevent user modification. @type {boolean} */
+  @bindable({ defaultBindingMode: bindingMode.toView })
+  disabled = false;
+
   /** Maximal number of displayed rows. @type {number} */
   @bindable({ defaultBindingMode: bindingMode.toView })
   maxRows = 50;
@@ -136,11 +140,18 @@ export class SimpleTable {
   /**
    * Defines the logic triggered when item is clicked.
    * @param {T & {selected: boolean}} item item clicked or selected
-   * @param {boolean} notify should we dispatch custom element events?
+   * @param {Event} event click event
    * @returns {boolean} let event propagates
    */
-  toggleItemSelection(item, notify = true) {
+  toggleItemSelection(item, event) {
+    // no selection
     if (!this.valueKey || this.selectionMode === 'none') return true;
+    // click on button, a, ...
+    const target = /** @type {HTMLElement} */ (event.target);
+    if (target?.closest('a, button, input, select, textarea')) {
+      return true;
+    }
+    // do selection logic
     const actualSelection = this.selectedItems;
     const index = actualSelection.indexOf(item);
     if (index === -1) {
@@ -152,10 +163,9 @@ export class SimpleTable {
       this.selectedItems = [...this.selectedItems];
     }
     this.synchronizeSelection();
-    if (notify) {
-      this.triggerChangeEvent(this.selectedItems);
-      this.triggerBlurEvent(this.selectedItems);
-    }
+    this.triggerChangeEvent(this.selectedItems);
+    this.triggerBlurEvent(this.selectedItems);
+
     return true;
   }
 
@@ -213,7 +223,16 @@ export class SimpleTable {
    */
   removeSelectionTooltips() {
     this._taskqueue.queueTask(() => {
-      if (this._tooltips) [...this._tooltips].map(tooltip => tooltip?.dispose());
+      if (this._tooltips) {
+        for (const tooltip of this._tooltips) {
+          try {
+            tooltip.dispose();
+          } catch {
+            /* empty */
+          }
+        }
+        this._tooltips = undefined;
+      }
     });
   }
 

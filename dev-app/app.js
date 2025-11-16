@@ -2,11 +2,11 @@ import { computedFrom, inject, NewInstance } from 'aurelia-framework';
 import { faker } from '@faker-js/faker';
 import { Validator, ValidationControllerFactory } from 'aurelia-validation';
 
+import { ExempleDialog } from './dialogs/exemple-dialog';
 import { AutoCompleteController } from 'resources/elements/auto-complete/auto-complete-controller';
 import { LockService } from 'core/lock-service/lock-service';
 import { ToastService } from 'core/toast-service/toast-service';
 import { DialogService } from 'core/dialog-service/dialog-service';
-import { ExempleDialog } from './dialogs/exemple-dialog';
 import { Adresse } from 'resources/elements/auto-complete/adresse';
 
 export const wait = delay => new Promise(resolve => setTimeout(resolve, delay));
@@ -130,7 +130,7 @@ export class App {
   }
 
   showItemDetails(data) {
-    console.log(data);
+    this.toast.info(data.name);
   }
 
   @computedFrom('selectedDialogMode')

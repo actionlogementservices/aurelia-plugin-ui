@@ -3,7 +3,7 @@
   <!-- where columns definition will be projected -->
   <slot></slot>
   <div class="table-wrapper" css="max-height: ${maxHeight}">
-    <table id="grid-${uniqueId}" class="table table-hover">
+    <table id="grid-${uniqueId}" class="table table-hover ${disabled ? 'table-disabled' : ''}">
       <thead>
         <!-- results count -->
         <tr if.bind="items.length > 0 && !noRowCountHeader" class="table-info">
@@ -44,7 +44,7 @@
         <!-- rows -->
         <tr
           repeat.for="item of items"
-          click.trigger="toggleItemSelection(item)"
+          click.trigger="toggleItemSelection(item, $event)"
           class="align-middle ${item.selected ? 'table-secondary' : ''} ${selectionMode != 'none' ? 'selection' : ''}">
           <!-- optional tick cell -->
           <td if.bind="selectionMode != 'none'" class="py-0 align-middle selection">
