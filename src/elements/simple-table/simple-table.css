@@ -43,3 +43,8 @@ simple-table table td.fixed-height:has(> button) {
   overflow: visible;
   white-space: normal;
 }
+
+simple-table table.table-disabled {
+  pointer-events: none;
+  opacity: 0.6;
+}
