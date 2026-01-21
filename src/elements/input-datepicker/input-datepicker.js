@@ -59,7 +59,7 @@ export class InputDatepicker {
   }
 
   /**
-   * Defines the logic triggered when the component is added to the DOM.
+   * Defines the logic triggered when the custom element is added to the DOM.
    */
   attached() {
     this._input = this._container.querySelector(`input[name="dp_${this.uniqueId}"]`);
@@ -86,7 +86,7 @@ export class InputDatepicker {
   }
 
   /**
-   * Defines the logic triggered when the component is removed from the DOM.
+   * Defines the logic triggered when the custom element is removed from the DOM.
    */
   detached() {
     this._input?.removeEventListener('changeDate', this.internalComponentDateChanged);

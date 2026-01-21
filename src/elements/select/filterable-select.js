@@ -10,16 +10,18 @@ import {
 } from 'aurelia-framework';
 import { Dropdown } from 'bootstrap';
 
-import { generateUniqueId, preventEventPropagation } from '../../core/functions';
+import { generateUniqueId, isNilOrEmpty, preventEventPropagation } from '../../core/functions';
+// import { setTraceDebugger } from '../../core/debug-tracer';
 
 /**
  * Implements the **`filterable-select` custom element** that provides a dropdown list based on a datasource with on the fly filtering and single selection.
  * @template T type of items of the data source
+ * @template K type of selected item value
  * @category select
  */
 @inject(DOM.Element, BindingEngine, TaskQueue)
 export class FilterableSelect {
-  /** Selected value @type {string} */
+  /** Selected value @type {K} */
   @bindable({ defaultBindingMode: bindingMode.twoWay })
   selectedValue;
 
@@ -67,9 +69,8 @@ export class FilterableSelect {
   /** Html input element. @type {HTMLInputElement} */ _input;
   /** Html dropdown host element. @type {HTMLDivElement} */ _dropdownList;
   /** Bootstrap dropdown. @type {Dropdown} */ _dropdown;
-
+  /** Prevents reentrancy @type {boolean} */ _guard;
   /** Prevents the input field to be reset when click outside dropdown? @type {Boolean} */ ignoringReset = false;
-  /** Is input field updated internally? @type {Boolean} */ updatingInput = false;
 
   /**
    * Creates an instance of the `filterable-select` custom element.
@@ -81,10 +82,11 @@ export class FilterableSelect {
     this._container = element;
     this.bindingEngine = bindingEngine;
     this._taskqueue = taskqueue;
+    // setTraceDebugger(this);
   }
 
   /**
-   * Defines the logic triggered when the component is added to the DOM.
+   * Defines the logic triggered when the custom element is added to the DOM.
    */
   attached() {
     this.itemView = new InlineViewStrategy(`<template>\${${this.labelKey}}</template>`);
@@ -95,7 +97,7 @@ export class FilterableSelect {
   }
 
   /**
-   * Defines the logic triggered when the component is removed from the DOM.
+   * Defines the logic triggered when the custom element is removed from the DOM.
    */
   detached() {
     this._dropdown?.dispose();
@@ -117,31 +119,65 @@ export class FilterableSelect {
   }
 
   /**
-   * Defines the logic triggered when item is clicked or selected with 'Enter' key.
+   * Selects the specified item.
    * @param {T} item item clicked or selected
    * @param {boolean} notify should we dispatch custom element events?
    */
   selectItem(item, notify = true) {
-    if (!this.datasource || !this._input) return;
-    this.selectedItem = item;
-    if (this.valueKey && this.selectedItem) this.selectedValue = this.selectedItem[this.valueKey];
-    this.updatingInput = true;
-    // eslint-disable-next-line unicorn/no-null
-    this._input.value = item ? (item[this.labelKey] ?? null) : null;
-    this.updatingInput = false;
+    if (this.isInvalidDatasource()) return;
+    if (!this._input) {
+      // input field is not yet loaded but datasource is ok so queue task
+      this._taskqueue.queueTask(() => this.selectItem(item, notify));
+      return;
+    }
+    // synchronizes selection
+    this.synchronizeSelection(item);
+    // sets the html input element content with the label
+    this.setHtmlInputContent(item);
     if (item) {
       this.hideDropdown();
       this.filteredItems = [item];
       this._input.blur();
     } else {
-      this.resetItems();
+      this.resetDropdownItems();
     }
+    // triggers events if applicable
     if (notify) {
-      const event = DOM.createCustomEvent('change', { bubbles: true, detail: item });
-      this._taskqueue.queueMicroTask(() => this._container.dispatchEvent(event));
-      const event2 = DOM.createCustomEvent('blur', { bubbles: true, detail: item });
-      this._taskqueue.queueMicroTask(() => this._container.dispatchEvent(event2));
+      this.triggerChangeEvent();
+      this.triggerBlurEvent();
     }
+  }
+
+  /**
+   * Synchronizes custom element selection.
+   * @param {T} item item to select
+   */
+  synchronizeSelection(item) {
+    this._guard = true;
+    this.selectedItem = item;
+    if (!this.isInvalidValueKey()) this.selectedValue = item ? item[this.valueKey] : undefined;
+    // ensures the _guard stays 'true' until after the change has been processed by the observer system
+    this._taskqueue.queueMicroTask(() => {
+      this._guard = false;
+    });
+  }
+
+  /**
+   * Triggers the 'change' event of the custom element.
+   * Required to participate in aurelia validation system.
+   */
+  triggerChangeEvent() {
+    const eventToSend = DOM.createCustomEvent('change', { bubbles: true, detail: this.selectedItem });
+    this._taskqueue.queueMicroTask(() => this._container.dispatchEvent(eventToSend));
+  }
+
+  /**
+   * Triggers the 'blur' event of the custom element.
+   * Required to participate in aurelia validation system.
+   */
+  triggerBlurEvent() {
+    const eventToSend = DOM.createCustomEvent('blur', { bubbles: true, detail: this.selectedItem });
+    this._taskqueue.queueMicroTask(() => this._container.dispatchEvent(eventToSend));
   }
 
   /**
@@ -153,7 +189,7 @@ export class FilterableSelect {
     this._keyCode = keyCode;
     // pass focus to first listitem when up/down/tab keys are pressed
     if (
-      this._dropdownList?.children?.length &&
+      this._dropdownList?.children?.length > 0 &&
       (keyCode === 'ArrowUp' || keyCode === 'ArrowDown' || keyCode === 'Tab')
     ) {
       this.ignoringReset = true;
@@ -166,10 +202,19 @@ export class FilterableSelect {
   }
 
   /**
+   * Sets the html input element content.
+   * @param {T} item item
+   */
+  setHtmlInputContent(item) {
+    // eslint-disable-next-line unicorn/no-null
+    this._input.value = item ? (item[this.labelKey] ?? null) : null;
+  }
+
+  /**
    * Filters the items list to those that contain the given input value and are not already selected.
    * @param {string} [inputValue] input value
    */
-  filterItems(inputValue) {
+  filterDropdownItems(inputValue) {
     const filteredItems = inputValue
       ? this.datasource.filter(item => item[this.labelKey]?.toUpperCase().includes(inputValue.toUpperCase()))
       : this.datasource;
@@ -179,7 +224,7 @@ export class FilterableSelect {
   /**
    * Reset the items list to the original databound list
    */
-  resetItems() {
+  resetDropdownItems() {
     this.filteredItems = this.datasource;
   }
 
@@ -193,9 +238,33 @@ export class FilterableSelect {
   }
 
   /**
-   * Defines the logic triggered when user clicks outside the component.
+   * Is the datasource invalid?
+   * @returns {boolean} true if invalid, false otherwise
    */
-  resetInputValue() {
+  isInvalidDatasource() {
+    return !this.datasource || !Array.isArray(this.datasource);
+  }
+
+  /**
+   * Is the labelKey invalid?
+   * @returns {boolean} true if invalid, false otherwise
+   */
+  isInvalidLabelKey() {
+    return isNilOrEmpty(this.labelKey);
+  }
+
+  /**
+   * Is the valueKey invalid?
+   * @returns {boolean} true if invalid, false otherwise
+   */
+  isInvalidValueKey() {
+    return isNilOrEmpty(this.valueKey);
+  }
+
+  /**
+   * Resets the html input.
+   */
+  onInputBlur() {
     if (!this.ignoringReset) {
       this.hideDropdown();
       this.selectItem(this.selectedItem, false);
@@ -206,16 +275,15 @@ export class FilterableSelect {
    * Defines the logic triggered when user types data in the input field.
    * @param {string} inputValue user input
    */
-  inputValueChanged(inputValue) {
-    if (this.updatingInput) return;
+  onInputChange(inputValue) {
     if (inputValue === '') {
       this.selectedItem = undefined;
       this.selectedValue = undefined;
-      this.resetItems();
+      this.resetDropdownItems();
       this.showDropdown();
       return;
     }
-    this.filterItems(inputValue);
+    this.filterDropdownItems(inputValue);
     if (this.filteredItemsCount === 1 && this._keyCode !== 'Backspace') {
       // for auto-completion
       this.selectItem(this.filteredItems[0]);
@@ -228,21 +296,18 @@ export class FilterableSelect {
    * Defines the logic triggered when `selected-item` attribute is databound.
    */
   selectedItemChanged() {
-    this._taskqueue.queueTask(() => {
-      if (this.updatingInput) return;
-      this.selectItem(this.selectedItem, false);
-    });
+    if (this._guard) return;
+    this.selectItem(this.selectedItem, false);
   }
 
   /**
    * Defines the logic triggered when `select-value` attribute is databound.
    */
   selectedValueChanged() {
-    this._taskqueue.queueTask(() => {
-      if (!this.valueKey || !this.datasource) return;
-      const selectedItem = this.datasource.find(item => item[this.valueKey] === this.selectedValue);
-      this.selectItem(selectedItem, false);
-    });
+    if (this._guard) return;
+    if (this.isInvalidDatasource() || this.isInvalidValueKey()) return;
+    const selectedItem = this.datasource.find(item => item[this.valueKey] === this.selectedValue);
+    this.selectItem(selectedItem, false);
   }
 
   /**
@@ -257,7 +322,7 @@ export class FilterableSelect {
    * Defines the logic triggered when `datasource` attribute is databound.
    */
   datasourceChanged() {
-    this.resetItems();
+    this.resetDropdownItems();
     // if value was first databound before datasource re-trigger value change
     if (this.selectedItem) this.selectedItemChanged();
     else if (this.selectedValue) this.selectedValueChanged();

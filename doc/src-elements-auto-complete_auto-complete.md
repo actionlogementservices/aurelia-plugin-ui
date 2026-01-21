@@ -31,7 +31,7 @@ __taskqueue__ | `TaskQueue` | *aurelia asynchronous task queue*
 
 ![modifier: public](images/badges/modifier-public.png)
 
-Defines the logic triggered when the component is added to the DOM.
+Defines the logic triggered when the custom element is added to the DOM.
 
 ---
 
@@ -39,7 +39,7 @@ Defines the logic triggered when the component is added to the DOM.
 
 ![modifier: public](images/badges/modifier-public.png)
 
-Defines the logic triggered when the component is removed from the DOM.
+Defines the logic triggered when the custom element is removed from the DOM.
 
 ---
 
@@ -63,12 +63,42 @@ Hides the dropdown.
 
 ![modifier: public](images/badges/modifier-public.png)
 
-Defines the logic triggered when item is clicked or selected with &#x27;Enter&#x27; key.
+Selects the specified item.
 
 Parameters | Type | Description
 --- | --- | ---
 __item__ | `U` | *item clicked or selected*
 __notify__ | `boolean` | *should we dispatch custom element events?*
+
+---
+
+### `synchronizeSelection(item)`
+
+![modifier: public](images/badges/modifier-public.png)
+
+Synchronizes custom element selection.
+
+Parameters | Type | Description
+--- | --- | ---
+__item__ | `U` | *item to select*
+
+---
+
+### `triggerChangeEvent()`
+
+![modifier: public](images/badges/modifier-public.png)
+
+Triggers the &#x27;change&#x27; event of the custom element.
+Required to participate in aurelia validation system.
+
+---
+
+### `triggerBlurEvent()`
+
+![modifier: public](images/badges/modifier-public.png)
+
+Triggers the &#x27;blur&#x27; event of the custom element.
+Required to participate in aurelia validation system.
 
 ---
 
@@ -97,15 +127,51 @@ __inputValue__ | `string` | *input value*
 
 ---
 
-### `resetInputValue()`
+### `setHtmlInputContent(item)`
 
 ![modifier: public](images/badges/modifier-public.png)
 
-Defines the logic triggered when user clicks outside the component.
+Sets the html input element content.
+
+Parameters | Type | Description
+--- | --- | ---
+__item__ | `T` | *item*
 
 ---
 
-### `inputValueChanged(inputValue)`
+### `isInvalidLabelKey() ► boolean`
+
+![modifier: public](images/badges/modifier-public.png)
+
+Is the labelKey invalid?
+
+Parameters | Type | Description
+--- | --- | ---
+__*return*__ | `boolean` | *true if invalid, false otherwise*
+
+---
+
+### `isInvalidValueKey() ► boolean`
+
+![modifier: public](images/badges/modifier-public.png)
+
+Is the valueKey invalid?
+
+Parameters | Type | Description
+--- | --- | ---
+__*return*__ | `boolean` | *true if invalid, false otherwise*
+
+---
+
+### `onInputBlur()`
+
+![modifier: public](images/badges/modifier-public.png)
+
+Resets the html input.
+
+---
+
+### `onInputChange(inputValue)`
 
 ![modifier: public](images/badges/modifier-public.png)
 
@@ -114,6 +180,18 @@ Defines the logic triggered when user types data in the input field.
 Parameters | Type | Description
 --- | --- | ---
 __inputValue__ | `string` | *user input*
+
+---
+
+### `selectedValueChanged(value)`
+
+![modifier: public](images/badges/modifier-public.png)
+
+Defines the logic triggered when &#x60;select-value&#x60; attribute is databound.
+
+Parameters | Type | Description
+--- | --- | ---
+__value__ | `K` | *databound value*
 
 ---
 
@@ -146,7 +224,7 @@ __labelKey__ | `string` | *databound value*
 Name | Type | Description
 --- | --- | ---
 __controller__ | `AutoCompleteController<T,U>` | *The controller used to retrieve data. @type {AutoCompleteController&lt;T,U&gt;}*
-__selectedValue__ | `string` | *Selected value @type {string}*
+__selectedValue__ | `K` | *Selected value @type {K}*
 __selectedItem__ | `U \| T` | *Selected item @type {U | T}*
 __placeholder__ | `string` | *The place holder text. @type {string}*
 __valueKey__ | `string` | *Property key used to identify item. @type {string}*
@@ -158,9 +236,9 @@ __noResultText__ | `string` | *Text corresponding to &#x27;no result&#x27;. @typ
 __uniqueId__ | `string` | *Unique id to identify the custom element instance. @type {string}*
 __items__ | `(U \| T)[]` | *List of retrieved items. @type {(U | T)[]}*
 __ignoringReset__ | `Boolean` | *Prevents the input field to be reset when click outside dropdown? @type {Boolean}*
-__updatingInput__ | `Boolean` | *Is input field updated internally? @type {Boolean}*
 __itemsCount__ | `number` | *Count of items.*
 ___container__ | `HTMLTemplateElement` | *Html container of the custom element. @type {HTMLTemplateElement}*
 ___input__ | `HTMLInputElement` | *Html input element. @type {HTMLInputElement}*
 ___dropdownList__ | `HTMLDivElement` | *Html dropdown host element. @type {HTMLDivElement}*
 ___dropdown__ | `Dropdown` | *Bootstrap dropdown. @type {Dropdown}*
+___guard__ | `boolean` | *Prevents reentrancy @type {boolean}*

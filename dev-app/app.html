@@ -7,335 +7,605 @@
     class="d-md-block"
     position="top-left"></environment-ribbon>
 
-  <div class="container-fluid my-4 d-grid gap-4">
-    <h1 class="text-center">Test application</h1>
-
-    <!-- LockService -->
-    <div class="row">
-      <div class="col">
-        <div class="p-4 rounded-3 border shadow-lg">
-          <h3>
-            Component
-            <code class="fw_bold text-primary">LockService</code>
-          </h3>
-          <button class="btn btn-secondary" click.trigger="lockScreen()">Lock</button>
-        </div>
-      </div>
+  <div class="container-fluid my-4 gap-3">
+    <div class="d-flex flex-row justify-content-center align-items-center gap-3">
+      <h2>Test application</h2>
+      <button class="btn btn-danger" click.trigger="resetAll()">Reset all</button>
     </div>
 
-    <!-- ToastService -->
-    <div class="row">
-      <div class="col">
-        <div class="p-4 rounded-3 border shadow-lg">
-          <h3>
-            Component
-            <code class="fw_bold text-primary">ToastService</code>
-          </h3>
-          <div class="d-flex justify-content-around">
-            <button class="btn btn-info" click.trigger="showInfo()">Info</button>
-            <button class="btn btn-warning" click.trigger="showWarning()">Warning</button>
-            <button class="btn btn-danger" click.trigger="showError()">Error</button>
-            <button class="btn btn-success text-white" click.trigger="showSuccess()">Success</button>
+    <div class="accordion" id="sections">
+      <!-- LockService -->
+      <div class="accordion-item">
+        <div class="accordion-header">
+          <button
+            class="accordion-button py-1"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#section-1"
+            aria-expanded="true"
+            aria-controls="section-1">
+            <div class="fs-5">
+              Service
+              <code class="fw_bold text-primary">LockService</code>
+            </div>
+          </button>
+        </div>
+        <div id="section-1" class="accordion-collapse collapse show" data-bs-parent="#accordionExample">
+          <div class="accordion-body">
+            <button class="btn btn-secondary" click.trigger="lockScreen()">Lock</button>
           </div>
         </div>
       </div>
-    </div>
 
-    <!-- DialogService -->
-    <div class="row">
-      <div class="col">
-        <div class="p-4 rounded-3 border shadow-lg">
-          <h3>
-            Component
-            <code class="fw_bold text-primary">DialogService</code>
-          </h3>
-          <div class="d-flex justify-content-around align-items-center">
-            <div class="form-floating">
-              <select id="select-dialog-mode" class="form-select me-auto" value.bind="selectedDialogMode">
-                <option value="modal">Modal</option>
-                <option value="offcanvas">Offcanvas</option>
-              </select>
-              <label for="select-dialog-mode">Mode</label>
+      <!-- ToastService -->
+      <div class="accordion-item">
+        <div class="accordion-header">
+          <button
+            class="accordion-button py-1"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#section-2"
+            aria-expanded="true"
+            aria-controls="section-2">
+            <div class="fs-5">
+              Service
+              <code class="fw_bold text-primary">ToastService</code>
             </div>
-            <div class="form-check" if.bind="isDialogModalMode">
-              <input
-                id="check-fullscreen"
-                class="form-check-input"
-                type="checkbox"
-                name="check-fullscreen"
-                checked.bind="dialogFullscreen" />
-              <label class="form-check-label" for="check-fullscreen">Fullscreen</label>
+          </button>
+        </div>
+        <div id="section-2" class="accordion-collapse collapse show" data-bs-parent="#accordionExample">
+          <div class="accordion-body">
+            <div class="d-flex justify-content-between">
+              <button class="btn btn-info" click.trigger="showInfo()">Info</button>
+              <button class="btn btn-warning" click.trigger="showWarning()">Warning</button>
+              <button class="btn btn-danger" click.trigger="showError()">Error</button>
+              <button class="btn btn-success text-white" click.trigger="showSuccess()">Success</button>
             </div>
-            <div class="form-floating" if.bind="!isDialogModalMode">
-              <select
-                id="select-offcanvas-position"
-                class="form-select me-auto"
-                value.bind="selectedOffcanvasPosition">
-                <option value="start">Start</option>
-                <option value="end">End</option>
-                <option value="top">Top</option>
-                <option value="bottom">Bottom</option>
-              </select>
-              <label for="select-offcanvas-position" class="col-form-label">Position</label>
-            </div>
-            <div class="form-check">
-              <input
-                id="check-lock"
-                class="form-check-input"
-                type="checkbox"
-                name="check-lock"
-                checked.bind="dialogLocked" />
-              <label class="form-check-label" for="check-lock">Locked</label>
-            </div>
-            <div>
-              <button class="btn btn-secondary" click.trigger="showDialog()">Dialog</button>
-            </div>
-            <div class="fw-semibold m-0">${dialogStatus}</div>
           </div>
         </div>
       </div>
-    </div>
 
-    <!-- Selection binding -->
-    <div class="row">
-      <div class="col">
-        <div class="p-4 rounded-3 border shadow-lg">
-          <h3>Selection binding</h3>
-          <div class="d-flex justify-content-around">
-            <button class="btn btn-info" click.trigger="setSelectedItem()">Select item</button>
-            <button class="btn btn-info" click.trigger="setSelectedItems()">Select items</button>
-            <button class="btn btn-info" click.trigger="setSelectedValue()">Select value</button>
-            <button class="btn btn-info" click.trigger="setSelectedValues()">Select values</button>
-            <button class="btn btn-info" click.trigger="setSelectedAddress()">Select address</button>
+      <!-- DialogService -->
+      <div class="accordion-item">
+        <div class="accordion-header">
+          <button
+            class="accordion-button py-1"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#section-3"
+            aria-expanded="true"
+            aria-controls="section-3">
+            <div class="fs-5">
+              Service
+              <code class="fw_bold text-primary">DialogService</code>
+            </div>
+          </button>
+        </div>
+        <div id="section-3" class="accordion-collapse collapse show" data-bs-parent="#accordionExample">
+          <div class="accordion-body">
+            <div class="d-flex justify-content-between align-items-center">
+              <div class="form-floating">
+                <select id="select-dialog-mode" class="form-select me-auto" value.bind="selectedDialogMode">
+                  <option value="modal">Modal</option>
+                  <option value="offcanvas">Offcanvas</option>
+                </select>
+                <label for="select-dialog-mode">Mode</label>
+              </div>
+              <div class="form-check" if.bind="isDialogModalMode">
+                <input
+                  id="check-fullscreen"
+                  class="form-check-input"
+                  type="checkbox"
+                  name="check-fullscreen"
+                  checked.bind="dialogFullscreen" />
+                <label class="form-check-label" for="check-fullscreen">Fullscreen</label>
+              </div>
+              <div class="form-floating" if.bind="!isDialogModalMode">
+                <select
+                  id="select-offcanvas-position"
+                  class="form-select me-auto"
+                  value.bind="selectedOffcanvasPosition">
+                  <option value="start">Start</option>
+                  <option value="end">End</option>
+                  <option value="top">Top</option>
+                  <option value="bottom">Bottom</option>
+                </select>
+                <label for="select-offcanvas-position" class="col-form-label">Position</label>
+              </div>
+              <div class="form-check">
+                <input
+                  id="check-lock"
+                  class="form-check-input"
+                  type="checkbox"
+                  name="check-lock"
+                  checked.bind="dialogLocked" />
+                <label class="form-check-label" for="check-lock">Locked</label>
+              </div>
+              <div>
+                <button class="btn btn-secondary" click.trigger="showDialog()">Dialog</button>
+              </div>
+              <div class="fw-semibold m-0">${dialogStatus}</div>
+            </div>
           </div>
         </div>
       </div>
-    </div>
 
-    <!-- simple-select -->
-    <div class="row">
-      <div class="col">
-        <div class="p-4 rounded-3 border shadow-lg">
-          <h3>
-            Element
-            <code class="fw_bold text-primary">simple-select</code>
-          </h3>
-          <simple-select
-            class="form-select"
-            datasource.bind="smallItemsList"
-            change.delegate="logSelectedItem($event)"
-            label-key="name"
-            value-key="id"
-            selected-item.bind="selectedItem"
-            selected-value.bind="selectedValue">
-            <template replace-part="itemTemplate">
-              <div class="d-flex justify-content-between flex-nowrap">
-                <div class="fw-semibold m-0">${item.name}</div>
-                <div class="fw-light ps-2 m-0"><code>${item.id}</code></div>
-              </div>
-            </template>
-          </simple-select>
+      <!-- simple-select -->
+      <div class="accordion-item">
+        <div class="accordion-header">
+          <button
+            class="accordion-button py-1"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#section-4"
+            aria-expanded="true"
+            aria-controls="section-4">
+            <div class="fs-5">
+              Element
+              <code class="fw_bold text-primary">simple-select</code>
+            </div>
+          </button>
+        </div>
+        <div id="section-4" class="accordion-collapse collapse show" data-bs-parent="#accordionExample">
+          <div class="accordion-body">
+            <div class="d-flex justify-content-between align-items-center gap-3">
+              <button class="btn btn-primary text-nowrap" click.trigger="setSelectedValue()">
+                Select value
+              </button>
+              <button class="btn btn-secondary text-nowrap" click.trigger="resetSelectedValue()">
+                Reset selected value
+              </button>
+              <button class="btn btn-primary text-nowrap" click.trigger="setSelectedItem()">
+                Select item
+              </button>
+              <button class="btn btn-secondary text-nowrap" click.trigger="resetSelectedItem()">
+                Reset selected item
+              </button>
+              <simple-select
+                id="ss-selected-value"
+                class="form-select"
+                datasource.bind="smallItemsList"
+                change.trigger="logSelectedItem($event)"
+                placeholder="with selected-value..."
+                label-key="name"
+                value-key="id"
+                selected-value.bind="selectedValue">
+                <template replace-part="itemTemplate">
+                  <div class="d-flex justify-content-between flex-nowrap">
+                    <div class="fw-semibold m-0">${item.name}</div>
+                    <div class="fw-light ps-2 m-0"><code>${item.id}</code></div>
+                  </div>
+                </template>
+              </simple-select>
+              <simple-select
+                id="ss-selected-item"
+                class="form-select"
+                datasource.bind="smallItemsList"
+                change.trigger="logSelectedItem($event)"
+                placeholder="with selected-item..."
+                label-key="name"
+                value-key="id"
+                selected-item.bind="selectedItem">
+                <template replace-part="itemTemplate">
+                  <div class="d-flex justify-content-between flex-nowrap">
+                    <div class="fw-semibold m-0">${item.name}</div>
+                    <div class="fw-light ps-2 m-0"><code>${item.id}</code></div>
+                  </div>
+                </template>
+              </simple-select>
+            </div>
+          </div>
         </div>
       </div>
-    </div>
 
-    <!-- filterable-select -->
-    <div class="row">
-      <div class="col">
-        <div class="p-4 rounded-3 border shadow-lg">
-          <h3>
-            Element
-            <code class="fw_bold text-primary">filterable-select</code>
-          </h3>
-          <filterable-select
-            class="form-select"
-            datasource.bind="itemsList"
-            change.trigger="logSelectedItem($event)"
-            label-key="name"
-            value-key="id"
-            selected-item.bind="selectedItem"
-            selected-value.bind="selectedValue">
-            <template replace-part="itemTemplate">
-              <div class="d-flex justify-content-between flex-nowrap">
-                <div class="fw-semibold m-0">${item.name}</div>
-                <div class="fw-light ps-2 m-0"><code>${item.id}</code></div>
-              </div>
-            </template>
-          </filterable-select>
+      <!-- filterable-select -->
+      <div class="accordion-item">
+        <div class="accordion-header">
+          <button
+            class="accordion-button py-1"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#section-5"
+            aria-expanded="true"
+            aria-controls="section-5">
+            <div class="fs-5">
+              Element
+              <code class="fw_bold text-primary">filterable-select</code>
+            </div>
+          </button>
+        </div>
+        <div id="section-5" class="accordion-collapse collapse show" data-bs-parent="#accordionExample">
+          <div class="accordion-body">
+            <div class="d-flex justify-content-between align-items-center gap-3">
+              <button class="btn btn-primary text-nowrap" click.trigger="setSelectedValue()">
+                Select value
+              </button>
+              <button class="btn btn-secondary text-nowrap" click.trigger="resetSelectedValue()">
+                Reset selected value
+              </button>
+              <button class="btn btn-primary text-nowrap" click.trigger="setSelectedItem()">
+                Select item
+              </button>
+              <button class="btn btn-secondary text-nowrap" click.trigger="resetSelectedItem()">
+                Reset selected item
+              </button>
+              <filterable-select
+                id="fs-selected-value"
+                class="form-select"
+                datasource.bind="itemsList"
+                change.trigger="logSelectedItem($event)"
+                placeholder="with selected-value..."
+                label-key="name"
+                value-key="id"
+                selected-value.bind="selectedValue">
+                <template replace-part="itemTemplate">
+                  <div class="d-flex justify-content-between flex-nowrap">
+                    <div class="fw-semibold m-0">${item.name}</div>
+                    <div class="fw-light ps-2 m-0"><code>${item.id}</code></div>
+                  </div>
+                </template>
+              </filterable-select>
+              <filterable-select
+                id="fs-selected-item"
+                class="form-select"
+                datasource.bind="itemsList"
+                change.trigger="logSelectedItem($event)"
+                placeholder="with selected-item..."
+                label-key="name"
+                value-key="id"
+                selected-item.bind="selectedItem">
+                <template replace-part="itemTemplate">
+                  <div class="d-flex justify-content-between flex-nowrap">
+                    <div class="fw-semibold m-0">${item.name}</div>
+                    <div class="fw-light ps-2 m-0"><code>${item.id}</code></div>
+                  </div>
+                </template>
+              </filterable-select>
+            </div>
+          </div>
         </div>
       </div>
-    </div>
 
-    <!-- badges-select -->
-    <div class="row">
-      <div class="col">
-        <div class="p-4 rounded-3 border shadow-lg">
-          <h3>
-            Element
-            <code class="fw_bold text-primary">badges-select</code>
-          </h3>
-          <badges-select
-            class="form-select"
-            datasource.bind="itemsList"
-            change.trigger="logSelectedItem($event)"
-            label-key="name"
-            value-key="id"
-            selected-items.bind="selectedItems">
-            <template replace-part="itemTemplate">
-              <div class="d-flex justify-content-between flex-nowrap">
-                <div class="fw-semibold m-0">${item.name}</div>
-                <div class="fw-light ps-2 m-0"><code>${item.id}</code></div>
-              </div>
-            </template>
-          </badges-select>
+      <!-- badges-select -->
+      <div class="accordion-item">
+        <div class="accordion-header">
+          <button
+            class="accordion-button py-1"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#section-6"
+            aria-expanded="true"
+            aria-controls="section-6">
+            <div class="fs-5">
+              Element
+              <code class="fw_bold text-primary">badges-select</code>
+            </div>
+          </button>
+        </div>
+        <div id="section-6" class="accordion-collapse collapse show" data-bs-parent="#accordionExample">
+          <div class="accordion-body">
+            <div class="d-flex justify-content-between align-items-center gap-3">
+              <button class="btn btn-primary text-nowrap" click.trigger="setSelectedValues()">
+                Select values
+              </button>
+              <button class="btn btn-secondary text-nowrap" click.trigger="resetSelectedValues()">
+                Reset selected values
+              </button>
+              <button class="btn btn-primary text-nowrap" click.trigger="setSelectedItems()">
+                Select items
+              </button>
+              <button class="btn btn-secondary text-nowrap" click.trigger="resetSelectedItems()">
+                Reset selected items
+              </button>
+              <badges-select
+                id="bs-selected-values"
+                class="form-select"
+                datasource.bind="itemsList"
+                change.trigger="logSelectedItem($event)"
+                placeholder="with selected-values..."
+                label-key="name"
+                value-key="id"
+                selected-values.bind="selectedValues">
+                <template replace-part="itemTemplate">
+                  <div class="d-flex justify-content-between flex-nowrap">
+                    <div class="fw-semibold m-0">${item.name}</div>
+                    <div class="fw-light ps-2 m-0"><code>${item.id}</code></div>
+                  </div>
+                </template>
+              </badges-select>
+              <badges-select
+                id="bs-selected-items"
+                class="form-select"
+                datasource.bind="itemsList"
+                change.trigger="logSelectedItem($event)"
+                placeholder="with selected-items..."
+                label-key="name"
+                value-key="id"
+                selected-items.bind="selectedItems">
+                <template replace-part="itemTemplate">
+                  <div class="d-flex justify-content-between flex-nowrap">
+                    <div class="fw-semibold m-0">${item.name}</div>
+                    <div class="fw-light ps-2 m-0"><code>${item.id}</code></div>
+                  </div>
+                </template>
+              </badges-select>
+            </div>
+          </div>
         </div>
       </div>
-    </div>
 
-    <!--auto-complete -->
-    <div class="row">
-      <div class="col">
-        <div class="p-4 rounded-3 border shadow-lg">
-          <h3>
-            Element
-            <code class="fw_bold text-primary">auto-complete</code>
-          </h3>
-          <div class="input-group">
-            <auto-complete
-              class="form-control"
-              controller.bind="itemsController"
-              change.trigger="logSelectedItem($event)"
-              label-key="name"
-              value-key="id"
-              selected-item.bind="selectedItem"
-              selected-value.bind="selectedValue">
-              <template replace-part="itemTemplate">
-                <div class="d-flex justify-content-between flex-nowrap">
-                  <div class="fw-semibold m-0">${item.name}</div>
-                  <div class="fw-light ps-2 m-0"><code>${item.id}</code></div>
+      <!-- auto-complete -->
+      <div class="accordion-item">
+        <div class="accordion-header">
+          <button
+            class="accordion-button py-1"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#section-7"
+            aria-expanded="true"
+            aria-controls="section-7">
+            <div class="fs-5">
+              Element
+              <code class="fw_bold text-primary">auto-complete</code>
+            </div>
+          </button>
+        </div>
+        <div id="section-7" class="accordion-collapse collapse show" data-bs-parent="#accordionExample">
+          <div class="accordion-body">
+            <div class="d-flex justify-content-between align-items-center gap-3">
+              <button class="btn btn-primary text-nowrap" click.trigger="setSelectedValue()">
+                Select value
+              </button>
+              <button class="btn btn-secondary text-nowrap" click.trigger="resetSelectedValue()">
+                Reset selected value
+              </button>
+              <button class="btn btn-primary text-nowrap" click.trigger="setSelectedItem()">
+                Select item
+              </button>
+              <button class="btn btn-secondary text-nowrap" click.trigger="resetSelectedItem()">
+                Reset selected item
+              </button>
+              <auto-complete
+                id="ac-selected-value"
+                class="form-control"
+                controller.bind="itemsController"
+                change.trigger="logSelectedItem($event)"
+                placeholder="with selected-value..."
+                label-key="name"
+                value-key="id"
+                selected-value.bind="selectedValue">
+                <template replace-part="itemTemplate">
+                  <div class="d-flex justify-content-between flex-nowrap">
+                    <div class="fw-semibold m-0">${item.name}</div>
+                    <div class="fw-light ps-2 m-0"><code>${item.id}</code></div>
+                  </div>
+                </template>
+              </auto-complete>
+              <auto-complete
+                id="ac-selected-item"
+                class="form-control"
+                controller.bind="itemsController"
+                change.trigger="logSelectedItem($event)"
+                placeholder="with selected-item..."
+                label-key="name"
+                value-key="id"
+                selected-item.bind="selectedItem">
+                <template replace-part="itemTemplate">
+                  <div class="d-flex justify-content-between flex-nowrap">
+                    <div class="fw-semibold m-0">${item.name}</div>
+                    <div class="fw-light ps-2 m-0"><code>${item.id}</code></div>
+                  </div>
+                </template>
+              </auto-complete>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- badges-auto-complete -->
+      <div class="accordion-item">
+        <div class="accordion-header">
+          <button
+            class="accordion-button py-1"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#section-8"
+            aria-expanded="true"
+            aria-controls="section-8">
+            <div class="fs-5">
+              Element
+              <code class="fw_bold text-primary">badges-auto-complete</code>
+            </div>
+          </button>
+        </div>
+        <div id="section-8" class="accordion-collapse collapse show" data-bs-parent="#accordionExample">
+          <div class="accordion-body">
+            <div class="d-flex justify-content-between align-items-center gap-3">
+              <button class="btn btn-primary text-nowrap" click.trigger="setSelectedValues()">
+                Select values
+              </button>
+              <button class="btn btn-secondary text-nowrap" click.trigger="resetSelectedValues()">
+                Reset selected values
+              </button>
+              <button class="btn btn-primary text-nowrap" click.trigger="setSelectedItems()">
+                Select items
+              </button>
+              <button class="btn btn-secondary text-nowrap" click.trigger="resetSelectedItems()">
+                Reset selected items
+              </button>
+              <div class="input-group">
+                <badges-auto-complete
+                  id="bac-selected-values"
+                  class="form-control"
+                  controller.bind="itemsController"
+                  change.trigger="logSelectedItem($event)"
+                  placeholder="with selected-values..."
+                  label-key="name"
+                  value-key="id"
+                  selected-values.bind="selectedValues">
+                  <template replace-part="itemTemplate">
+                    <div class="d-flex justify-content-between flex-nowrap">
+                      <div class="fw-semibold m-0">${item.name}</div>
+                      <div class="fw-light ps-2 m-0"><code>${item.id}</code></div>
+                    </div>
+                  </template>
+                </badges-auto-complete>
+                <span class="input-group-text"><i class="bi bi-search"></i></span>
+              </div>
+              <div class="input-group">
+                <badges-auto-complete
+                  id="bs-selected-items"
+                  class="form-control"
+                  controller.bind="itemsController"
+                  change.trigger="logSelectedItem($event)"
+                  placeholder="with selected-items..."
+                  label-key="name"
+                  value-key="id"
+                  selected-items.bind="selectedItems">
+                  <template replace-part="itemTemplate">
+                    <div class="d-flex justify-content-between flex-nowrap">
+                      <div class="fw-semibold m-0">${item.name}</div>
+                      <div class="fw-light ps-2 m-0"><code>${item.id}</code></div>
+                    </div>
+                  </template>
+                </badges-auto-complete>
+                <span class="input-group-text"><i class="bi bi-search"></i></span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- address-auto-complete -->
+      <div class="accordion-item">
+        <div class="accordion-header">
+          <button
+            class="accordion-button py-1"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#section-9"
+            aria-expanded="true"
+            aria-controls="section-9">
+            <div class="fs-5">
+              Element
+              <code class="fw_bold text-primary">address-auto-complete</code>
+            </div>
+          </button>
+        </div>
+        <div id="section-9" class="accordion-collapse collapse show" data-bs-parent="#accordionExample">
+          <div class="accordion-body">
+            <div class="d-flex justify-content-between align-items-center gap-3">
+              <button class="btn btn-secondary" click.trigger="setSelectedAddress()">Select address</button>
+              <address-auto-complete
+                id="aac"
+                mode="address"
+                manual-entry.bind="true"
+                value.bind="selectedAdresse"></address-auto-complete>
+              <dl class="row">
+                <dt class="col-12 text-primary mb-2">Adresse sélectionnée</dt>
+                <dt class="col-2">Numéro</dt>
+                <dd class="col-10"><code>${selectedAdresse.numero}</code></dd>
+                <dt class="col-2">Voie</dt>
+                <dd class="col-10"><code>${selectedAdresse.nomVoie}</code></dd>
+                <dt class="col-2">Code&nbsp;postal</dt>
+                <dd class="col-10"><code>${selectedAdresse.codePostal}</code></dd>
+                <dt class="col-2">Commune</dt>
+                <dd class="col-10"><code>${selectedAdresse.commune}</code></dd>
+              </dl>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- input-datepicker -->
+      <div class="accordion-item">
+        <div class="accordion-header">
+          <button
+            class="accordion-button py-1"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#section-10"
+            aria-expanded="true"
+            aria-controls="section-10">
+            <div class="fs-5">
+              Element
+              <code class="fw_bold text-primary">input-datepicker</code>
+            </div>
+          </button>
+        </div>
+        <div id="section-10" class="accordion-collapse collapse show" data-bs-parent="#accordionExample">
+          <div class="accordion-body">
+            <div class="d-flex justify-content-start align-items-center gap-3">
+              <div class="form-group">
+                <div class="input-group">
+                  <input-datepicker
+                    id="idp"
+                    class="form-select"
+                    date.bind="selectedDate"
+                    change.trigger="logSelectedItem($event)"></input-datepicker>
+                  <span class="input-group-text"><i class="bi bi-calendar2"></i></span>
                 </div>
-              </template>
-            </auto-complete>
-            <span class="input-group-text"><i class="bi bi-search"></i></span>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- badges-auto-complete -->
-    <div class="row">
-      <div class="col">
-        <div class="p-4 rounded-3 border shadow-lg">
-          <h3>
-            Element
-            <code class="fw_bold text-primary">badges-auto-complete</code>
-          </h3>
-          <div class="input-group">
-            <badges-auto-complete
-              class="form-control"
-              controller.bind="itemsController"
-              change.trigger="logSelectedItem($event)"
-              label-key="name"
-              value-key="id"
-              selected-items.bind="selectedItems">
-              <template replace-part="itemTemplate">
-                <div class="d-flex justify-content-between flex-nowrap">
-                  <div class="fw-semibold m-0">${item.name}</div>
-                  <div class="fw-light ps-2 m-0"><code>${item.id}</code></div>
-                </div>
-              </template>
-            </badges-auto-complete>
-            <span class="input-group-text"><i class="bi bi-search"></i></span>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!--address-auto-complete -->
-    <div class="row">
-      <div class="col">
-        <div class="p-4 rounded-3 border shadow-lg">
-          <h3>
-            Element
-            <code class="fw_bold text-primary">address-auto-complete</code>
-          </h3>
-          <address-auto-complete
-            mode="address"
-            manual-entry.bind="true"
-            value.bind="selectedAdresse"></address-auto-complete>
-          <div class="row mt-4">
-            <dl class="row">
-              <dt class="col-12 text-primary mb-2">Elément sélectionné :</dt>
-              <dt class="col-1">Numéro :</dt>
-              <dd class="col-11"><code>${selectedAdresse.numero}</code></dd>
-              <dt class="col-1">Voie :</dt>
-              <dd class="col-11"><code>${selectedAdresse.nomVoie}</code></dd>
-              <dt class="col-1">Code postal :</dt>
-              <dd class="col-11"><code>${selectedAdresse.codePostal}</code></dd>
-              <dt class="col-1">Commune :</dt>
-              <dd class="col-11"><code>${selectedAdresse.commune}</code></dd>
-            </dl>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- input-datepicker -->
-    <div class="row">
-      <div class="col">
-        <div class="p-4 rounded-3 border shadow-lg">
-          <h3>
-            Element
-            <code class="fw_bold text-primary">input-datepicker</code>
-          </h3>
-          <div class="input-group">
-            <input-datepicker
-              class="form-select"
-              date.bind="selectedDate"
-              change.trigger="logSelectedItem($event)"></input-datepicker>
-            <span class="input-group-text"><i class="bi bi-calendar2"></i></span>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- simple-table -->
-    <div class="row">
-      <div class="col">
-        <div class="p-4 rounded-3 border shadow-lg">
-          <h3>
-            Element
-            <code class="fw_bold text-primary">simple-table</code>
-          </h3>
-          <simple-table
-            datasource.bind="itemsList"
-            selected-items.bind="selectedItems"
-            selection-mode="multiple">
-            <column header="Id" cell-key="id" sortable="true" sort-type="numeric" width="80px">
-              <small>
-                <span
-                  class="badge text-bg-secondary"
-                  data-bs-toggle="tooltip"
-                  data-bs-placement="right"
-                  data-bs-title="${item && item.name ? item.name : ' '}">
-                  ${item.id}
-                </span>
-              </small>
-            </column>
-            <column header="Name" cell-key="name" sortable="true"></column>
-            <column header="Email" cell-key="email" sortable="true" width="220px"></column>
-            <column header="Color" cell-key="color" width="120px">
-              <div class="d-flex justify-content-between flex-nowrap">
-                <div class="fw-semibold m-0">${item.color}</div>
-                <div
-                  class="ps-2 m-0"
-                  style="height: 20px; width: 20px; background-color: ${item.color};"></div>
               </div>
-            </column>
-            <column>
-              <button class="btn btn-secondary" click.trigger="item.showItemDetails(item)">Details</button>
-            </column>
-          </simple-table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- simple-table -->
+      <div class="accordion-item">
+        <div class="accordion-header">
+          <button
+            class="accordion-button py-1"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#section-11"
+            aria-expanded="true"
+            aria-controls="section-11">
+            <div class="fs-5">
+              Element
+              <code class="fw_bold text-primary">simple-table</code>
+            </div>
+          </button>
+        </div>
+        <div id="section-11" class="accordion-collapse collapse show" data-bs-parent="#accordionExample">
+          <div class="accordion-body">
+            <div class="d-flex justify-content-between align-items-center gap-3">
+              <div class="flex-fill">
+                <simple-table
+                  id="st"
+                  datasource.bind="itemsList"
+                  selected-items.bind="selectedItems"
+                  selection-mode="multiple">
+                  <column header="Id" cell-key="id" sortable="true" sort-type="numeric" width="80px">
+                    <small>
+                      <span
+                        class="badge text-bg-secondary"
+                        data-bs-toggle="tooltip"
+                        data-bs-placement="right"
+                        data-bs-title="${item && item.name ? item.name : ' '}">
+                        ${item.id}
+                      </span>
+                    </small>
+                  </column>
+                  <column header="Name" cell-key="name" sortable="true"></column>
+                  <column header="Email" cell-key="email" sortable="true" width="220px"></column>
+                  <column header="Color" cell-key="color" width="120px">
+                    <div class="d-flex justify-content-between flex-nowrap">
+                      <div class="fw-semibold m-0">${item.color}</div>
+                      <div
+                        class="ps-2 m-0"
+                        css="height: 20px; width: 20px; background-color: ${item.color};"></div>
+                    </div>
+                  </column>
+                  <column>
+                    <button class="btn btn-secondary" click.trigger="item.showItemDetails(item)">
+                      Details
+                    </button>
+                  </column>
+                </simple-table>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>

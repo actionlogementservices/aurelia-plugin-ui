@@ -10,7 +10,8 @@ import {
 } from 'aurelia-framework';
 import { Dropdown } from 'bootstrap';
 
-import { generateUniqueId, preventEventPropagation } from '../../core/functions';
+import { generateUniqueId, isNilOrEmpty, preventEventPropagation } from '../../core/functions';
+// import { setTraceDebugger } from '../../core/debug-tracer';
 
 /** @template T,U @typedef {import('./auto-complete-controller').AutoCompleteController<T,U>} AutoCompleteController<T,U> */
 
@@ -18,6 +19,7 @@ import { generateUniqueId, preventEventPropagation } from '../../core/functions'
  * Implements the **`badges-auto-complete` custom element** that provides auto completion upon a controller to be specified and a multiple selection with badge rendering.
  * @template T type of items that are retrieved with the controller
  * @template U type of items that are displayed
+ * @template K type of selected item value
  * @category autocomplete
  */
 @inject(DOM.Element, BindingEngine, TaskQueue)
@@ -26,11 +28,11 @@ export class BadgesAutoComplete {
   @bindable({ defaultBindingMode: bindingMode.toView })
   controller;
 
-  /** Selected values @type {string} */
+  /** Selected values @type {K[]} */
   @bindable({ defaultBindingMode: bindingMode.twoWay })
   selectedValues;
 
-  /** Selected items @type {(U | T)[]} */
+  /** Selected items @type {(T|U)[]} */
   @bindable({ defaultBindingMode: bindingMode.twoWay })
   selectedItems = [];
 
@@ -71,8 +73,8 @@ export class BadgesAutoComplete {
   /** Bootstrap dropdown. @type {Dropdown} */ _dropdown;
 
   /** List of retrieved items. @type {(U | T)[]} */ items = [];
+  /** Prevents reentrancy @type {boolean} */ _guard;
   /** Prevents the input field to be reset when click outside dropdown? @type {Boolean} */ ignoringReset = false;
-  /** Is input field updated internally? @type {Boolean} */ updatingInput = false;
 
   /**
    * Creates an instance of the `badges-auto-complete` custom element.
@@ -84,10 +86,11 @@ export class BadgesAutoComplete {
     this._container = element;
     this.bindingEngine = bindingEngine;
     this._taskqueue = taskqueue;
+    // setTraceDebugger(this);
   }
 
   /**
-   * Defines the logic triggered when the component is added to the DOM.
+   * Defines the logic triggered when the custom element is added to the DOM.
    */
   attached() {
     this.itemView = new InlineViewStrategy(`<template>\${${this.labelKey}}</template>`);
@@ -98,7 +101,7 @@ export class BadgesAutoComplete {
   }
 
   /**
-   * Defines the logic triggered when the component is removed from the DOM.
+   * Defines the logic triggered when the custom element is removed from the DOM.
    */
   detached() {
     this._dropdown?.dispose();
@@ -121,42 +124,71 @@ export class BadgesAutoComplete {
   }
 
   /**
-   * Defines the logic triggered when item is clicked or selected with 'Enter' key.
+   * Selects the specified item.
    * @param {U | T} item item clicked or selected
    * @param {boolean} notify should we dispatch custom element events?
    */
   selectItem(item, notify = true) {
-    if (!this.controller || !this.valueKey || !this._input) return;
-    if (this.isItemNotSelected(item)) {
-      this.selectedItems = [...this.selectedItems, item];
+    if (!this.controller) return;
+    if (!this._input) {
+      // input field is not yet loaded but datasource is ok so queue task
+      this._taskqueue.queueTask(() => this.selectItem(item, notify));
+      return;
     }
-    this.updatingInput = true;
-    this.clearInputField();
-    this.updatingInput = false;
+    // adds a new badge if applicable and synchronizes selection
+    if (this.isItemNotSelected(item)) {
+      this.synchronizeSelection([...this.selectedItems, item]);
+    }
+    // clears the html input element
+    this.clearHtmlInput();
+    // hides the dropdown
     this.hideDropdown();
     if (notify) {
-      this.triggerChangeEvent(this.selectedItems);
-      this.triggerBlurEvent(this.selectedItems);
+      this.triggerChangeEvent();
+      this.triggerBlurEvent();
     }
+  }
+
+  /**
+   * Removes the specifed item from selected items.
+   * @param {T} itemToRemove item to remove
+   */
+  removeItem(itemToRemove) {
+    const items = (this.selectedItems || []).filter(item => item !== itemToRemove);
+    this.synchronizeSelection(items);
+    this.triggerChangeEvent();
+    this.triggerBlurEvent();
+  }
+
+  /**
+   * Synchronizes custom element selection.
+   * @param {(T|U)[]} items items to select
+   */
+  synchronizeSelection(items) {
+    this._guard = true;
+    this.selectedItems = items ? [...items] : [];
+    if (!this.isInvalidValueKey()) this.selectedValues = this.selectedItems.map(item => item[this.valueKey]);
+    // ensures the _guard stays 'true' until after the change has been processed by the observer system
+    this._taskqueue.queueMicroTask(() => {
+      this._guard = false;
+    });
   }
 
   /**
    * Triggers the 'change' event of the custom element.
    * Required to participate in aurelia validation system.
-   * @param {(U | T)[]} values selected values
    */
-  triggerChangeEvent(values) {
-    const eventToSend = DOM.createCustomEvent('change', { bubbles: true, detail: values });
+  triggerChangeEvent() {
+    const eventToSend = DOM.createCustomEvent('change', { bubbles: true, detail: this.selectedItems });
     this._taskqueue.queueMicroTask(() => this._container.dispatchEvent(eventToSend));
   }
 
   /**
    * Triggers the 'blur' event of the custom element.
    * Required to participate in aurelia validation system.
-   * @param {(U | T)[]} values selected values
    */
-  triggerBlurEvent(values) {
-    const eventToSend = DOM.createCustomEvent('blur', { bubbles: true, detail: values });
+  triggerBlurEvent() {
+    const eventToSend = DOM.createCustomEvent('blur', { bubbles: true, detail: this.selectedItems });
     this._taskqueue.queueMicroTask(() => this._container.dispatchEvent(eventToSend));
   }
 
@@ -198,16 +230,32 @@ export class BadgesAutoComplete {
   }
 
   /**
-   * Defines the logic triggered when user clicks outside the component.
+   * Is the labelKey invalid?
+   * @returns {boolean} true if invalid, false otherwise
    */
-  resetInputValue() {
-    if (!this.ignoringReset) this.clearInputField();
+  isInvalidLabelKey() {
+    return isNilOrEmpty(this.labelKey);
   }
 
   /**
-   * Clears the input field.
+   * Is the valueKey invalid?
+   * @returns {boolean} true if invalid, false otherwise
    */
-  clearInputField() {
+  isInvalidValueKey() {
+    return isNilOrEmpty(this.valueKey);
+  }
+
+  /**
+   * Resets the html input.
+   */
+  onInputBlur() {
+    if (!this.ignoringReset) this.clearHtmlInput();
+  }
+
+  /**
+   * Clears the html input.
+   */
+  clearHtmlInput() {
     // eslint-disable-next-line unicorn/no-null
     this._input.value = null;
   }
@@ -224,27 +272,12 @@ export class BadgesAutoComplete {
   }
 
   /**
-   * Removes the specifed item from selected items.
-   * @param {U | T} item item to remove
-   */
-  removeItem(item) {
-    const index = this.selectedItems.indexOf(item);
-    if (index !== -1) {
-      this.selectedItems.splice(index, 1);
-      this.selectedItems = [...this.selectedItems];
-    }
-    this.triggerChangeEvent(this.selectedItems);
-    this.triggerBlurEvent(this.selectedItems);
-  }
-
-  /**
    * Defines the logic triggered when user types data in the input field.
    * @param {string} inputValue user input
    */
-  async inputValueChanged(inputValue) {
-    if (this.updatingInput) return;
+  async onInputChange(inputValue) {
+    if (this._guard) return;
     if (inputValue === '') {
-      this.value = undefined;
       this.hideDropdown();
       return;
     }
@@ -262,10 +295,20 @@ export class BadgesAutoComplete {
    * Defines the logic triggered when `selected-items` attribute is databound.
    */
   selectedItemsChanged() {
-    this._taskqueue.queueTask(() => {
-      if (!this.controller || !this.valueKey || this.updatingInput) return;
-      if (!this.selectedItems) this.selectedItems = [];
-    });
+    if (this._guard) return;
+    if (!this.controller || !this.valueKey || this._guard) return;
+    if (!this.selectedItems) this.selectedItems = [];
+  }
+
+  /**
+   * Defines the logic triggered when `selected-values` attribute is databound.
+   * @param {undefined | K[]} newValues new `selected-values` value
+   */
+  selectedValuesChanged(newValues) {
+    // if (this._guard) return;
+    // if (!this.controller) return;
+    // const itemsToSelect = await this.controller.getItems(newValues);
+    // this.synchronizeSelection(itemsToSelect);
   }
 
   /**

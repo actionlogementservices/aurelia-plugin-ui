@@ -25,8 +25,8 @@
       data-bs-toggle="dropdown"
       role="button"
       role="searchbox"
-      input.trigger="inputValueChanged($event.target.value)"
-      blur.trigger="resetInputValue()"
+      input.trigger="onInputChange($event.target.value)"
+      blur.trigger="onInputBlur()"
       keydown.trigger="manageKey($event.code)" />
     <!-- dropdown -->
     <div

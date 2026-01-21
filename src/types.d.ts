@@ -40,14 +40,14 @@ export type NotificationType = 'info' | 'warning' | 'error' | 'success';
 
 export type AddressMode = 'zipCode' | 'address';
 
-export type DisplayValueFormater<T> = (item: T) => string;
+export type IItemModelBuilder<T, U> = (item: T) => T | U;
 
-export type ItemModelBuilder<T, U> = (item: T) => T | U;
+export type ISearchable<T> = (text: string, ...params) => Promise<T[]>;
 
-export type Search<T> = (text: string, ...params) => Promise<T[]>;
+export type IByKeyGetter<K, T> = (values: K[]) => Promise<T[]>;
 
 export type AutoCompleteControllerConfiguration<T> = {
-  requestFactory: (callback: Search<T>) => Search<T>;
+  requestFactory: (callback: ISearchable<T>) => ISearchable<T>;
   buildItemModel: (item: T) => T;
 };
 

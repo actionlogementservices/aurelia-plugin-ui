@@ -40,7 +40,7 @@ __element__ | `HTMLInputElement` | *html input element using this custom attribu
 
 ![modifier: public](images/badges/modifier-public.png)
 
-Defines the logic triggered when the component is added to the DOM.
+Defines the logic triggered when the custom element is added to the DOM.
 
 ---
 
