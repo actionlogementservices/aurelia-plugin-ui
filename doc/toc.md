@@ -47,15 +47,18 @@
 This attribute works together with the &#x60;numberFormat&#x60; and the &#x60;cleanInputMask&#x60; value converters._
   * [attributes/no-submit](src-attributes_no-submit.md) - _Implements the **&#x60;no-submit&#x60; custom attribute** that prevents submitting when &#x60;enter&#x60; is pressed._
 
+* ![category:internal](https://img.shields.io/badge/category-internal-6b6b6b.svg?style=flat-square)
+  * [core/decorators](src-core_decorators.md) - _Defines common decorators._
+  * [core/functions](src-core_functions.md) - _Defines common functions._
+  * [core/sorting](src-core_sorting.md) - _Defines the common sorting functions._
+
+* ![category:other](https://img.shields.io/badge/category-other-9f9f9f.svg?style=flat-square)
+  * [core/debug-tracer](src-core_debug-tracer.md) - _Module core/debug-tracer_
+
 * ![category:valueconverter](https://img.shields.io/badge/category-valueconverter-085a8a.svg?style=flat-square)
   * [value-converters/clean-input-mask](src-value-converters_clean-input-mask.md) - _Implements a **&#x60;cleanInputMask&#x60; value converter** to remove the input mask.
 This converter works together with the &#x60;input-mask&#x60; attribute and the &#x60;numberFormat&#x60; value converter._
   * [value-converters/date-format](src-value-converters_date-format.md) - _Implements a **&#x60;dateFormat&#x60;value converter** to transform a date to DD/MM/YYYY format._
   * [value-converters/number-format](src-value-converters_number-format.md) - _Implements a **&#x60;numberFormat&#x60;value converter** to transform a number to a string representation.
 This converter works together with the &#x60;input-mask&#x60; attribute and the &#x60;cleanInputMask&#x60; value converter._
-
-* ![category:internal](https://img.shields.io/badge/category-internal-6b6b6b.svg?style=flat-square)
-  * [core/decorators](src-core_decorators.md) - _Defines common decorators._
-  * [core/functions](src-core_functions.md) - _Defines common functions._
-  * [core/sorting](src-core_sorting.md) - _Defines the common sorting functions._
 

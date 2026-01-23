@@ -62,8 +62,21 @@ export class App {
   }
 
   activate() {
-    this.itemsController.configure(text =>
-      this.itemsList.filter(item => item.name.toUpperCase().includes(text.toUpperCase()))
+    // this.itemsController.configure(
+    //   text => this.itemsList.filter(item => item.name.toUpperCase().includes(text.toUpperCase())),
+    //   undefined,
+    //   values => this.itemsList.filter(item => values.includes(item.id))
+    // );
+    this.itemsController.configure(
+      async text => {
+        await wait(200);
+        return this.itemsList.filter(item => item.name.toUpperCase().includes(text.toUpperCase()));
+      },
+      undefined,
+      async values => {
+        await wait(200);
+        return this.itemsList.filter(item => values.includes(item.id));
+      }
     );
   }
 
@@ -86,6 +99,30 @@ export class App {
 
   setSelectedValues() {
     this.selectedValues = [5, 6, 7];
+  }
+
+  resetAll() {
+    this.selectedItem = undefined;
+    this.selectedValue = undefined;
+    this.selectedItems = [];
+    this.selectedValues = [];
+    this.selectedAdresse = undefined;
+  }
+
+  resetSelectedItem() {
+    this.selectedItem = undefined;
+  }
+
+  resetSelectedItems() {
+    this.selectedItems = [];
+  }
+
+  resetSelectedValue() {
+    this.selectedValue = undefined;
+  }
+
+  resetSelectedValues() {
+    this.selectedValues = [];
   }
 
   setSelectedAddress() {

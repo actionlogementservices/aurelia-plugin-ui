@@ -12,7 +12,7 @@ Imlements a controller that retrieves data on the fly for an &#x27;auto-complete
 
 ## Methods
 
-### `configure(search, buildItemModel)`
+### `configure(search, buildItemModel, getItems)`
 
 ![modifier: public](images/badges/modifier-public.png)
 
@@ -20,8 +20,9 @@ Creates an instance of the autocomplete controller.
 
 Parameters | Type | Description
 --- | --- | ---
-__search__ | `Search.<T>` | *query function that retrieves item to display*
-__buildItemModel__ | `ItemModelBuilder.<T, U>` | *build the model of type &#x60;U&#x60; to be displayed based on the response object of type &#x60;T&#x60; retrieved by the query function*
+__search__ | `ISearchable.<T>` | *query function that retrieves item to display*
+__buildItemModel__ | `IItemModelBuilder.<T, U>` | *build the model of type &#x60;U&#x60; to be displayed based on the response object of type &#x60;T&#x60; retrieved by the query function*
+__getItems__ | `IByKeyGetter.<K, T>` | *query function that retrieves items by their values*
 
 ---
 
@@ -34,6 +35,19 @@ Searches the specified text and return corresponding results to display.
 Parameters | Type | Description
 --- | --- | ---
 __searchText__ | `string` | *text to search*
+__*return*__ | `Promise<(U \| T)[]>` | *corresponding results*
+
+---
+
+### `getItems(itemValues) ► Promise<(U | T)[]>`
+
+![modifier: public](images/badges/modifier-public.png)
+
+Gets the item corresponding to the specified value.
+
+Parameters | Type | Description
+--- | --- | ---
+__itemValues__ | `Array.<K>` | *item values*
 __*return*__ | `Promise<(U \| T)[]>` | *corresponding results*
 
 ---

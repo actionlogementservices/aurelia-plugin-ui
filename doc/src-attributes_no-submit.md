@@ -29,7 +29,7 @@ __element__ | `HTMLFormElement` | *html form element using this custom attribute
 
 ![modifier: public](images/badges/modifier-public.png)
 
-Defines the logic triggered when the component is added to the DOM.
+Defines the logic triggered when the custom element is added to the DOM.
 
 ---
 

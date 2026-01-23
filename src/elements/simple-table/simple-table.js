@@ -81,14 +81,14 @@ export class SimpleTable {
   }
 
   /**
-   * Defines the logic triggered when the component is added to the DOM.
+   * Defines the logic triggered when the custom element is added to the DOM.
    */
   attached() {
     this.setDisplayedItems();
   }
 
   /**
-   * Defines the logic triggered when the component is removed from the DOM.
+   * Defines the logic triggered when the custom element is removed from the DOM.
    */
   detached() {
     if (this._tooltips) [...this._tooltips].map(tooltip => tooltip?.dispose());

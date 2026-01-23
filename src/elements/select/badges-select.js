@@ -10,16 +10,18 @@ import {
 } from 'aurelia-framework';
 import { Dropdown } from 'bootstrap';
 
-import { generateUniqueId, preventEventPropagation } from '../../core/functions';
+import { generateUniqueId, isNilOrEmpty, preventEventPropagation } from '../../core/functions';
+// import { setTraceDebugger } from '../../core/debug-tracer';
 
 /**
  * Implements the **`badges-select` custom element** that provides a dropdown list based on a datasource with on the fly filtering and a multiple selection with badge rendering.
  * @template T type of items of the data source
+ * @template K type of selected item value
  * @category select
  */
 @inject(DOM.Element, BindingEngine, TaskQueue)
 export class BadgesSelect {
-  /** Selected values @type {string} */
+  /** Selected values @type {K[]} */
   @bindable({ defaultBindingMode: bindingMode.twoWay })
   selectedValues;
 
@@ -63,9 +65,8 @@ export class BadgesSelect {
   /** Html input element. @type {HTMLInputElement} */ _input;
   /** Html dropdown host element. @type {HTMLDivElement} */ _dropdownList;
   /** Bootstrap dropdown. @type {Dropdown} */ _dropdown;
-
+  /** Prevents reentrancy. @type {boolean} */ _guard;
   /** Prevents the input field to be reset when click outside dropdown? @type {Boolean} */ ignoringReset = false;
-  /** Is input field updated internally? @type {Boolean} */ updatingInput = false;
 
   /**
    * Creates an instance of the `badges-select` custom element.
@@ -77,10 +78,11 @@ export class BadgesSelect {
     this._container = element;
     this.bindingEngine = bindingEngine;
     this._taskqueue = taskqueue;
+    // setTraceDebugger(this);
   }
 
   /**
-   * Defines the logic triggered when the component is added to the DOM.
+   * Defines the logic triggered when the custom element is added to the DOM.
    */
   attached() {
     this.itemView = new InlineViewStrategy(`<template>\${${this.labelKey}}</template>`);
@@ -91,7 +93,7 @@ export class BadgesSelect {
   }
 
   /**
-   * Defines the logic triggered when the component is removed from the DOM.
+   * Defines the logic triggered when the custom element is removed from the DOM.
    */
   detached() {
     this._dropdown?.dispose();
@@ -113,43 +115,68 @@ export class BadgesSelect {
   }
 
   /**
-   * Defines the logic triggered when item is clicked or selected with 'Enter' key.
+   * Selects the specified item.
    * @param {T} item item clicked or selected
    * @param {boolean} notify should we dispatch custom element events?
    */
   selectItem(item, notify = true) {
-    if (!this.datasource || !this.valueKey) return;
+    if (this.isInvalidDatasource()) return;
+    // adds a new badge if applicable and synchronizes selection
     if (this.isItemNotSelected(item)) {
-      this.selectedItems = [...this.selectedItems, item];
+      this.synchronizeSelection([...this.selectedItems, item]);
     }
-    this.updatingInput = true;
-    this.clearInputField();
-    this.updatingInput = false;
+    // clears the html input element
+    this.clearHtmlInput();
+    // hides the dropdown
     this.hideDropdown();
-    this.filterItems();
+    // triggers events if applicable
     if (notify) {
-      this.triggerChangeEvent(this.selectedItems);
-      this.triggerBlurEvent(this.selectedItems);
+      this.triggerChangeEvent();
+      this.triggerBlurEvent();
     }
+  }
+
+  /**
+   * Removes the item with the specified value from selected items.
+   * @param {T} itemToRemove item to remove
+   */
+  removeItem(itemToRemove) {
+    const items = (this.selectedItems || []).filter(item => item !== itemToRemove);
+    this.synchronizeSelection(items);
+    this.triggerChangeEvent();
+    this.triggerBlurEvent();
+  }
+
+  /**
+   * Synchronizes custom element selection.
+   * @param {T[]} items items to select
+   */
+  synchronizeSelection(items) {
+    this._guard = true;
+    this.selectedItems = Array.isArray(items) ? [...items] : [];
+    if (!this.isInvalidValueKey()) this.selectedValues = this.selectedItems.map(item => item[this.valueKey]);
+    this.filterDropdownItems();
+    // ensures the _guard stays 'true' until after the change has been processed by the observer system
+    this._taskqueue.queueMicroTask(() => {
+      this._guard = false;
+    });
   }
 
   /**
    * Triggers the 'change' event of the custom element.
    * Required to participate in aurelia validation system.
-   * @param {T[]} values selected values
    */
-  triggerChangeEvent(values) {
-    const eventToSend = DOM.createCustomEvent('change', { bubbles: true, detail: values });
+  triggerChangeEvent() {
+    const eventToSend = DOM.createCustomEvent('change', { bubbles: true, detail: this.selectedItems });
     this._taskqueue.queueMicroTask(() => this._container.dispatchEvent(eventToSend));
   }
 
   /**
    * Triggers the 'blur' event of the custom element.
    * Required to participate in aurelia validation system.
-   * @param {T[]} values selected values
    */
-  triggerBlurEvent(values) {
-    const eventToSend = DOM.createCustomEvent('blur', { bubbles: true, detail: values });
+  triggerBlurEvent() {
+    const eventToSend = DOM.createCustomEvent('blur', { bubbles: true, detail: this.selectedItems });
     this._taskqueue.queueMicroTask(() => this._container.dispatchEvent(eventToSend));
   }
 
@@ -174,29 +201,40 @@ export class BadgesSelect {
   }
 
   /**
-   * Filters the items list to those that contain the given input value and are not already selected.
-   * @param {string} [inputValue] input value
+   * Filters the dropdown items list to those that contain the given input value and are not already selected.
+   * @param {string} [text] input text
    */
-  filterItems(inputValue) {
-    const filteredItems =
-      (inputValue
+  filterDropdownItems(text) {
+    if (this.isInvalidDatasource()) return;
+    // retrieve items that matches the input text
+    const itemsToFilter =
+      text && !this.isInvalidLabelKey()
         ? this.datasource.filter(item =>
-            item[this.labelKey]?.toLocaleUpperCase().includes(inputValue.toLocaleUpperCase())
+            item[this.labelKey]?.toLocaleUpperCase().includes(text.toLocaleUpperCase())
           )
-        : this.datasource) || [];
-    this.filteredItems = filteredItems.filter(item => this.isItemNotSelected(item));
+        : this.datasource;
+    // filter them to those not already selected
+    this.filteredItems = itemsToFilter.filter(item => this.isItemNotSelected(item));
   }
 
   /**
-   * Resets the items list to the original databound list.
+   * Resets the dropdown items list to the original databound list.
    */
-  resetItems() {
+  resetDropdownItems() {
     this.filteredItems = this.datasource;
   }
 
   /**
+   * Clears the html input element.
+   */
+  clearHtmlInput() {
+    // eslint-disable-next-line unicorn/no-null
+    this._input.value = null;
+  }
+
+  /**
    * Count of items.
-   * @type {number} items count
+   * @type {number}
    */
   @computedFrom('filteredItems')
   get filteredItemsCount() {
@@ -204,11 +242,27 @@ export class BadgesSelect {
   }
 
   /**
-   * Clears the input field.
+   * Is the datasource invalid?
+   * @returns {boolean} true if invalid, false otherwise
    */
-  clearInputField() {
-    // eslint-disable-next-line unicorn/no-null
-    this._input.value = null;
+  isInvalidDatasource() {
+    return !this.datasource || !Array.isArray(this.datasource);
+  }
+
+  /**
+   * Is the labelKey invalid?
+   * @returns {boolean} true if invalid, false otherwise
+   */
+  isInvalidLabelKey() {
+    return isNilOrEmpty(this.labelKey);
+  }
+
+  /**
+   * Is the valueKey invalid?
+   * @returns {boolean} true if invalid, false otherwise
+   */
+  isInvalidValueKey() {
+    return isNilOrEmpty(this.valueKey);
   }
 
   /**
@@ -223,34 +277,18 @@ export class BadgesSelect {
   }
 
   /**
-   * Removes the specifed item from selected items.
-   * @param {T} item item to remove
+   * Defines the logic triggered when user clicks outside of the html input element.
    */
-  removeItem(item) {
-    const index = this.selectedItems.indexOf(item);
-    if (index !== -1) {
-      this.selectedItems.splice(index, 1);
-      this.selectedItems = [...this.selectedItems];
-    }
-    this.filterItems();
-    this.triggerChangeEvent(this.selectedItems);
-    this.triggerBlurEvent(this.selectedItems);
+  onInputBlur() {
+    if (!this.ignoringReset) this.clearHtmlInput();
   }
 
   /**
-   * Defines the logic triggered when user clicks outside the component.
-   */
-  resetInputValue() {
-    if (!this.ignoringReset) this.clearInputField();
-  }
-
-  /**
-   * Defines the logic triggered when user types data in the input field.
+   * Defines the logic triggered when user types data in the html input element.
    * @param {string} inputValue user input
    */
-  inputValueChanged(inputValue) {
-    if (this.updatingInput) return;
-    this.filterItems(inputValue);
+  onInputChange(inputValue) {
+    this.filterDropdownItems(inputValue);
     if (this.filteredItemsCount === 1 && this._keyCode !== 'Backspace') {
       // for auto-completion
       this.selectItem(this.filteredItems[0]);
@@ -261,13 +299,26 @@ export class BadgesSelect {
 
   /**
    * Defines the logic triggered when `selected-items` attribute is databound.
+   * @param {undefined | T[]} newItems new `selected-items` value
    */
-  selectedItemsChanged() {
-    this._taskqueue.queueTask(() => {
-      if (this.updatingInput) return;
-      if (!this.selectedItems) this.selectedItems = [];
-      this.filterItems();
-    });
+  selectedItemsChanged(newItems) {
+    if (this._guard) return;
+    this.synchronizeSelection(newItems);
+    this.filterDropdownItems();
+  }
+
+  /**
+   * Defines the logic triggered when `selected-values` attribute is databound.
+   * @param {undefined | K[]} newValues new `selected-values` value
+   */
+  selectedValuesChanged(newValues) {
+    if (this._guard) return;
+    if (this.isInvalidDatasource() || this.isInvalidValueKey()) return;
+    const newItems =
+      newValues?.length > 0
+        ? this.datasource.filter(item => newValues.includes(item && item[this.valueKey]))
+        : [];
+    this.synchronizeSelection(newItems);
   }
 
   /**
@@ -282,8 +333,12 @@ export class BadgesSelect {
    * Defines the logic triggered when `datasource` attribute is databound.
    */
   datasourceChanged() {
-    this.resetItems();
+    this.resetDropdownItems();
     // if values was first databound before datasource re-trigger values change
-    if (this.selectedItems?.length > 0) this.selectedItemsChanged();
+    if (Array.isArray(this.selectedValues)) {
+      this.selectedValuesChanged(this.selectedValues);
+    } else {
+      this.filterDropdownItems();
+    }
   }
 }

@@ -31,7 +31,7 @@ __taskqueue__ | `TaskQueue` | *aurelia asynchronous task queue*
 
 ![modifier: public](images/badges/modifier-public.png)
 
-Defines the logic triggered when the component is added to the DOM.
+Defines the logic triggered when the custom element is added to the DOM.
 
 ---
 
@@ -39,7 +39,7 @@ Defines the logic triggered when the component is added to the DOM.
 
 ![modifier: public](images/badges/modifier-public.png)
 
-Defines the logic triggered when the component is removed from the DOM.
+Defines the logic triggered when the custom element is removed from the DOM.
 
 ---
 
@@ -55,12 +55,42 @@ Hides the dropdown.
 
 ![modifier: public](images/badges/modifier-public.png)
 
-Defines the logic triggered when item is clicked or selected with &#x27;Enter&#x27; key.
+Selects the specified item.
 
 Parameters | Type | Description
 --- | --- | ---
 __item__ | `T` | *item clicked or selected*
 __notify__ | `boolean` | *should we dispatch custom element events?*
+
+---
+
+### `synchronizeSelection(item)`
+
+![modifier: public](images/badges/modifier-public.png)
+
+Synchronizes custom element selection.
+
+Parameters | Type | Description
+--- | --- | ---
+__item__ | `T` | *item to select*
+
+---
+
+### `triggerChangeEvent()`
+
+![modifier: public](images/badges/modifier-public.png)
+
+Triggers the &#x27;change&#x27; event of the custom element.
+Required to participate in aurelia validation system.
+
+---
+
+### `triggerBlurEvent()`
+
+![modifier: public](images/badges/modifier-public.png)
+
+Triggers the &#x27;blur&#x27; event of the custom element.
+Required to participate in aurelia validation system.
 
 ---
 
@@ -74,6 +104,54 @@ Parameters | Type | Description
 --- | --- | ---
 __keyCode__ | `string` | *key code*
 __*return*__ | `boolean` | *true*
+
+---
+
+### `setHtmlInputContent(item)`
+
+![modifier: public](images/badges/modifier-public.png)
+
+Sets the html input element content.
+
+Parameters | Type | Description
+--- | --- | ---
+__item__ | `T` | *item*
+
+---
+
+### `isInvalidDatasource() ► boolean`
+
+![modifier: public](images/badges/modifier-public.png)
+
+Is the datasource invalid?
+
+Parameters | Type | Description
+--- | --- | ---
+__*return*__ | `boolean` | *true if invalid, false otherwise*
+
+---
+
+### `isInvalidLabelKey() ► boolean`
+
+![modifier: public](images/badges/modifier-public.png)
+
+Is the labelKey invalid?
+
+Parameters | Type | Description
+--- | --- | ---
+__*return*__ | `boolean` | *true if invalid, false otherwise*
+
+---
+
+### `isInvalidValueKey() ► boolean`
+
+![modifier: public](images/badges/modifier-public.png)
+
+Is the valueKey invalid?
+
+Parameters | Type | Description
+--- | --- | ---
+__*return*__ | `boolean` | *true if invalid, false otherwise*
 
 ---
 
@@ -117,7 +195,7 @@ Defines the logic triggered when &#x60;datasource&#x60; attribute is databound.
 
 Name | Type | Description
 --- | --- | ---
-__selectedValue__ | `string` | *Selected value @type {string}*
+__selectedValue__ | `K` | *Selected value @type {K}*
 __selectedItem__ | `T` | *Selected item @type {T}*
 __datasource__ | `T[]` | *Data source @type {T[]}*
 __placeholder__ | `string` | *The place holder text. @type {string}*
@@ -131,3 +209,4 @@ ___container__ | `HTMLTemplateElement` | *Html container of the custom element. 
 ___input__ | `HTMLInputElement` | *Html input element. @type {HTMLInputElement}*
 ___dropdownList__ | `HTMLDivElement` | *Html dropdown host element. @type {HTMLDivElement}*
 ___dropdown__ | `Dropdown` | *Bootstrap dropdown. @type {Dropdown}*
+___guard__ | `boolean` | *Prevents reentrancy. @type {boolean}*

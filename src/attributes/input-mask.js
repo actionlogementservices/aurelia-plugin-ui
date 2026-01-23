@@ -61,7 +61,7 @@ export class InputMaskCustomAttribute {
   }
 
   /**
-   * Defines the logic triggered when the component is added to the DOM.
+   * Defines the logic triggered when the custom element is added to the DOM.
    */
   attached() {
     const inputMask = new Inputmask(this.value, maskConfiguration[this.value] || defaultMaskConfiguration);

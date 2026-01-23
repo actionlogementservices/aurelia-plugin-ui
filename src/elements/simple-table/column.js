@@ -72,12 +72,12 @@ export class Column {
   }
 
   /**
-   * Defines the logic triggered when the component is added to the DOM.
+   * Defines the logic triggered when the custom element is added to the DOM.
    */
   attached() {}
 
   /**
-   * Defines the logic triggered when the component is removed from the DOM.
+   * Defines the logic triggered when the custom element is removed from the DOM.
    */
   detached() {}
 

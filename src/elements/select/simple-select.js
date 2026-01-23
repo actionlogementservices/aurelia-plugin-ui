@@ -9,16 +9,18 @@ import {
 } from 'aurelia-framework';
 import { Dropdown } from 'bootstrap';
 
-import { generateUniqueId, preventEventPropagation } from '../../core/functions';
+import { generateUniqueId, isNilOrEmpty, preventEventPropagation } from '../../core/functions';
+// import { setTraceDebugger } from '../../core/debug-tracer';
 
 /**
  * Implements the **`simple-select` custom element** that provides a dropdown list based on a datasource and single selection.
  * @template T type of items of the data source
+ * @template K type of selected item value
  * @category select
  */
 @inject(DOM.Element, BindingEngine, TaskQueue)
 export class SimpleSelect {
-  /** Selected value @type {string} */
+  /** Selected value @type {K} */
   @bindable({ defaultBindingMode: bindingMode.twoWay })
   selectedValue;
 
@@ -59,6 +61,7 @@ export class SimpleSelect {
   /** Html input element. @type {HTMLInputElement} */ _input;
   /** Html dropdown host element. @type {HTMLDivElement} */ _dropdownList;
   /** Bootstrap dropdown. @type {Dropdown} */ _dropdown;
+  /** Prevents reentrancy. @type {boolean} */ _guard;
 
   /**
    * Creates an instance of the `simple-select` custom element.
@@ -70,10 +73,11 @@ export class SimpleSelect {
     this._container = element;
     this.bindingEngine = bindingEngine;
     this._taskqueue = taskqueue;
+    // setTraceDebugger(this);
   }
 
   /**
-   * Defines the logic triggered when the component is added to the DOM.
+   * Defines the logic triggered when the custom element is added to the DOM.
    */
   attached() {
     this.itemView = new InlineViewStrategy(`<template>\${${this.labelKey}}</template>`);
@@ -84,7 +88,7 @@ export class SimpleSelect {
   }
 
   /**
-   * Defines the logic triggered when the component is removed from the DOM.
+   * Defines the logic triggered when the custom element is removed from the DOM.
    */
   detached() {
     this._dropdown?.dispose();
@@ -99,23 +103,60 @@ export class SimpleSelect {
   }
 
   /**
-   * Defines the logic triggered when item is clicked or selected with 'Enter' key.
+   * Selects the specified item.
    * @param {T} item item clicked or selected
    * @param {boolean} notify should we dispatch custom element events?
    */
   selectItem(item, notify = true) {
-    if (!this.datasource || !this._input) return;
-    this.selectedItem = item;
-    if (this.valueKey && this.selectedItem) this.selectedValue = this.selectedItem[this.valueKey];
-    // eslint-disable-next-line unicorn/no-null
-    this._input.value = item ? item[this.labelKey] : null;
-    this.hideDropdown();
-    if (notify) {
-      const event = DOM.createCustomEvent('change', { bubbles: true, detail: item });
-      this._taskqueue.queueMicroTask(() => this._container.dispatchEvent(event));
-      const event2 = DOM.createCustomEvent('blur', { bubbles: true, detail: item });
-      this._taskqueue.queueMicroTask(() => this._container.dispatchEvent(event2));
+    if (this.isInvalidDatasource()) return;
+    // input field is not yet loaded but datasource is ok so queue task
+    if (!this._input) {
+      this._taskqueue.queueTask(() => this.selectItem(item, notify));
+      return;
     }
+    // synchronizes selection
+    this.synchronizeSelection(item);
+    // sets the html input element content with the label
+    this.setHtmlInputContent(item);
+    // hides the dropdown
+    this.hideDropdown();
+    // triggers events if applicable
+    if (notify) {
+      this.triggerChangeEvent();
+      this.triggerBlurEvent();
+    }
+  }
+
+  /**
+   * Synchronizes custom element selection.
+   * @param {T} item item to select
+   */
+  synchronizeSelection(item) {
+    this._guard = true;
+    this.selectedItem = item;
+    if (!this.isInvalidValueKey()) this.selectedValue = item ? item[this.valueKey] : undefined;
+    // ensures the _guard stays 'true' until after the change has been processed by the observer system
+    this._taskqueue.queueMicroTask(() => {
+      this._guard = false;
+    });
+  }
+
+  /**
+   * Triggers the 'change' event of the custom element.
+   * Required to participate in aurelia validation system.
+   */
+  triggerChangeEvent() {
+    const eventToSend = DOM.createCustomEvent('change', { bubbles: true, detail: this.selectedItem });
+    this._taskqueue.queueMicroTask(() => this._container.dispatchEvent(eventToSend));
+  }
+
+  /**
+   * Triggers the 'blur' event of the custom element.
+   * Required to participate in aurelia validation system.
+   */
+  triggerBlurEvent() {
+    const eventToSend = DOM.createCustomEvent('blur', { bubbles: true, detail: this.selectedItem });
+    this._taskqueue.queueMicroTask(() => this._container.dispatchEvent(eventToSend));
   }
 
   /**
@@ -138,21 +179,54 @@ export class SimpleSelect {
   }
 
   /**
+   * Sets the html input element content.
+   * @param {T} item item
+   */
+  setHtmlInputContent(item) {
+    // eslint-disable-next-line unicorn/no-null
+    this._input.value = item ? (item[this.labelKey] ?? null) : null;
+  }
+
+  /**
+   * Is the datasource invalid?
+   * @returns {boolean} true if invalid, false otherwise
+   */
+  isInvalidDatasource() {
+    return !this.datasource || !Array.isArray(this.datasource);
+  }
+
+  /**
+   * Is the labelKey invalid?
+   * @returns {boolean} true if invalid, false otherwise
+   */
+  isInvalidLabelKey() {
+    return isNilOrEmpty(this.labelKey);
+  }
+
+  /**
+   * Is the valueKey invalid?
+   * @returns {boolean} true if invalid, false otherwise
+   */
+  isInvalidValueKey() {
+    return isNilOrEmpty(this.valueKey);
+  }
+
+  /**
    * Defines the logic triggered when `selected-item` attribute is databound.
    */
   selectedItemChanged() {
-    this._taskqueue.queueTask(() => this.selectItem(this.selectedItem, false));
+    if (this._guard) return;
+    this.selectItem(this.selectedItem, false);
   }
 
   /**
    * Defines the logic triggered when `select-value` attribute is databound.
    */
   selectedValueChanged() {
-    this._taskqueue.queueTask(() => {
-      if (!this.valueKey || !this.datasource) return;
-      const selectedItem = this.datasource.find(item => item[this.valueKey] === this.selectedValue);
-      this.selectItem(selectedItem, false);
-    });
+    if (this._guard) return;
+    if (this.isInvalidDatasource() || this.isInvalidValueKey()) return;
+    const selectedItem = this.datasource.find(item => item[this.valueKey] === this.selectedValue);
+    this.selectItem(selectedItem, false);
   }
 
   /**

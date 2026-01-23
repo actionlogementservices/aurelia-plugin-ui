@@ -7,18 +7,18 @@
       disabled.bind="disabled"
       class="form-control border-0 shadow-none"
       aria-autocomplete="none"
-      autocomplete="none"
+      autocomplete="off"
       autocorrect="off"
       spellcheck="false"
       data-bs-toggle="dropdown"
       role="searchbox"
-      input.trigger="inputValueChanged($event.target.value) & debounce:delay"
+      input.trigger="onInputChange($event.target.value) & debounce:delay"
       click.trigger="hideDropdown()"
-      blur.trigger="resetInputValue()"
+      blur.trigger="onInputBlur()"
       keydown.trigger="manageKey($event.code)" />
   <div id="auto-complete-${uniqueId}" class="dropdown">
     <!-- dropdown -->
-    <div id="dropDown-${uniqueId}" class="dropdown-menu dropdown-menu-scroll ${autosize ? 'dropdown-menu-autosize' : ''}"">
+    <div id="dropDown-${uniqueId}" class="dropdown-menu dropdown-menu-scroll ${autosize ? 'dropdown-menu-autosize' : ''}">
       <button
         repeat.for="item of items"
         type="button"

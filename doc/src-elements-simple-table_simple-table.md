@@ -30,7 +30,7 @@ __taskqueue__ | `TaskQueue` | *aurelia asynchronous task queue*
 
 ![modifier: public](images/badges/modifier-public.png)
 
-Defines the logic triggered when the component is added to the DOM.
+Defines the logic triggered when the custom element is added to the DOM.
 
 ---
 
@@ -38,7 +38,7 @@ Defines the logic triggered when the component is added to the DOM.
 
 ![modifier: public](images/badges/modifier-public.png)
 
-Defines the logic triggered when the component is removed from the DOM.
+Defines the logic triggered when the custom element is removed from the DOM.
 
 ---
 
@@ -62,7 +62,7 @@ __columnToSort__ | [Column](src-elements-simple-table_column.md) | *the column t
 
 ---
 
-### `toggleItemSelection(item, notify) ► boolean`
+### `toggleItemSelection(item, event) ► boolean`
 
 ![modifier: public](images/badges/modifier-public.png)
 
@@ -71,7 +71,7 @@ Defines the logic triggered when item is clicked.
 Parameters | Type | Description
 --- | --- | ---
 __item__ | `T & {selected: boolean}` | *item clicked or selected*
-__notify__ | `boolean` | *should we dispatch custom element events?*
+__event__ | `Event` | *click event*
 __*return*__ | `boolean` | *let event propagates*
 
 ---
@@ -163,6 +163,7 @@ __columns__ | `Column[]` | *Columns description @type {Column[]}*
 __selectedItems__ | `T[]` | *Selected items @type {T[]}*
 __valueKey__ | `string` | *Property key used to identify item. @type {string}*
 __datasource__ | `T[] \| { items: T[], totalCount: number }` | *Data source @type {T[] | { items: T[], totalCount: number }}*
+__disabled__ | `boolean` | *Enable/Disable the custom element to prevent user modification. @type {boolean}*
 __maxRows__ | `number` | *Maximal number of displayed rows. @type {number}*
 __maxHeight__ | `string` | *CSS max height of the table. @type {string}*
 __selectionMode__ | `'none' \| 'single' \| 'multiple'` | *Selection mode. @type {&#x27;none&#x27; | &#x27;single&#x27; | &#x27;multiple&#x27;}*

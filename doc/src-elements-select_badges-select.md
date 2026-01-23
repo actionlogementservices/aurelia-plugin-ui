@@ -31,7 +31,7 @@ __taskqueue__ | `TaskQueue` | *aurelia asynchronous task queue*
 
 ![modifier: public](images/badges/modifier-public.png)
 
-Defines the logic triggered when the component is added to the DOM.
+Defines the logic triggered when the custom element is added to the DOM.
 
 ---
 
@@ -39,7 +39,7 @@ Defines the logic triggered when the component is added to the DOM.
 
 ![modifier: public](images/badges/modifier-public.png)
 
-Defines the logic triggered when the component is removed from the DOM.
+Defines the logic triggered when the custom element is removed from the DOM.
 
 ---
 
@@ -63,7 +63,7 @@ Hides the dropdown.
 
 ![modifier: public](images/badges/modifier-public.png)
 
-Defines the logic triggered when item is clicked or selected with &#x27;Enter&#x27; key.
+Selects the specified item.
 
 Parameters | Type | Description
 --- | --- | ---
@@ -72,29 +72,45 @@ __notify__ | `boolean` | *should we dispatch custom element events?*
 
 ---
 
-### `triggerChangeEvent(values)`
+### `removeItem(itemToRemove)`
+
+![modifier: public](images/badges/modifier-public.png)
+
+Removes the item with the specified value from selected items.
+
+Parameters | Type | Description
+--- | --- | ---
+__itemToRemove__ | `T` | *item to remove*
+
+---
+
+### `synchronizeSelection(items)`
+
+![modifier: public](images/badges/modifier-public.png)
+
+Synchronizes custom element selection.
+
+Parameters | Type | Description
+--- | --- | ---
+__items__ | `Array.<T>` | *items to select*
+
+---
+
+### `triggerChangeEvent()`
 
 ![modifier: public](images/badges/modifier-public.png)
 
 Triggers the &#x27;change&#x27; event of the custom element.
 Required to participate in aurelia validation system.
 
-Parameters | Type | Description
---- | --- | ---
-__values__ | `Array.<T>` | *selected values*
-
 ---
 
-### `triggerBlurEvent(values)`
+### `triggerBlurEvent()`
 
 ![modifier: public](images/badges/modifier-public.png)
 
 Triggers the &#x27;blur&#x27; event of the custom element.
 Required to participate in aurelia validation system.
-
-Parameters | Type | Description
---- | --- | ---
-__values__ | `Array.<T>` | *selected values*
 
 ---
 
@@ -111,31 +127,67 @@ __*return*__ | `boolean` | *true*
 
 ---
 
-### `filterItems(inputValue)`
+### `filterDropdownItems(text)`
 
 ![modifier: public](images/badges/modifier-public.png)
 
-Filters the items list to those that contain the given input value and are not already selected.
+Filters the dropdown items list to those that contain the given input value and are not already selected.
 
 Parameters | Type | Description
 --- | --- | ---
-__inputValue__ | `string` | *input value*
+__text__ | `string` | *input text*
 
 ---
 
-### `resetItems()`
+### `resetDropdownItems()`
 
 ![modifier: public](images/badges/modifier-public.png)
 
-Resets the items list to the original databound list.
+Resets the dropdown items list to the original databound list.
 
 ---
 
-### `clearInputField()`
+### `clearHtmlInput()`
 
 ![modifier: public](images/badges/modifier-public.png)
 
-Clears the input field.
+Clears the html input element.
+
+---
+
+### `isInvalidDatasource() ► boolean`
+
+![modifier: public](images/badges/modifier-public.png)
+
+Is the datasource invalid?
+
+Parameters | Type | Description
+--- | --- | ---
+__*return*__ | `boolean` | *true if invalid, false otherwise*
+
+---
+
+### `isInvalidLabelKey() ► boolean`
+
+![modifier: public](images/badges/modifier-public.png)
+
+Is the labelKey invalid?
+
+Parameters | Type | Description
+--- | --- | ---
+__*return*__ | `boolean` | *true if invalid, false otherwise*
+
+---
+
+### `isInvalidValueKey() ► boolean`
+
+![modifier: public](images/badges/modifier-public.png)
+
+Is the valueKey invalid?
+
+Parameters | Type | Description
+--- | --- | ---
+__*return*__ | `boolean` | *true if invalid, false otherwise*
 
 ---
 
@@ -152,31 +204,19 @@ __*return*__ | `boolean` | *true if already selected, false otherwise*
 
 ---
 
-### `removeItem(item)`
+### `onInputBlur()`
 
 ![modifier: public](images/badges/modifier-public.png)
 
-Removes the specifed item from selected items.
-
-Parameters | Type | Description
---- | --- | ---
-__item__ | `T` | *item to remove*
+Defines the logic triggered when user clicks outside of the html input element.
 
 ---
 
-### `resetInputValue()`
+### `onInputChange(inputValue)`
 
 ![modifier: public](images/badges/modifier-public.png)
 
-Defines the logic triggered when user clicks outside the component.
-
----
-
-### `inputValueChanged(inputValue)`
-
-![modifier: public](images/badges/modifier-public.png)
-
-Defines the logic triggered when user types data in the input field.
+Defines the logic triggered when user types data in the html input element.
 
 Parameters | Type | Description
 --- | --- | ---
@@ -184,11 +224,27 @@ __inputValue__ | `string` | *user input*
 
 ---
 
-### `selectedItemsChanged()`
+### `selectedItemsChanged(newItems)`
 
 ![modifier: public](images/badges/modifier-public.png)
 
 Defines the logic triggered when &#x60;selected-items&#x60; attribute is databound.
+
+Parameters | Type | Description
+--- | --- | ---
+__newItems__ | `undefined` | *new &#x60;selected-items&#x60; value*
+
+---
+
+### `selectedValuesChanged(newValues)`
+
+![modifier: public](images/badges/modifier-public.png)
+
+Defines the logic triggered when &#x60;selected-values&#x60; attribute is databound.
+
+Parameters | Type | Description
+--- | --- | ---
+__newValues__ | `undefined` | *new &#x60;selected-values&#x60; value*
 
 ---
 
@@ -216,7 +272,7 @@ Defines the logic triggered when &#x60;datasource&#x60; attribute is databound.
 
 Name | Type | Description
 --- | --- | ---
-__selectedValues__ | `string` | *Selected values @type {string}*
+__selectedValues__ | `K[]` | *Selected values @type {K[]}*
 __selectedItems__ | `T[]` | *Selected items @type {T[]}*
 __datasource__ | `T[]` | *Data source @type {T[]}*
 __placeholder__ | `string` | *The place holder text. @type {string}*
@@ -228,10 +284,10 @@ __noResultText__ | `string` | *Text corresponding to &#x27;no result&#x27;. @typ
 __filteredItems__ | `T[]` | *List of items filtered by the user input. @type {T[]}*
 __uniqueId__ | `string` | *Unique id to identify the custom element instance. @type {string}*
 __ignoringReset__ | `Boolean` | *Prevents the input field to be reset when click outside dropdown? @type {Boolean}*
-__updatingInput__ | `Boolean` | *Is input field updated internally? @type {Boolean}*
 __filteredItemsCount__ | `number` | *Count of items.*
 ___keyCode__ | `string` | *The last key code used. @type {string}*
 ___container__ | `HTMLTemplateElement` | *Html container of the custom element. @type {HTMLTemplateElement}*
 ___input__ | `HTMLInputElement` | *Html input element. @type {HTMLInputElement}*
 ___dropdownList__ | `HTMLDivElement` | *Html dropdown host element. @type {HTMLDivElement}*
 ___dropdown__ | `Dropdown` | *Bootstrap dropdown. @type {Dropdown}*
+___guard__ | `boolean` | *Prevents reentrancy. @type {boolean}*
