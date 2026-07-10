@@ -23,16 +23,16 @@ export const wait = delay => new Promise(resolve => setTimeout(resolve, delay));
 )
 export class App {
 
-now  =  new Date (); 
-mindate =  new Date();
-maxDate  =  new Date (); 
+  now = new Date();
+  mindate = new Date();
+  maxDate = new Date();
 
   /** @type {AutoCompleteController<Item> } */ controller;
   /** @type {Item[]} */ itemsList;
   /** @type {Item[]} */ smallItemsList;
   /** @type {Item[]} */ selectedItems;
   /** @type {Item} */ selectedItem;
-  /** @type {string} */ selectedDate =  new Date ().toISOString();
+  /** @type {string} */ selectedDate = new Date().toISOString();
   /** @type {any} */ selectedAdresse;
   /** @type {'modal' | 'offcanvas'} */ selectedDialogMode = 'modal';
   /** @type {'start' | 'end' | 'top' | 'bottom'} */ selectedOffcanvasPosition = 'end';
@@ -49,10 +49,8 @@ maxDate  =  new Date ();
   constructor(controller, toast, lock, dialog) {
     this.maxDate.setMonth(this.maxDate.getMonth() + 1);
     this.mindate.setMonth(this.mindate.getMonth() - 1);
-this.maxDateString =  this.maxDate.toISOString();
-this.mindateString =  this.mindate.toISOString();
-
-console.log('mindate', this.mindateString, 'maxDate', this.maxDateString);
+    this.maxDateString = this.maxDate.toISOString();
+    this.mindateString = this.mindate.toISOString();
 
     this.environment = { name: 'LOCAL', type: 'dev' };
     this.itemsController = controller;
