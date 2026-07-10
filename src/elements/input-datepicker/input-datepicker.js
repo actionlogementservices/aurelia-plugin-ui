@@ -41,6 +41,16 @@ export class InputDatepicker {
   @bindable({ defaultBindingMode: bindingMode.toView })
   disabledDates = [];
 
+  /** Minimum selectable date in ISO string format, empty for no limit. @type {string} */
+  @bindable({ defaultBindingMode: bindingMode.toView })
+  minDate = '';
+
+  /** Maximum selectable date in ISO string format, empty for no limit. @type {string} */
+  @bindable({ defaultBindingMode: bindingMode.toView })
+  maxDate = '';
+
+
+
   /** Unique id to identify the custom element instance. @type {string} */ uniqueId = generateUniqueId();
   /** Html container of the custom element. @type {HTMLTemplateElement} */ _container;
   /** Html input element. @type {HTMLInputElement} */ _input;
@@ -76,8 +86,13 @@ export class InputDatepicker {
       todayHighlight: true,
       daysOfWeekDisabled: this.disabledDays,
       // @ts-ignore
-      datesDisabled: this.disabledDates?.map(d => new Date(d))
+      datesDisabled: this.disabledDates?.map(d => new Date(d)),
+      // @ts-ignore null is accepted at runtime to mean "no limit"
+      minDate: this.getComponentDateLimit(this.minDate),
+      // @ts-ignore null is accepted at runtime to mean "no limit"
+      maxDate: this.getComponentDateLimit(this.maxDate)
     });
+
     // it may happen that the databound date is already defined,
     // so dateChanged may not be called
     // in such case set the date of the underlying vanillajs component
@@ -103,6 +118,18 @@ export class InputDatepicker {
     this._taskqueue.queueMicroTask(() => {
       this._propagation = undefined;
     });
+  }
+
+  /**
+   * Converts a date bindable (ISO string) into a limit usable by the underlying vanillajs component.
+   * The underlying component enforces the limit for both calendar selection and manual keyboard input.
+   * @param {string} dateISOstring date specified as ISO string, empty when no limit is set
+   * @returns {Date | null} the corresponding Date instance, or null when no limit applies
+   */
+  getComponentDateLimit(dateISOstring) {
+    const date = new Date(dateISOstring);
+    // eslint-disable-next-line unicorn/no-null
+    return !dateISOstring || Number.isNaN(date.getTime()) ? null : date;
   }
 
   /**
@@ -160,6 +187,9 @@ export class InputDatepicker {
     }
   }
 
+
+
+
   /**
    * Defines the logic triggered when `date` attribute is databound.
    * @param {string} date date in ISO string format
@@ -178,5 +208,25 @@ export class InputDatepicker {
     if (!this._datepicker) return;
     const datesDisabled = disabledDates?.map(d => new Date(d));
     this._datepicker.setOptions({ datesDisabled });
+  }
+
+  /**
+   * Defines the logic triggered when `minDate` attribute is databound.
+   * @param {string} minDate minimum selectable date in ISO string format, empty for no limit
+   */
+  minDateChanged(minDate) {
+    if (!this._datepicker) return;
+    // @ts-ignore null is accepted at runtime to mean "no limit"
+    this._datepicker.setOptions({ minDate: this.getComponentDateLimit(minDate) });
+  }
+
+  /**
+   * Defines the logic triggered when `maxDate` attribute is databound.
+   * @param {string} maxDate maximum selectable date in ISO string format, empty for no limit
+   */
+  maxDateChanged(maxDate) {
+    if (!this._datepicker) return;
+    // @ts-ignore null is accepted at runtime to mean "no limit"
+    this._datepicker.setOptions({ maxDate: this.getComponentDateLimit(maxDate) });
   }
 }

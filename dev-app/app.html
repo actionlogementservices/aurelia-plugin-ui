@@ -538,10 +538,28 @@
             <div class="d-flex justify-content-start align-items-center gap-3">
               <div class="form-group">
                 <div class="input-group">
+                  minDate : 
+                  <input-datepicker
+                    class="form-select"
+                    date.bind="mindateString"
+                    change.trigger="logSelectedItem($event)"></input-datepicker>
+                  <span class="input-group-text"><i class="bi bi-calendar2"></i></span>
+                </div>
+                <div class="input-group">
                   <input-datepicker
                     id="idp"
                     class="form-select"
                     date.bind="selectedDate"
+                    max-date.bind="maxDateString"
+                    min-date.bind="mindateString"
+                    change.trigger="logSelectedItem($event)"></input-datepicker>
+                  <span class="input-group-text"><i class="bi bi-calendar2"></i></span>
+                </div>
+                <div class="input-group">
+                  maxDate  : 
+                  <input-datepicker
+                    class="form-select"
+                    date.bind="maxDateString"
                     change.trigger="logSelectedItem($event)"></input-datepicker>
                   <span class="input-group-text"><i class="bi bi-calendar2"></i></span>
                 </div>
