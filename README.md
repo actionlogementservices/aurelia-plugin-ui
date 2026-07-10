@@ -597,6 +597,8 @@ Prevent user interaction with Bootstrap back drop.
   | `autohide` | Auto hide dropdown after selection | `true` or `false` | `true` |
   | `disabled-days` | Days of week to disable | 0 for sunday, 1 for monday, and so on | |
   | `disabled-dates` | Specific dates to disable | Iso string dates | |
+  | `max-date` | all dates beyond this date will be disabled | Iso string dates | |
+  | `min-date` | all dates before this date will be disabled | Iso string dates | |
 
 ### `simple-table` custom element
 
