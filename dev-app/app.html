@@ -538,7 +538,7 @@
             <div class="d-flex justify-content-start align-items-center gap-3">
               <div class="form-group">
                 <div class="input-group">
-                  minDate : 
+                  minDate :
                   <input-datepicker
                     class="form-select"
                     date.bind="mindateString"
@@ -556,7 +556,7 @@
                   <span class="input-group-text"><i class="bi bi-calendar2"></i></span>
                 </div>
                 <div class="input-group">
-                  maxDate  : 
+                  maxDate  :
                   <input-datepicker
                     class="form-select"
                     date.bind="maxDateString"
@@ -605,7 +605,20 @@
                       </span>
                     </small>
                   </column>
-                  <column header="Name" cell-key="name" sortable="true"></column>
+                  <column cell-key="name" sortable="true">
+                  <template replace-part="header">
+                      Name
+                      <img
+                        src="https://icons.getbootstrap.com/assets/icons/info-circle.svg"
+                        alt="icône information"
+                        height="16"
+                        width="16"
+                        class="ms-1"
+                        data-bs-toggle="tooltip"
+                        data-bs-html="true"
+                        data-bs-title="<b>Nom</b> de la personne." />
+                    </template>
+                  </column>
                   <column header="Email" cell-key="email" sortable="true" width="220px"></column>
                   <column header="Color" cell-key="color" width="120px">
                     <div class="d-flex justify-content-between flex-nowrap">

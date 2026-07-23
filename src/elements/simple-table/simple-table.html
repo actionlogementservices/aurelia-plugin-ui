@@ -33,10 +33,14 @@
             scope="col"
             class="align-middle">
             <a if.bind="column.sortable" role="button" click.trigger="sortDisplayedItems(column)">
-              ${column.header}
+              <compose if.bind="column.headerTemplate" view.bind="column.headerTemplate" containerless></compose>
+              <span if.bind="!column.headerTemplate">${column.header}</span>
               <i role="button" class="bi bi-${column.sortIcon}"></i>
             </a>
-            <span if.bind="!column.sortable">${column.header}</span>
+            <span if.bind="!column.sortable">
+              <compose if.bind="column.headerTemplate" view.bind="column.headerTemplate" containerless></compose>
+              <span if.bind="!column.headerTemplate">${column.header}</span>
+            </span>
           </th>
         </tr>
       </thead>
