@@ -591,6 +591,7 @@
               <div class="flex-fill">
                 <simple-table
                   id="st"
+                  metadata.bind="{ currentYear: 2026 }"
                   datasource.bind="itemsList"
                   selected-items.bind="selectedItems"
                   selection-mode="multiple">
@@ -605,9 +606,12 @@
                       </span>
                     </small>
                   </column>
-                  <column cell-key="name" sortable="true">
-                  <template replace-part="header">
-                      Name
+                  <column header="Name" cell-key="name" sortable="true">
+                    ${item.name}
+                  </column>
+                  <column cell-key="headcount" sortable="true">
+                    <template replace-part="header">
+                      ${metadata.currentYear} Headcount
                       <img
                         src="https://icons.getbootstrap.com/assets/icons/info-circle.svg"
                         alt="icône information"
@@ -616,8 +620,26 @@
                         class="ms-1"
                         data-bs-toggle="tooltip"
                         data-bs-html="true"
-                        data-bs-title="<b>Nom</b> de la personne." />
+                        data-bs-title="Headcount of the current year"
+                      />
                     </template>
+                    ${item.headcount}
+                  </column>
+                  <column cell-key="headcountminusone" sortable="true">
+                    <template replace-part="header">
+                      ${metadata.currentYear - 1} Headcount
+                      <img
+                        src="https://icons.getbootstrap.com/assets/icons/info-circle.svg"
+                        alt="icône information"
+                        height="16"
+                        width="16"
+                        class="ms-1"
+                        data-bs-toggle="tooltip"
+                        data-bs-html="true"
+                        data-bs-title="Headcount of last year"
+                      />
+                    </template>
+                    ${item.headcountMinusOne}
                   </column>
                   <column header="Email" cell-key="email" sortable="true" width="220px"></column>
                   <column header="Color" cell-key="color" width="120px">
