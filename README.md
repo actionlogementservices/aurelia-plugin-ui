@@ -619,7 +619,20 @@ Prevent user interaction with Bootstrap back drop.
     <column header="Id" cell-key="id" sortable="true" sort-type="numeric" width="80px">
       <small><span class="badge text-bg-secondary">${item.id}</span></small>
     </column>
-    <column header="Name" cell-key="name" sortable="true"></column>
+    <column cell-key="name" sortable="true">
+     <template replace-part="header">
+       Name
+       <img
+         src="https://icons.getbootstrap.com/assets/icons/info-circle.svg"
+         alt="icône information"
+         height="16"
+         width="16"
+         class="ms-1"
+         data-bs-toggle="tooltip"
+         data-bs-html="true"
+         data-bs-title="<b>Nom</b> de la personne." />
+     </template>
+    </column>
     <column header="Email" cell-key="email" sortable="true"></column>
     <column header="Color" cell-key="color" width="120px">
       <div class="d-flex justify-content-between flex-nowrap">
@@ -632,7 +645,6 @@ Prevent user interaction with Bootstrap back drop.
     </column>
   </simple-table>
   ```
-
 - You can specify the optional following attributes on the `simple-table` element :
   | Attribute name | Role | Possible values | Default value |
   |--- |---|--- |---|
@@ -649,8 +661,9 @@ Prevent user interaction with Bootstrap back drop.
 
 - You can specify the optional following attributes on the `column` element :
   | Attribute name | Role | Possible values | Default value |
-  |--- |---|--- |---|
+  |--- |---|--- |---|  
   | `header` | Header of the column | Any string representing a property present on the item | |
+  | `<template replace-part="header">` | Header of the column as HTML replace Header text | Any Html representing a property present on the item | |
   | `cell-key` | Property of the item used to display as cell content | Any string representing a property present on the item | |
   | `sortable` | Is the column sortable | `true` or `false` | `false` |
   | `sort-order` | Sorting order of the column | `asc` or `desc` | |
