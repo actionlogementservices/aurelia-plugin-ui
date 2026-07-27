@@ -61,9 +61,11 @@ export class App {
     for (let index = 0; index < 120; index++) {
       const id = index;
       const name = faker.person.fullName();
+      const headcount = Math.round(Math.random()*100)
+      const headcountMinusOne = headcount - Math.round(Math.random()*(headcount - 1))
       const email = faker.internet.email();
       const color = faker.color.human();
-      itemsList.push({ id, name, email, color, showItemDetails: item => this.showItemDetails(item) });
+      itemsList.push({ id, name, headcount, headcountMinusOne, email, color, showItemDetails: item => this.showItemDetails(item) });
     }
     setTimeout(() => {
       this.itemsList = itemsList;

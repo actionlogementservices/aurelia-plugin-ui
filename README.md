@@ -604,7 +604,7 @@ Prevent user interaction with Bootstrap back drop.
 
 **Mutliple selection** and **scrollable** html table with custom **column template** and **in memory sorting**, well adapted for small number of items (typically **less than 100**).
 
-![simple-table rendering](./doc/screenshot/simple-table.png)
+![simple-table rendering](./doc/screenshot/simple-table-2.png)
 
 - Use the [`<simple-table>`](./doc/src-elements-simple-table_simple-table.md) element in your view and define [columns](./doc/src-elements-simple-table_column.md) with `header` and `cell-key` attributes and optionally a column template.
 - Data bind the `datasource` attribute to your viewmodel to retrieve user selection as array of items.
@@ -620,18 +620,39 @@ Prevent user interaction with Bootstrap back drop.
       <small><span class="badge text-bg-secondary">${item.id}</span></small>
     </column>
     <column cell-key="name" sortable="true">
-     <template replace-part="header">
-       Name
-       <img
-         src="https://icons.getbootstrap.com/assets/icons/info-circle.svg"
-         alt="icône information"
-         height="16"
-         width="16"
-         class="ms-1"
-         data-bs-toggle="tooltip"
-         data-bs-html="true"
-         data-bs-title="<b>Nom</b> de la personne." />
-     </template>
+      ${item.name}
+    </column>
+    <column cell-key="headcount" sortable="true">
+      <template replace-part="header">
+        ${metadata.currentYear} Headcount
+        <img
+          src="https://icons.getbootstrap.com/assets/icons/info-circle.svg"
+          alt="icône information"
+          height="16"
+          width="16"
+          class="ms-1"
+          data-bs-toggle="tooltip"
+          data-bs-html="true"
+          data-bs-title="Headcount of the current year"
+        />
+      </template>
+      ${item.headcount}
+    </column>
+    <column cell-key="headcountminusone" sortable="true">
+      <template replace-part="header">
+        ${metadata.currentYear - 1} Headcount
+        <img
+          src="https://icons.getbootstrap.com/assets/icons/info-circle.svg"
+          alt="icône information"
+          height="16"
+          width="16"
+          class="ms-1"
+          data-bs-toggle="tooltip"
+          data-bs-html="true"
+          data-bs-title="Headcount of last year"
+        />
+      </template>
+      ${item.headcountMinusOne}
     </column>
     <column header="Email" cell-key="email" sortable="true"></column>
     <column header="Color" cell-key="color" width="120px">
@@ -658,6 +679,7 @@ Prevent user interaction with Bootstrap back drop.
   | `no-result-text` | Text displayed when there is no items | Any string | `Aucun résultat` |
   | `warning-template-text` | Warning template text shown when not all items are displayed. Must contain the `{maxRows}` token | Any string with `{maxRows}` | `Seuls les {maxRows} premiers résultats sont affichés.` |
   | `result-text` | Text displayed after the # of items | Any string | `résultat(s).` |
+  | `metadata` | Any type of extra data that is not part of the data source | Any | none |
 
 - You can specify the optional following attributes on the `column` element :
   | Attribute name | Role | Possible values | Default value |

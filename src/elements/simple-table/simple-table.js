@@ -28,6 +28,10 @@ export class SimpleTable {
   @bindable({ defaultBindingMode: bindingMode.toView })
   datasource;
 
+  /** Meta Data @type { any } */
+  @bindable({ defaultBindingMode: bindingMode.toView })
+  metadata;
+
   /** Enable/Disable the custom element to prevent user modification. @type {boolean} */
   @bindable({ defaultBindingMode: bindingMode.toView })
   disabled = false;
