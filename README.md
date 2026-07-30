@@ -615,6 +615,8 @@ Prevent user interaction with Bootstrap back drop.
     datasource.bind="itemsList"
     selected-items.bind="selectedItems"
     selection-mode="multiple"
+    disableable-rows="true"
+    disable-prop-name="customPropName"
     value-key="Id">
     <column header="Id" cell-key="id" sortable="true" sort-type="numeric" width="80px">
       <small><span class="badge text-bg-secondary">${item.id}</span></small>
@@ -680,6 +682,8 @@ Prevent user interaction with Bootstrap back drop.
   | `warning-template-text` | Warning template text shown when not all items are displayed. Must contain the `{maxRows}` token | Any string with `{maxRows}` | `Seuls les {maxRows} premiers résultats sont affichés.` |
   | `result-text` | Text displayed after the # of items | Any string | `résultat(s).` |
   | `metadata` | Any type of extra data that is not part of the data source | Any | none |
+  | `disableableRows` | Are rows disableable | `true` or `false` | `false` |
+  | `disablePropName` | Property name to check if row is disabled | Any string | `disabled` |
 
 - You can specify the optional following attributes on the `column` element :
   | Attribute name | Role | Possible values | Default value |
