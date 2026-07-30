@@ -11,7 +11,7 @@ import { Adresse } from 'resources/elements/auto-complete/adresse';
 
 export const wait = delay => new Promise(resolve => setTimeout(resolve, delay));
 
-/** @typedef {{ id: number, name: string; email: string; color: string }} Item */
+/** @typedef {{ disabled: boolean, id: number, name: string; headcount: number, headcountMinusOne: number, email: string; color: string }} Item */
 
 @inject(
   NewInstance.of(AutoCompleteController),
@@ -59,13 +59,14 @@ export class App {
     this.dialog = dialog;
     const itemsList = [];
     for (let index = 0; index < 120; index++) {
+      const disabled = Math.random() < 0.5;
       const id = index;
       const name = faker.person.fullName();
       const headcount = Math.round(Math.random()*100)
       const headcountMinusOne = headcount - Math.round(Math.random()*(headcount - 1))
       const email = faker.internet.email();
       const color = faker.color.human();
-      itemsList.push({ id, name, headcount, headcountMinusOne, email, color, showItemDetails: item => this.showItemDetails(item) });
+      itemsList.push({ disabled, id, name, headcount, headcountMinusOne, email, color, showItemDetails: item => this.showItemDetails(item) });
     }
     setTimeout(() => {
       this.itemsList = itemsList;
