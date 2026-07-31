@@ -1,0 +1,29 @@
+<template>
+  <div class="form-group">
+    <label
+      class="form-label"
+      if.bind="!fieldOnly"
+      show.bind="label !== ''"
+      for.bind="id"
+      class="form-label text-primary">
+      ${label}<span class="text-danger">${required ? ' *' : ''}</span>
+    </label>
+    <input
+      class="form-control ${isError ? 'is-invalid' : ''}"
+      type="text"
+      inputmode="numeric"
+      id.bind="id"
+      name.bind="name"
+      required.bind="required"
+      step.bind="step"
+      min.bind="min"
+      max.bind="max"
+      placeholder.bind="placeholder"
+      disabled.bind="disabled"
+      readonly.bind="readonly"
+      value.bind="value | cleanInputMask | formIntInputFormat & updateTrigger:'change':'blur'"
+      keydown.trigger="handleKeyDown($event)"
+      blur.trigger="handleBlur()" />
+    <small if.bind="!fieldOnly" show.bind="isError" class="text-danger">${errorMessage}</small>
+  </div>
+</template>
