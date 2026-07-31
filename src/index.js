@@ -44,7 +44,7 @@ function configure(aurelia) {
 
     PLATFORM.moduleName('./value-converters/clean-input-mask'),
     PLATFORM.moduleName('./value-converters/date-format'),
-    PLATFORM.moduleName('./value-converters/form-int-input-format'),
+    PLATFORM.moduleName('./value-converters/form-input-number-format'),
     PLATFORM.moduleName('./value-converters/number-format')
   ]);
 }

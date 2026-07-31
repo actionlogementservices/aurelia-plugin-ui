@@ -1,3 +1,5 @@
+import { valueConverter } from 'aurelia-framework';
+
 /**
  * Implements a **`cleanInputMask` value converter** to remove the input mask.
  * This converter works together with the `input-mask` attribute and the `numberFormat` value converter.
@@ -9,6 +11,7 @@
  *     value.one-time="montant | numberFormat"
  *     value.from-view="montant | cleanInputMask" />
  */
+@valueConverter('cleanInputMask')
 export class CleanInputMaskValueConverter {
   /**
    * Converts the value of the html view to the javascript model.

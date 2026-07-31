@@ -30,6 +30,10 @@ export class AlsInputNumber {
   // @ts-ignore
   name;
 
+  /** Type @type {'integer' | 'decimal' | 'currency'} */
+  @bindable({ defaultBindingMode: bindingMode.toView })
+  type = 'integer';
+
   /** Label @type {string} */
   @bindable({ defaultBindingMode: bindingMode.toView })
   // @ts-ignore
@@ -54,7 +58,7 @@ export class AlsInputNumber {
   max;
 
   /** Step @type {number} */
-  @bindable({ defaultBindingMode: bindingMode.toView })
+  @bindable({ defaultBindingMode: bindingMode.oneTime })
   step = 1;
 
   /** Placeholder text @type {string} */
@@ -62,7 +66,7 @@ export class AlsInputNumber {
   placeholder = '';
 
   /** Readonly @type {boolean} */
-  @bindable({ defaultBindingMode: bindingMode.oneTime })
+  @bindable({ defaultBindingMode: bindingMode.toView })
   readonly = false;
 
   /** Disabled @type {boolean} */
@@ -92,22 +96,22 @@ export class AlsInputNumber {
    * @returns {boolean}
    */
   handleKeyDown(event) {
+    if (
+      (this.type === 'decimal' || this.type === 'currency') &&
+      ((event.shiftKey && event.key === '.') || event.key === '.' || event.key === ',')
+    ) {
+      // Allow decimal separator for decimal and currency types
+      return true;
+    }
+
     if (event.ctrlKey && (event.key === 'a' || event.key === 'c' || event.key === 'v')) {
-      // select all/copy/paste enabled
+      // Allow Ctrl+A, Ctrl+C, Ctrl+V
       return true;
     }
 
     if (!authorizedKeyList.has(event.key)) {
       event.preventDefault();
       return false;
-    }
-
-    return true;
-  }
-
-  handleFocus() {
-    if (!this.pristine) {
-      this.validate(parseInt(this.value));
     }
 
     return true;
@@ -121,19 +125,6 @@ export class AlsInputNumber {
     this.validate(parseInt(this.value));
 
     return true;
-  }
-
-  /**
-   * Reverse format a number string to a plain number string (remove spaces, etc.)
-   * @param {string} value Value to reverse format
-   * @returns {string} Reverse formatted value
-   */
-  reverseFormatValue(value) {
-    const plainValue = value.replaceAll(/\s/g, '');
-    if (!isFinite(parseInt(plainValue))) {
-      return '';
-    }
-    return plainValue;
   }
 
   /**
