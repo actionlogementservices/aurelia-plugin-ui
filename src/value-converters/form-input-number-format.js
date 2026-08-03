@@ -31,8 +31,8 @@ export class formInputNumberFormatValueConverter {
    * @param {string} locale
    * @returns {string}
    */
-  toView(value, type, locale = 'fr-FR') {
-    if (!value || !isFinite(parseInt(value))) return '';
+  toView(value, type = 'integer', locale = 'fr-FR') {
+    if (!value || !isFinite(parseFloat(value))) return '';
     const numberValue = Number(value);
 
     /** @type {Intl.NumberFormatOptions} */
@@ -58,14 +58,16 @@ export class formInputNumberFormatValueConverter {
    *
    * @param {string} value
    * @param {'integer' | 'decimal' | 'currency'} type
+   * @param {string} locale
    * @returns {string}
    */
-  fromView(value, type = 'integer') {
-    const plainValue = value.replaceAll(/\s/g, '');
-    if (!isFinite(parseInt(plainValue))) {
+  fromView(value, type = 'integer', locale = 'fr-FR') {
+    const cleanValue = value.replaceAll(/\s?€?/g, '').replaceAll(',', '.');
+    const parsedValue = parseFloat(cleanValue);
+    if (!isFinite(parsedValue)) {
       return '';
     }
-    // TODO : limiter les decimales a 2 apres la virgule pour les types decimal et currency
-    return plainValue;
+
+    return parsedValue.toFixed(type === 'decimal' || type === 'currency' ? 2 : 0);
   }
 }

@@ -104,8 +104,11 @@ export class AlsInputNumber {
       return true;
     }
 
-    if (event.ctrlKey && (event.key === 'a' || event.key === 'c' || event.key === 'v')) {
-      // Allow Ctrl+A, Ctrl+C, Ctrl+V
+    if (
+      event.key === 'Enter' ||
+      ((event.ctrlKey || event.metaKey) && (event.key === 'a' || event.key === 'c' || event.key === 'v'))
+    ) {
+      // Allow Enter, Select all, Copy, Paste
       return true;
     }
 

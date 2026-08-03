@@ -21,7 +21,7 @@
       placeholder.bind="placeholder"
       disabled.bind="disabled"
       readonly.bind="readonly"
-      value.bind="value | cleanInputMask | formInputNumberFormat:type & updateTrigger:'change':'blur'"
+      value.bind="value | formInputNumberFormat:type & updateTrigger:'change':'blur'"
       keydown.trigger="handleKeyDown($event)"
       blur.trigger="handleBlur()" />
     <small if.bind="!fieldOnly" show.bind="isError" class="text-danger">${errorMessage}</small>
