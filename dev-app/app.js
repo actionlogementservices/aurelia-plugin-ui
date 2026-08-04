@@ -82,12 +82,12 @@ export class App {
     // );
     this.itemsController.configure(
       async text => {
-        await wait(200);
+        await wait(600);
         return this.itemsList.filter(item => item.name.toUpperCase().includes(text.toUpperCase()));
       },
       undefined,
       async values => {
-        await wait(200);
+        await wait(600);
         return this.itemsList.filter(item => values.includes(item.id));
       }
     );
