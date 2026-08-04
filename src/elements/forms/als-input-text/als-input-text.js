@@ -1,28 +1,7 @@
 import { bindable, bindingMode, useView } from 'aurelia-framework';
 
-const authorizedKeyList = new Set([
-  '0',
-  '1',
-  '2',
-  '3',
-  '4',
-  '5',
-  '6',
-  '7',
-  '8',
-  '9',
-  'Shift',
-  'Meta',
-  'ArrowLeft',
-  'ArrowRight',
-  'Backspace',
-  'Delete',
-  'Enter',
-  'Tab'
-]);
-
-@useView('./als-input-number.html')
-export class AlsInputNumber {
+@useView('./als-input-text.html')
+export class AlsInputText {
   /** Id @type {string} */
   @bindable({ defaultBindingMode: bindingMode.toView })
   // @ts-ignore
@@ -33,9 +12,9 @@ export class AlsInputNumber {
   // @ts-ignore
   name;
 
-  /** Type @type {'integer' | 'decimal' | 'currency'} */
+  /** Type @type {'text' | 'email'} */
   @bindable({ defaultBindingMode: bindingMode.toView })
-  type = 'integer';
+  type = 'text';
 
   /** Label @type {string} */
   @bindable({ defaultBindingMode: bindingMode.toView })
@@ -50,19 +29,6 @@ export class AlsInputNumber {
   @bindable({ defaultBindingMode: bindingMode.twoWay })
   // @ts-ignore
   value;
-
-  /** Min value @type {number} */
-  @bindable({ defaultBindingMode: bindingMode.toView })
-  min = 0;
-
-  /** Max value @type {number} */
-  @bindable({ defaultBindingMode: bindingMode.toView })
-  // @ts-ignore
-  max;
-
-  /** Step @type {number} */
-  @bindable({ defaultBindingMode: bindingMode.oneTime })
-  step = 1;
 
   /** Placeholder text @type {string} */
   @bindable({ defaultBindingMode: bindingMode.toView })
@@ -99,27 +65,9 @@ export class AlsInputNumber {
    * @returns {boolean}
    */
   handleKeyDown(event) {
-    if (
-      (this.type === 'decimal' || this.type === 'currency') &&
-      ((event.shiftKey && event.key === '.') || event.key === '.' || event.key === ',')
-    ) {
-      // Allow decimal separator for decimal and currency types
-      return true;
-    }
-
-    if ((event.ctrlKey || event.metaKey) && (event.key === 'a' || event.key === 'c' || event.key === 'v')) {
-      // Allow Select all, Copy, Paste
-      return true;
-    }
-
     if (event.key === 'Enter') {
       this.validate(this.value);
       return true;
-    }
-
-    if (!authorizedKeyList.has(event.key)) {
-      event.preventDefault();
-      return false;
     }
 
     return true;
@@ -132,26 +80,19 @@ export class AlsInputNumber {
   }
 
   /**
-   * Validate number value against basic rules
+   * Validate value against rules
    * @param {string} value Value to validate
    */
   validate(value) {
-    const parsedValue = parseFloat(value);
-    if (value === '' && this.required) {
+    if (!value && this.required) {
       this.isError = true;
       this.errorMessage = `Ce champ est obligatoire.`;
       return;
     }
 
-    if (!isFinite(parsedValue)) {
+    if (this.type === 'email' && value && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
       this.isError = true;
-      this.errorMessage = `La valeur n'est pas un nombre valide.`;
-    } else if (parsedValue < this.min) {
-      this.isError = true;
-      this.errorMessage = `La valeur minimum est ${this.min}.`;
-    } else if (this.max && this.max !== null && parsedValue > this.max) {
-      this.isError = true;
-      this.errorMessage = `La valeur maximum est ${this.max}.`;
+      this.errorMessage = `L'adresse email n'est pas valide.`;
     } else {
       this.isError = false;
       this.errorMessage = '';

@@ -11,20 +11,18 @@
     <input
       class="form-control ${isError ? 'is-invalid' : ''}"
       type="text"
-      inputmode="numeric"
+      inputmode.bind="type === 'email' ? 'email' : 'text'"
       id.bind="id"
       name.bind="name"
       required.bind="required"
-      step.bind="step"
-      min.bind="min"
-      max.bind="max"
       placeholder.bind="placeholder"
       disabled.bind="disabled"
       readonly.bind="readonly"
-      value.bind="value | formInputNumberFormat:type & updateTrigger:'change':'blur'"
-      focus.trigger="pristine = false"
+      pattern.bind="type === 'email' ? '^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$' : null"
       keydown.trigger="handleKeyDown($event)"
-      blur.trigger="handleBlur()" />
+      focus.trigger="pristine = false"
+      blur.trigger="handleBlur()"
+      value.bind="value" />
     <small if.bind="!fieldOnly" show.bind="isError" class="text-danger">${errorMessage}</small>
   </div>
 </template>

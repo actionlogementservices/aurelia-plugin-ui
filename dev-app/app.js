@@ -12,6 +12,8 @@ import { Adresse } from 'resources/elements/auto-complete/adresse';
 export const wait = delay => new Promise(resolve => setTimeout(resolve, delay));
 
 /** @typedef {{ disabled: boolean, id: number, name: string; headcount: number, headcountMinusOne: number, email: string; color: string }} Item */
+/** @typedef {{ name: string; email: string; age: number, height: number, money: number }} FormData */
+/** @typedef {OptionsFlags<FormData> = {[Property in keyof FormData]: boolean;}} FormError */
 
 @inject(
   NewInstance.of(AutoCompleteController),
@@ -39,6 +41,10 @@ export class App {
   /** @type {string} */ dialogStatus = 'Dialog not opened';
   /** @type {boolean} */ dialogFullscreen = false;
   /** @type {boolean} */ dialogLocked = false;
+  /** @type {FormData} */ formData;
+  /** @type {FormError} */ formErrors;
+  /** @type {boolean} */ isFormValid = false;
+  /** @type {boolean} */ errorName = false;
 
   /**
    * @param {AutoCompleteController} controller
@@ -57,6 +63,23 @@ export class App {
     this.toast = toast;
     this.lock = lock;
     this.dialog = dialog;
+
+    this.formData = {
+      name: '',
+      email: '',
+      age: 0,
+      height: 0,
+      money: 0,
+    };
+
+    this.formErrors = {
+      name: false,
+      email: false,
+      age: false,
+      height: false,
+      money: false,
+    };
+
     const itemsList = [];
     for (let index = 0; index < 120; index++) {
       const disabled = Math.random() < 0.5;
@@ -186,5 +209,20 @@ export class App {
   @computedFrom('selectedDialogMode')
   get isDialogModalMode() {
     return this.selectedDialogMode === 'modal';
+  }
+
+  validateForm() {
+    this.isFormValid = Object.values(this.formErrors).every(error => !error);
+    return this.isFormValid;
+  }
+
+  handleSubmit() {
+    if (this.validateForm()) {
+      this.toast.success('Form submitted successfully!');
+    } else {
+      this.toast.error('Form has errors. Please fix them before submitting.');
+    }
+
+    return false; // Prevent default form submission behavior
   }
 }
