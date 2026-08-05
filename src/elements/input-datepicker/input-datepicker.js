@@ -49,8 +49,6 @@ export class InputDatepicker {
   @bindable({ defaultBindingMode: bindingMode.toView })
   maxDate = '';
 
-
-
   /** Unique id to identify the custom element instance. @type {string} */ uniqueId = generateUniqueId();
   /** Html container of the custom element. @type {HTMLTemplateElement} */ _container;
   /** Html input element. @type {HTMLInputElement} */ _input;
@@ -186,9 +184,6 @@ export class InputDatepicker {
       this.triggerBlurEvent(date);
     }
   }
-
-
-
 
   /**
    * Defines the logic triggered when `date` attribute is databound.

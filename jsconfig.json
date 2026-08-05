@@ -5,9 +5,10 @@
     "moduleResolution": "Node",
     "resolveJsonModule": true,
     "allowJs": true,
-    "checkJs": true,
+    "checkJs": false,
     "baseUrl": "./src",
     "experimentalDecorators": true,
+    "ignoreDeprecations": "6.0",
     "forceConsistentCasingInFileNames": true
   },
   "include": ["src/**/*", "@types/*.d.ts"]
