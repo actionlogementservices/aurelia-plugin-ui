@@ -96,7 +96,7 @@ export class AlsInputNumber {
   /**
    * Custom handler to prevent typing anything other than a number or to edit the field.
    * @param {KeyboardEvent} event The keyboard event
-   * @returns {boolean}
+   * @returns {boolean} true to continue processing, false to cancel
    */
   handleKeyDown(event) {
     if (

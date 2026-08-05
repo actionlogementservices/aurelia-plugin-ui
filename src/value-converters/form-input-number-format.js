@@ -25,11 +25,11 @@ const currencyOptions = {
 @valueConverter('formInputNumberFormat')
 export class formInputNumberFormatValueConverter {
   /**
-   *
-   * @param {string} value
-   * @param {'integer' | 'decimal' | 'currency'} type
-   * @param {string} locale
-   * @returns {string}
+   * Converts the value of the javascript model to the html view.
+   * @param {string} value value from javascript model
+   * @param {'integer' | 'decimal' | 'currency'} [type] type of the input field
+   * @param {string} [locale] locale format
+   * @returns {string} the string representation
    */
   toView(value, type = 'integer', locale = 'fr-FR') {
     if (!value || !isFinite(parseFloat(value))) return '';
@@ -55,11 +55,11 @@ export class formInputNumberFormatValueConverter {
   }
 
   /**
-   *
-   * @param {string} value
-   * @param {'integer' | 'decimal' | 'currency'} type
-   * @param {string} locale
-   * @returns {string}
+   * Converts the value of the html view to the javascript model.
+   * @param {string} value value from html view in the specified format
+   * @param {'integer' | 'decimal' | 'currency'} type type of the input field
+   * @param {string} locale locale format
+   * @returns {string} the final value
    */
   fromView(value, type = 'integer', locale = 'fr-FR') {
     const cleanValue = value.replaceAll(/\s?€?/g, '').replaceAll(',', '.');

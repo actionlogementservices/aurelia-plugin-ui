@@ -11,12 +11,11 @@ export class DateFormatValueConverter {
   /**
    * Converts the value of the html view to the javascript model.
    * @param {string} value value from html view in the specified format
-   * @param {SupportedFormat} [format] display format, by default french: `DD/MM/YYYY`
+   * @param {SupportedFormat} [formatToUse] display format, by default french: `DD/MM/YYYY`
    * @returns {string | undefined} the date in ISO 8601 format
    */
-  fromView(value, format) {
-    if (!value) return undefined;
-    const formatToUse = format || 'DD/MM/YYYY';
+  fromView(value, formatToUse = 'DD/MM/YYYY') {
+    if (!value) return;
     const { valid, date } = isValidDate(value, formatToUse);
     if (!valid || !date) return value;
     return date.toISOString();
@@ -29,7 +28,7 @@ export class DateFormatValueConverter {
    * @returns {string | undefined} the date in the specified display format
    */
   toView(value, displayFormat) {
-    if (!value) return undefined;
+    if (!value) return;
     const date = new Date(value);
     if (isNaN(date.getTime())) return value;
     const formatToUse = displayFormat || 'DD/MM/YYYY';
