@@ -724,6 +724,33 @@ Implements **mask feature** on html input leveraging the [npm inputmask package]
   value.from-view="amount | cleanInputMask" />
 ```
 
+### Forms
+
+Form input have been included in this package, for now we have number and text inputs.
+It includes form label and form message.
+
+#### <als-form-input-number>
+
+It includes most of the base html input attributes. You can also specify the following attributes to this element :
+  | Attribute name | Role | Possible values | Default value |
+  | --- | --- | --- | --- |  
+  | `type` | The type of formatting | `integer`, `decimal` or `currency` | `integer` |
+  | `label` | The input label, asterisk is automatically added if the field is required | Any string | None |
+  | `field-only` | Flag to hide label and error message | `true` or `false` | `false` |
+  | `is-error` | Two-way bound property to know if the field is in error state | `true` or `false` | `false` |
+  | `error-message` | To set a custom error message | Any string | None |
+
+#### <als-form-input-text>
+
+It includes most of the base html input attributes. You can also specify the following attributes to this element :
+  | Attribute name | Role | Possible values | Default value |
+  | --- | --- | --- | --- |  
+  | `type` | The type of formatting | `text`, `email` | `text` |
+  | `label` | The input label, asterisk is automatically added if the field is required | Any string | None |
+  | `field-only` | Flag to hide label and error message | `true` or `false` | `false` |
+  | `is-error` | Two-way bound property to know if the field is in error state | `true` or `false` | `false` |
+  | `error-message` | To set a custom error message | Any string | None |
+
 ## Compatibility
 
 This plugin has been tested on aurelia v1 with **webpack**.

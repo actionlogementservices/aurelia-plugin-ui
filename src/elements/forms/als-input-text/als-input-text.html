@@ -1,0 +1,28 @@
+<template>
+  <div class="form-group">
+    <label
+      class="form-label"
+      if.bind="!fieldOnly"
+      show.bind="label !== ''"
+      for.bind="id"
+      class="form-label text-primary">
+      ${label}<span class="text-danger">${required ? ' *' : ''}</span>
+    </label>
+    <input
+      class="form-control ${isError ? 'is-invalid' : ''}"
+      type="text"
+      inputmode.bind="type === 'email' ? 'email' : 'text'"
+      id.bind="id"
+      name.bind="name"
+      required.bind="required"
+      placeholder.bind="placeholder"
+      disabled.bind="disabled"
+      readonly.bind="readonly"
+      pattern.bind="type === 'email' ? '^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$' : null"
+      keydown.trigger="handleKeyDown($event)"
+      focus.trigger="pristine = false"
+      blur.trigger="handleBlur()"
+      value.bind="value" />
+    <small if.bind="!fieldOnly" show.bind="isError" class="text-danger">${errorMessage}</small>
+  </div>
+</template>

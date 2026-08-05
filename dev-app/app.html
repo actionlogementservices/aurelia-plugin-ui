@@ -662,6 +662,55 @@
             </div>
           </div>
         </div>
+
+        <!-- als-input-number -->
+        <div class="accordion-item">
+          <div class="accordion-header">
+            <button class="accordion-button py-1" type="button" data-bs-toggle="collapse" data-bs-target="#section-12"
+              aria-expanded="true" aria-controls="section-12">
+              <div class="fs-5">
+                ELEMENT <code class="fw_bold text-primary">Form Example</code>
+              </div>
+            </button>
+          </div>
+          <div id="section-12" class="accordion-collapse collapse show" data-bs-parent="#accordionExample">
+            <div class="accordion-body">
+              <div class="d-flex justify-content-start align-items-center gap-3">
+                <div class="flex-fill">
+                  <form novalidate>
+                    <div>
+                      <als-input-text label="Name" id="name" name="name" required="true"
+                        value.bind="formData.name" placeholder="Votre nom" is-error.bind="formErrors.name"></als-input-text>
+                      <p>NAME = ${formData.name} | isError = ${formErrors.name}</p>
+                    </div>
+                    <div>
+                      <als-input-text type="email" label="Email" id="email" name="email" required="true"
+                        value.bind="formData.email" placeholder="Votre email" is-error.bind="formErrors.email"></als-input-text>
+                      <p>EMAIL = ${formData.email} | isError = ${formErrors.email}</p>
+                    </div>
+                    <div>
+                      <als-input-number label="Age" id="age" name="age" required="true"
+                        value.bind="formData.age" min="18" max="150" is-error.bind="formErrors.age"></als-input-number>
+                      <p>AGE = ${formData.age} | isError = ${formErrors.age}</p>
+                    </div>
+                    <div>
+                      <als-input-number type="decimal" label="Height" id="height" name="height" required="true"
+                        value.bind="formData.height" is-error.bind="formErrors.height"></als-input-number>
+                      <p>HEIGHT = ${formData.height} | isError = ${formErrors.height}</p>
+                    </div>
+                    <div>
+                      <als-input-number type="currency" label="Money" id="money" name="money" required="true"
+                        value.bind="formData.money" is-error.bind="formErrors.money"></als-input-number>
+                      <p>MONEY = ${formData.money} | isError = ${formErrors.money}</p>
+                    </div>
+                    <button class="btn btn-primary" type="button" click.trigger="handleSubmit()">SUBMIT</button>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
       </div>
     </div>
   </div>
