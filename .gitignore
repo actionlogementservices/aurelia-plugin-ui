@@ -35,3 +35,7 @@ node_modules
 /dev-app/environment.js
 /dist
 /test/coverage-jest
+
+# Compiled SCSS (generated from src/styles/*.scss)
+/src/styles/*.css
+/src/styles/*.css.map

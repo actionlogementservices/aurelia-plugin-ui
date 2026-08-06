@@ -1,0 +1,18 @@
+// Custom.scss
+// Option A: Include all of Bootstrap, with variable overrides applied first.
+// The dev-app and this plugin's elements rely on the full Bootstrap component set
+// (accordion, badges, buttons, nav, etc.), so we pull in the whole framework here.
+
+// Include any default variable overrides here (functions aren't available yet)
+@import "./override.scss";
+
+// Add additional custom code here
+
+// Include all of Bootstrap
+@import "../../node_modules/bootstrap/scss/bootstrap";
+
+
+// Optionally include utilities API last to generate classes based on the Sass map in `_utilities.scss`
+@import "../../node_modules/bootstrap/scss/utilities/api";
+
+// Add additional custom code here
