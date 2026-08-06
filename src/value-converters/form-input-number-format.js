@@ -1,5 +1,6 @@
 import { valueConverter } from 'aurelia-framework';
 
+// Define the options for different number formats, to be synchronized with input-mask.js mask configurations.
 /** @type {Intl.NumberFormatOptions} */
 const integerOptions = {
   style: 'decimal',
@@ -52,22 +53,5 @@ export class formInputNumberFormatValueConverter {
     }
 
     return new Intl.NumberFormat(locale, options).format(numberValue);
-  }
-
-  /**
-   * Converts the value of the html view to the javascript model.
-   * @param {string} value value from html view in the specified format
-   * @param {'integer' | 'decimal' | 'currency'} type type of the input field
-   * @param {string} locale locale format
-   * @returns {string} the final value
-   */
-  fromView(value, type = 'integer', locale = 'fr-FR') {
-    const cleanValue = value.replaceAll(/\s?€?/g, '').replaceAll(',', '.');
-    const parsedValue = parseFloat(cleanValue);
-    if (!isFinite(parsedValue)) {
-      return '';
-    }
-
-    return parsedValue.toFixed(type === 'decimal' || type === 'currency' ? 2 : 0);
   }
 }
