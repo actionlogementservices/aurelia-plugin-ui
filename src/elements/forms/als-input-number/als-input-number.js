@@ -46,7 +46,7 @@ export class AlsInputNumber {
   @bindable({ defaultBindingMode: bindingMode.toView })
   required = true;
 
-  /** Value @type {string} */
+  /** Value @type {number} */
   @bindable({ defaultBindingMode: bindingMode.twoWay })
   // @ts-ignore
   value;
@@ -134,27 +134,32 @@ export class AlsInputNumber {
   /**
    * Validate number value against basic rules
    * @param {string} value Value to validate
+   * @returns {boolean} true if value is valid
    */
   validate(value) {
     const parsedValue = parseFloat(value);
     if (value === '' && this.required) {
       this.isError = true;
       this.errorMessage = `Ce champ est obligatoire.`;
-      return;
+      return false;
     }
 
     if (!isFinite(parsedValue)) {
       this.isError = true;
       this.errorMessage = `La valeur n'est pas un nombre valide.`;
+      return false;
     } else if (parsedValue < this.min) {
       this.isError = true;
       this.errorMessage = `La valeur minimum est ${this.min}.`;
+      return false;
     } else if (this.max && this.max !== null && parsedValue > this.max) {
       this.isError = true;
       this.errorMessage = `La valeur maximum est ${this.max}.`;
-    } else {
-      this.isError = false;
-      this.errorMessage = '';
+      return false;
     }
+
+    this.isError = false;
+    this.errorMessage = '';
+    return true;
   }
 }

@@ -5,6 +5,7 @@ import {CLIOptions, build as buildCLI} from 'aurelia-cli';
 import transpile from './transpile';
 import processMarkup from './process-markup';
 import processJson from './process-json';
+import processSCSS from './process-scss';
 import processCSS from './process-css';
 import copyFiles from './copy-files';
 import watch from './watch';
@@ -15,6 +16,7 @@ function clean() {
 
 let build = gulp.series(
   readProjectConfiguration,
+  processSCSS,
   gulp.parallel(
     transpile,
     processMarkup,
