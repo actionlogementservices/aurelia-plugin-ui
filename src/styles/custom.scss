@@ -1,18 +1,19 @@
-// Custom.scss
-// Option A: Include all of Bootstrap, with variable overrides applied first.
-// The dev-app and this plugin's elements rely on the full Bootstrap component set
-// (accordion, badges, buttons, nav, etc.), so we pull in the whole framework here.
+// Include functions first (so you can manipulate colors, SVGs, calc, etc)
+@import "../../node_modules/bootstrap/scss/functions";
 
-// Include any default variable overrides here (functions aren't available yet)
+// Include any default variable overrides here
 @import "./override.scss";
 
-// Add additional custom code here
-
-// Include all of Bootstrap
 @import "../../node_modules/bootstrap/scss/bootstrap";
 
+// Then add additional custom code here
+.accordion {
+  .accordion-item {
+    border-left: 0;
+    border-right: 0;
+  }
 
-// Optionally include utilities API last to generate classes based on the Sass map in `_utilities.scss`
-@import "../../node_modules/bootstrap/scss/utilities/api";
-
-// Add additional custom code here
+  .accordion-button:hover {
+      background-color: $neutral-100;
+    }
+}

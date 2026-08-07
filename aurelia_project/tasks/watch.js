@@ -18,7 +18,7 @@ let watchCallback = () => { };
 let watches = [
   { name: 'transpile', callback: transpile, source: project.transpiler.source },
   { name: 'markup', callback: processMarkup, source: project.markupProcessor.source },
-  { name: 'SCSS', callback: gulp.series(processSCSS, processCSS), source: './src/styles/**/*.scss' },
+  { name: 'SCSS', callback: gulp.series(processSCSS, processCSS), source: project.scssProcessor.watchSource },
   { name: 'CSS', callback: processCSS, source: project.cssProcessor.source },
   { name: 'JSON', callback: processJson, source: project.jsonProcessor.source }
 ];
