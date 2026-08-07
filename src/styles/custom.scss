@@ -17,3 +17,13 @@
       background-color: $neutral-100;
     }
 }
+
+.form-control:hover {
+  outline: solid 1px $blue;
+}
+
+.form-control:focus {
+  box-shadow: none;
+  outline: solid 2px $danger;
+  outline-offset: 2px;
+}

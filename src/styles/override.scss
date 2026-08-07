@@ -1,1 +1,58 @@
-$input-group-addon-bg: $body-bg !default;
+$blue:    #0d6efd !default;
+$indigo:  #6610f2 !default;
+$purple:  #6f42c1 !default;
+$pink:    #d63384 !default;
+$red:     #FF0018 !default;
+$orange:  #fd7e14 !default;
+$yellow:  #FFB200 !default;
+$green:   #198754 !default;
+$teal:    #20c997 !default;
+$cyan:    #0080FF !default;
+
+$white:    #FFFFFF !default;
+$black:    #000000 !default;
+
+$neutral-25:   #F8F9FB !default;
+$neutral-50:   #EDF1F5 !default;
+$neutral-100:  #E3E8EF !default;
+$neutral-200:  #D8E0EA !default;
+$neutral-300:  #CED7E4 !default;
+$neutral-400:  #C4CFDE !default;
+$neutral-500:  #B9C6D8 !default;
+$neutral-600:  #9DA8B8 !default;
+$neutral-700:  #818B97 !default;
+$neutral-800:  #666D77 !default;
+$neutral-900:  #4A4F56 !default;
+
+$primary:   #003F7A !default;
+$secondary: #E41D4B !default;
+
+// Fonts
+$font-family-base: 'Roboto', 'Helvetica Neue', Arial, sans-serif !default;
+$small-font-size: 0.75rem !default;
+
+$enable-negative-margins: true !default;
+$enable-validation-icons: false !default;
+$enable-deprecation-messages: false !default;
+
+$focus-ring-width: 2px !default;
+$focus-ring-color: $red !default;
+
+// Input
+$input-border-radius: 0.25rem !default;
+$input-focus-border-color: neutral-300 !default;
+$input-focus-width:  1px !default;
+$input-group-addon-bg: $white !default;
+
+// Forms
+$form-label-margin-bottom:              0.125rem !default;
+$form-label-font-size:                  1rem !default;
+$form-label-font-style:                 medium !default;
+$form-label-font-weight:                500 !default;
+$form-label-color:                      $primary !default;
+
+// Accordion
+$accordion-padding-y: 0.75rem !default;
+$accordion-border-radius: 0 !default;
+$accordion-border-color: $neutral-200 !default;
+$accordion-button-active-bg: $white !default;
