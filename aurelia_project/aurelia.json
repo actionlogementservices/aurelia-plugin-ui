@@ -33,7 +33,8 @@
       "js": "src/**/*.js",
       "css": "src/**/*.css",
       "html": "src/**/*.html",
-      "json": "src/**/*.json"
+      "json": "src/**/*.json",
+      "scss": "src/styles/override*.scss"
     }
   },
   "markupProcessor": {

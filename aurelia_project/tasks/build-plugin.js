@@ -4,7 +4,8 @@ import { pluginMarkup } from './process-markup';
 import { pluginCSS } from './process-css';
 import { pluginJson } from './process-json';
 import { buildPluginJavaScript } from './transpile';
-import processSCSS from './process-scss';
+import processSCSS, { pluginSCSS } from './process-scss';
+import copyAssets from './copy-assets';
 import { CLIOptions } from 'aurelia-cli';
 
 function clean() {
@@ -15,12 +16,16 @@ let build = gulp.series(
   processSCSS,
   gulp.parallel(
     // package.json "module" field pointing to dist/native-modules/index.js
+    copyAssets('dist/native-modules'),
+    pluginSCSS('dist/native-modules'),
     pluginMarkup('dist/native-modules'),
     pluginCSS('dist/native-modules'),
     pluginJson('dist/native-modules'),
     buildPluginJavaScript('dist/native-modules', 'es2015'),
 
     // package.json "main" field pointing to dist/native-modules/index.js
+    copyAssets('dist/commonjs'),
+    pluginSCSS('dist/commonjs'),
     pluginMarkup('dist/commonjs'),
     pluginCSS('dist/commonjs'),
     pluginJson('dist/commonjs'),

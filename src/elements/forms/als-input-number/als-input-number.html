@@ -29,7 +29,7 @@
         focus.trigger="pristine = false"
         keydown.trigger="handleKeyDown($event)"
         blur.trigger="handleBlur()" />
-        <img if.bind="type === 'currency'" class="input-group-text" src="/static/icons/euro.svg" alt=""/>
+        <img if.bind="type === 'currency'" class="input-group-text" src="../../../assets/icons/euro.svg" alt=""/>
     </div>
     <small if.bind="!fieldOnly" show.bind="isError" class="text-danger">${errorMessage}</small>
   </div>
