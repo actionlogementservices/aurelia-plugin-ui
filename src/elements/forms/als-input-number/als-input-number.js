@@ -113,7 +113,7 @@ export class AlsInputNumber {
     }
 
     if (event.key === 'Enter') {
-      this.validate(this.value);
+      this.validate(this.value.toString());
       return true;
     }
 
@@ -126,7 +126,7 @@ export class AlsInputNumber {
   }
 
   handleBlur() {
-    this.validate(this.value);
+    this.validate(this.value.toString());
 
     return true;
   }
@@ -137,13 +137,13 @@ export class AlsInputNumber {
    * @returns {boolean} true if value is valid
    */
   validate(value) {
-    const parsedValue = parseFloat(value);
     if (value === '' && this.required) {
       this.isError = true;
       this.errorMessage = `Ce champ est obligatoire.`;
       return false;
     }
 
+    const parsedValue = parseFloat(value);
     if (!isFinite(parsedValue)) {
       this.isError = true;
       this.errorMessage = `La valeur n'est pas un nombre valide.`;
