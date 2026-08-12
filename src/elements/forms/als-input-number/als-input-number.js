@@ -113,7 +113,7 @@ export class AlsInputNumber {
     }
 
     if (event.key === 'Enter') {
-      this.validate(this.value.toString());
+      this.validate(this.value);
       return true;
     }
 
@@ -126,33 +126,32 @@ export class AlsInputNumber {
   }
 
   handleBlur() {
-    this.validate(this.value.toString());
+    this.validate(this.value);
 
     return true;
   }
 
   /**
    * Validate number value against basic rules
-   * @param {string} value Value to validate
+   * @param {number} value Value to validate
    * @returns {boolean} true if value is valid
    */
   validate(value) {
-    if (value === '' && this.required) {
+    if ((value === undefined || value === null) && this.required) {
       this.isError = true;
       this.errorMessage = `Ce champ est obligatoire.`;
       return false;
     }
 
-    const parsedValue = parseFloat(value);
-    if (!isFinite(parsedValue)) {
+    if (!isFinite(value)) {
       this.isError = true;
       this.errorMessage = `La valeur n'est pas un nombre valide.`;
       return false;
-    } else if (parsedValue < this.min) {
+    } else if (value < this.min) {
       this.isError = true;
       this.errorMessage = `La valeur minimum est ${this.min}.`;
       return false;
-    } else if (this.max && this.max !== null && parsedValue > this.max) {
+    } else if (this.max && this.max !== null && value > this.max) {
       this.isError = true;
       this.errorMessage = `La valeur maximum est ${this.max}.`;
       return false;
