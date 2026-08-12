@@ -1,0 +1,29 @@
+// Include functions first (so you can manipulate colors, SVGs, calc, etc)
+@import "../../node_modules/bootstrap/scss/functions";
+
+// Include any default variable overrides here
+@import "./override.scss";
+
+@import "../../node_modules/bootstrap/scss/bootstrap";
+
+// Then add additional custom code here
+.accordion {
+  .accordion-item {
+    border-left: 0;
+    border-right: 0;
+  }
+
+  .accordion-button:hover {
+      background-color: $neutral-100;
+    }
+}
+
+.form-control:hover {
+  outline: solid 1px $blue;
+}
+
+.form-control:focus {
+  box-shadow: none;
+  outline: solid 2px $danger;
+  outline-offset: 2px;
+}

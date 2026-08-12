@@ -5,6 +5,7 @@ import debounce from 'debounce';
 import project from '../aurelia.json';
 import transpile from './transpile';
 import processMarkup from './process-markup';
+import processSCSS from './process-scss';
 import processCSS from './process-css';
 import processJson from './process-json';
 import copyFiles from './copy-files';
@@ -17,6 +18,7 @@ let watchCallback = () => { };
 let watches = [
   { name: 'transpile', callback: transpile, source: project.transpiler.source },
   { name: 'markup', callback: processMarkup, source: project.markupProcessor.source },
+  { name: 'SCSS', callback: gulp.series(processSCSS, processCSS), source: project.scssProcessor.watchSource },
   { name: 'CSS', callback: processCSS, source: project.cssProcessor.source },
   { name: 'JSON', callback: processJson, source: project.jsonProcessor.source }
 ];

@@ -48,6 +48,15 @@
       "src/**/*.css"
     ]
   },
+  "scssProcessor": {
+    "source": [
+      "src/styles/custom.scss"
+    ],
+    "watchSource": [
+      "src/styles/custom.scss",
+      "src/styles/override*.scss"
+    ]
+  },
   "jsonProcessor": {
     "source": [
       "dev-app/**/*.json",

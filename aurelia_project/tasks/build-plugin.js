@@ -4,6 +4,7 @@ import { pluginMarkup } from './process-markup';
 import { pluginCSS } from './process-css';
 import { pluginJson } from './process-json';
 import { buildPluginJavaScript } from './transpile';
+import processSCSS from './process-scss';
 import { CLIOptions } from 'aurelia-cli';
 
 function clean() {
@@ -11,6 +12,7 @@ function clean() {
 }
 
 let build = gulp.series(
+  processSCSS,
   gulp.parallel(
     // package.json "module" field pointing to dist/native-modules/index.js
     pluginMarkup('dist/native-modules'),

@@ -18,7 +18,24 @@ const defaultMaskConfiguration = {
  * @type {Record<string, Inputmask.Options>}
  */
 const maskConfiguration = {
+  integer: {
+    rightAlign: false,
+    radixPoint: ',',
+    groupSeparator: ' ',
+    digits: 0,
+    jitMasking: true,
+    positionCaretOnClick: 'radixFocus'
+  },
+  decimal: {
+    rightAlign: false,
+    radixPoint: ',',
+    groupSeparator: ' ',
+    digits: 2,
+    jitMasking: true,
+    positionCaretOnClick: 'radixFocus'
+  },
   currency: {
+    rightAlign: false,
     radixPoint: ',',
     groupSeparator: ' ',
     digits: 2,
@@ -26,6 +43,7 @@ const maskConfiguration = {
     positionCaretOnClick: 'radixFocus'
   },
   percentage: {
+    rightAlign: false,
     min: 0,
     max: 100,
     radixPoint: ',',

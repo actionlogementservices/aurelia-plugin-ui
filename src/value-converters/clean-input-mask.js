@@ -20,14 +20,16 @@ export class CleanInputMaskValueConverter {
    * @returns {number | undefined} number or undefined in case of failure
    */
   fromView(value, minimumFractionDigits = 2) {
-    const filteredValue = value
-      .replaceAll(' ', '')
-      .replaceAll('_', '')
-      .replace(',', '.')
-      .replace('€', '')
+    const cleanValue = value
+      .replaceAll(/\s?_?€?/g, '')
+      .replaceAll(',', '.')
       .trim();
-    const parsedValue = Number.parseFloat(filteredValue);
-    if (Number.isNaN(parsedValue)) return;
+
+    const parsedValue = Number.parseFloat(cleanValue);
+    if (Number.isNaN(parsedValue)) {
+      return;
+    }
+
     return parsedValue;
   }
 }
