@@ -14,3 +14,11 @@ export default function processSCSS() {
     .pipe(gulpSourcemaps.write('.'))
     .pipe(gulp.dest('./src/styles/css'));
 }
+
+// publishes the raw Sass variable overrides so consumers can @import them before compiling their own Bootstrap
+export function pluginSCSS(dest) {
+  return function processPluginScss() {
+    return gulp.src(project.plugin.source.scss)
+      .pipe(gulp.dest(`${dest}/styles/scss`));
+  };
+}
