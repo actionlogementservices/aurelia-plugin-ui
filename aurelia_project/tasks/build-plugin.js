@@ -15,9 +15,10 @@ function clean() {
 let build = gulp.series(
   processSCSS,
   gulp.parallel(
+    pluginSCSS('dist'),
+
     // package.json "module" field pointing to dist/native-modules/index.js
     copyAssets('dist/native-modules'),
-    pluginSCSS('dist/native-modules'),
     pluginMarkup('dist/native-modules'),
     pluginCSS('dist/native-modules'),
     pluginJson('dist/native-modules'),
@@ -25,7 +26,6 @@ let build = gulp.series(
 
     // package.json "main" field pointing to dist/native-modules/index.js
     copyAssets('dist/commonjs'),
-    pluginSCSS('dist/commonjs'),
     pluginMarkup('dist/commonjs'),
     pluginCSS('dist/commonjs'),
     pluginJson('dist/commonjs'),
