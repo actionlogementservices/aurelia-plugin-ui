@@ -19,6 +19,7 @@ const defaultMaskConfiguration = {
  */
 const maskConfiguration = {
   integer: {
+    allowMinus: false,
     rightAlign: false,
     radixPoint: ',',
     groupSeparator: ' ',
@@ -27,6 +28,7 @@ const maskConfiguration = {
     positionCaretOnClick: 'radixFocus'
   },
   decimal: {
+    allowMinus: false,
     rightAlign: false,
     radixPoint: ',',
     groupSeparator: ' ',
@@ -35,6 +37,7 @@ const maskConfiguration = {
     positionCaretOnClick: 'radixFocus'
   },
   currency: {
+    allowMinus: false,
     rightAlign: false,
     radixPoint: ',',
     groupSeparator: ' ',
@@ -43,6 +46,7 @@ const maskConfiguration = {
     positionCaretOnClick: 'radixFocus'
   },
   percentage: {
+    allowMinus: false,
     rightAlign: false,
     min: 0,
     max: 100,
