@@ -38,6 +38,9 @@ $enable-deprecation-messages: false !default;
 $focus-ring-width: 2px !default;
 $focus-ring-color: $red !default;
 
+// Buttons
+$btn-font-weight: 600 !default;
+
 // Input
 $input-border-radius: 0.25rem !default;
 $input-focus-border-color: neutral-300 !default;
@@ -52,7 +55,12 @@ $form-label-font-weight:                500 !default;
 $form-label-color:                      $primary !default;
 
 // Accordion
-$accordion-padding-y: 0.75rem !default;
-$accordion-border-radius: 0 !default;
-$accordion-border-color: $neutral-200 !default;
-$accordion-button-active-bg: $white !default;
+$accordion-icon-active-color:  $primary !default;
+$accordion-padding-y:          0.75rem !default;
+$accordion-border-radius:      0 !default;
+$accordion-border-color:       $neutral-200 !default;
+$accordion-button-color:       $primary !default;
+$accordion-button-active-bg:   $white !default;
+$accordion-button-active-color: $primary !default;
+$accordion-icon-color:         $primary !default;
+$accordion-icon-active-color:  $primary !default;

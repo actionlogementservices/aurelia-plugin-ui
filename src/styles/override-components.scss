@@ -1,14 +1,57 @@
+// BUTTONS
+.btn:focus {
+  box-shadow: none;
+  outline: solid 2px $red;
+  outline-offset: 2px;
+}
+
+.btn-primary {
+  background-color: $primary;
+  color: $white;
+  border: 1px solid $primary;
+}
+.btn-primary:hover {
+  background-color: shade-color($primary, 30%);
+}
+
+.btn-secondary {
+  background-color: $secondary;
+  color: $white;
+  border: 1px solid $secondary;
+}
+.btn-secondary:hover {
+  background-color: shade-color($secondary, 30%);
+}
+
+.btn-tertiary {
+  background-color: $white;
+  color: $primary;
+  border: 1px solid $primary;
+}
+.btn-tertiary:focus {
+  border: 1px solid $primary;
+}
+.btn-tertiary:hover {
+  border: 1px solid $primary;
+  background-color: $neutral-100;
+}
+
+// ACCORDION
 .accordion {
   .accordion-item {
     border-left: 0;
     border-right: 0;
   }
 
+  .accordion-button {
+    font-weight: 600;
+  }
   .accordion-button:hover {
       background-color: $neutral-100;
     }
 }
 
+// FORM CONTROL
 .form-control:hover {
   outline: solid 1px $blue;
 }
