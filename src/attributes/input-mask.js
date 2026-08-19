@@ -41,7 +41,7 @@ const maskConfiguration = {
     rightAlign: false,
     radixPoint: ',',
     groupSeparator: ' ',
-    digits: 2,
+    digits: 0,
     jitMasking: true,
     positionCaretOnClick: 'radixFocus'
   },
@@ -72,7 +72,7 @@ const maskConfiguration = {
 @inject(DOM.Element)
 export class InputMaskCustomAttribute {
   /** Html input element using this custom attribute. @type {HTMLInputElement} */ element;
-  /** Value of the custom attribute. @type {'currency' | 'percentage'} */ value;
+  /** Value of the custom attribute. @type {'integer' | 'decimal' | 'currency' | 'percentage'} */ value;
 
   /**
    * Creates an instance of the `input-mask` custom attribute.

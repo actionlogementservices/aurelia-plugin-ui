@@ -19,7 +19,7 @@ const decimalOptions = {
 const currencyOptions = {
   style: 'currency',
   currency: 'EUR',
-  maximumFractionDigits: 2,
+  maximumFractionDigits: 0,
   roundingMode: 'floor'
 };
 
@@ -33,7 +33,7 @@ export class formInputNumberFormatValueConverter {
    * @returns {string} the string representation
    */
   toView(value, type = 'integer', locale = 'fr-FR') {
-    if (!value || !isFinite(parseFloat(value))) return '';
+    if (value === null || value === undefined || value === '' || !isFinite(parseFloat(value))) return '';
     const numberValue = Number(value);
 
     /** @type {Intl.NumberFormatOptions} */

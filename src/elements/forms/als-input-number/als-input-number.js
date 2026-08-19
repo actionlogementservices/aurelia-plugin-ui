@@ -100,7 +100,7 @@ export class AlsInputNumber {
    */
   handleKeyDown(event) {
     if (
-      (this.type === 'decimal' || this.type === 'currency') &&
+      this.type === 'decimal' &&
       ((event.shiftKey && event.key === '.') || event.key === '.' || event.key === ',')
     ) {
       // Allow decimal separator for decimal and currency types
