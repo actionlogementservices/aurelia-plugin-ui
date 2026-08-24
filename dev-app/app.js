@@ -12,7 +12,7 @@ import { Adresse } from 'resources/elements/auto-complete/adresse';
 export const wait = delay => new Promise(resolve => setTimeout(resolve, delay));
 
 /** @typedef {{ disabled: boolean, id: number, name: string; headcount: number, headcountMinusOne: number, email: string; color: string }} Item */
-/** @typedef {{ name: string; email: string; age: number, height: number, money: number }} FormData */
+/** @typedef {{ name: string; email: string; age: number, height: number, money: number, years: Array<number> }} FormData */
 /** @typedef {OptionsFlags<FormData> = {[Property in keyof FormData]: boolean;}} FormError */
 
 @inject(
@@ -45,6 +45,7 @@ export class App {
   /** @type {FormError} */ formErrors;
   /** @type {boolean} */ isFormValid = false;
   /** @type {boolean} */ errorName = false;
+  /** @type {Array<{label: string, value: number}>} */ yearOptions = [];
 
   /**
    * @param {AutoCompleteController} controller
@@ -64,12 +65,27 @@ export class App {
     this.lock = lock;
     this.dialog = dialog;
 
+    this.yearOptions = [
+      { label: 'Année 2017', value: 2017 },
+      { label: 'Année 2018', value: 2018 },
+      { label: 'Année 2019', value: 2019 },
+      { label: 'Année 2020', value: 2020 },
+      { label: 'Année 2021', value: 2021 },
+      { label: 'Année 2022', value: 2022 },
+      { label: 'Année 2023', value: 2023 },
+      { label: 'Année 2024', value: 2024 },
+      { label: 'Année 2025', value: 2025 },
+      { label: 'Année 2026', value: 2026 },
+      { label: 'Année 2027', value: 2027 },
+    ];
+
     this.formData = {
       name: '',
       email: '',
-      age: 0,
+      age: 20,
       height: 0,
       money: 0,
+      years: [2026]
     };
 
     this.formErrors = {
@@ -78,6 +94,7 @@ export class App {
       age: false,
       height: false,
       money: false,
+      years: false
     };
 
     const itemsList = [];

@@ -678,33 +678,58 @@
             <div class="accordion-body">
               <div class="d-flex justify-content-start align-items-center gap-3">
                 <div class="flex-fill">
-                  <form novalidate>
-                    <div>
-                      <als-input-text label="Name" id="name" name="name" required="true"
-                        value.bind="formData.name" placeholder="Votre nom" is-error.bind="formErrors.name"></als-input-text>
-                      <p>NAME = ${formData.name} | isError = ${formErrors.name}</p>
+                  <form novalidate class="container-fluid">
+                    <div class="row">
+                      <div class="col">
+                        <als-input-text label="Name" id="name" name="name" required="true" value.bind="formData.name"
+                          placeholder="Votre nom" is-error.bind="formErrors.name"></als-input-text>
+                        <p>NAME = ${formData.name} | isError = ${formErrors.name}</p>
+                      </div>
+                      <div class="col">
+                        <als-input-text type="email" label="Email" id="email" name="email" required="true"
+                          value.bind="formData.email" placeholder="Votre email"
+                          is-error.bind="formErrors.email"></als-input-text>
+                        <p>EMAIL = ${formData.email} | isError = ${formErrors.email}</p>
+                      </div>
                     </div>
-                    <div>
-                      <als-input-text type="email" label="Email" id="email" name="email" required="true"
-                        value.bind="formData.email" placeholder="Votre email" is-error.bind="formErrors.email"></als-input-text>
-                      <p>EMAIL = ${formData.email} | isError = ${formErrors.email}</p>
+                    <div class="row">
+                      <div class="col">
+                        <als-input-number label="Age" id="age" name="age" required="true" value.bind="formData.age" min="18"
+                          max="150" is-error.bind="formErrors.age"></als-input-number>
+                        <p>AGE = ${formData.age} | isError = ${formErrors.age}</p>
+                      </div>
+                      <div class="col">
+                        <als-input-number label="Age" id="age" name="age" required="true" value.bind="formData.age" min="18"
+                          max="150" is-error.bind="formErrors.age"></als-input-number>
+                        <p>AGE duplicate = ${formData.age} | isError = ${formErrors.age}</p>
+                      </div>
                     </div>
-                    <div>
-                      <als-input-number label="Age" id="age" name="age" required="true"
-                        value.bind="formData.age" min="18" max="150" is-error.bind="formErrors.age"></als-input-number>
-                      <p>AGE = ${formData.age} | isError = ${formErrors.age}</p>
+                    <div class="row">
+                      <div class="col">
+                        <als-input-number type="decimal" label="Height" id="height" name="height" required="true"
+                          value.bind="formData.height" is-error.bind="formErrors.height"></als-input-number>
+                        <p>HEIGHT = ${formData.height} | isError = ${formErrors.height}</p>
+                      </div>
+                      <div class="col">
+                        <als-input-number type="currency" label="Money" id="money" name="money" required="true"
+                          value.bind="formData.money" is-error.bind="formErrors.money"></als-input-number>
+                        <p>MONEY = ${formData.money} | isError = ${formErrors.money}</p>
+                      </div>
                     </div>
-                    <div>
-                      <als-input-number type="decimal" label="Height" id="height" name="height" required="true"
-                        value.bind="formData.height" is-error.bind="formErrors.height"></als-input-number>
-                      <p>HEIGHT = ${formData.height} | isError = ${formErrors.height}</p>
+                    <div class="row">
+                      <div class="col">
+                        <als-multi-select id="years" label="Years" name="years" required="true" value.bind="formData.years"
+                          items.bind="yearOptions" is-error.bind="formErrors.years">
+                        </als-multi-select>
+                        <p>YEARS = [${formData.years}] | isError = ${formErrors.years}</p>
+                      </div>
+                      <div class="col"></div>
                     </div>
-                    <div>
-                      <als-input-number type="currency" label="Money" id="money" name="money" required="true"
-                        value.bind="formData.money" is-error.bind="formErrors.money"></als-input-number>
-                      <p>MONEY = ${formData.money} | isError = ${formErrors.money}</p>
+                    <div class="row">
+                      <div class="col">
+                        <button class="btn btn-primary" type="button" click.trigger="handleSubmit()">SUBMIT</button>
+                      </div>
                     </div>
-                    <button class="btn btn-primary" type="button" click.trigger="handleSubmit()">SUBMIT</button>
                   </form>
                 </div>
               </div>

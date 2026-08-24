@@ -1,0 +1,19 @@
+<template>
+  <div id="dropdown-${uniqueId}" class="dropdown ${autosize ? 'w-100' : ''}">
+    <button
+      id="toggle-${uniqueId}"
+      type="button"
+      class="btn dropdown-toggle ${toggleClass} ${autosize ? 'w-100' : ''}"
+      disabled.bind="disabled"
+      data-bs-toggle="dropdown"
+      aria-expanded="false"
+      focus.trigger="handleFocus($event)"
+      blur.trigger="handleBlur($event)"
+      >
+      <slot name="toggle">${label}</slot>
+    </button>
+    <ul id="menu-${uniqueId}" class="dropdown-menu ${menuClass} ${autosize ? 'w-100' : ''}" aria-labelledby="toggle-${uniqueId}">
+      <slot></slot>
+    </ul>
+  </div>
+</template>

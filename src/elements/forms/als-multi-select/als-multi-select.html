@@ -1,0 +1,31 @@
+<template>
+  <div class="form-group">
+    <label if.bind="!fieldOnly" for.bind="id" class="form-label text-primary">
+      ${label || placeholder || 'Sélectionner'}<span class="text-danger">${required ? ' *' : ''}</span>
+    </label>
+
+    <als-dropdown
+      unique-id.bind="id"
+      auto-close="outside"
+      label.bind="label || placeholder || 'Sélectionner'"
+      disabled.bind="disabled"
+      on-focus.bind="handleButtonFocus">
+      <span slot="toggle">
+        ${placeholder || 'Sélectionner'}
+      </span>
+      <div class="form-check" repeat.for="item of items">
+        <input
+          type="checkbox"
+          class="form-check-input"
+          id="${id}-${item.value}"
+          disabled.bind="disabled"
+          checked.bind="checkedItems[$index]"
+          value.bind="item.value"
+          change.trigger="handleChange($event, item, $index)"/>
+          <label class="form-check-label" for="${id}-${item.value}">${item.label}</label>
+      </div>
+    </als-dropdown>
+
+    <small if.bind="!fieldOnly" show.bind="isError" class="text-danger">${errorMessage}</small>
+  </div>
+</template>

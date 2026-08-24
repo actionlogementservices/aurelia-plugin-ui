@@ -31,6 +31,8 @@ function configure(aurelia) {
     PLATFORM.moduleName('./elements/simple-table/simple-table'),
     PLATFORM.moduleName('./elements/simple-table/column'),
 
+    PLATFORM.moduleName('./elements/als-dropdown/als-dropdown'),
+
     PLATFORM.moduleName('./elements/breadcrumbs/breadcrumbs'),
     PLATFORM.moduleName('./elements/environment-ribbon/environment-ribbon'),
     PLATFORM.moduleName('./elements/loading-indicator/loading-indicator'),
@@ -39,6 +41,7 @@ function configure(aurelia) {
 
     PLATFORM.moduleName('./elements/forms/als-input-number/als-input-number'),
     PLATFORM.moduleName('./elements/forms/als-input-text/als-input-text'),
+    PLATFORM.moduleName('./elements/forms/als-multi-select/als-multi-select'),
 
     PLATFORM.moduleName('./attributes/input-mask'),
     PLATFORM.moduleName('./attributes/no-submit'),

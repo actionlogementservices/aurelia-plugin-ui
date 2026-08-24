@@ -36,6 +36,21 @@
   background-color: $neutral-100;
 }
 
+// FORM CONTROL
+.form-control:hover {
+  outline: solid 1px $blue;
+}
+
+.form-control:focus {
+  box-shadow: none;
+  outline: solid 2px $red;
+  outline-offset: 2px;
+}
+
+.form-control.is-invalid + .input-group-text {
+  border-color: $red;
+}
+
 // ACCORDION
 .accordion {
   .accordion-item {
@@ -51,17 +66,21 @@
     }
 }
 
-// FORM CONTROL
-.form-control:hover {
-  outline: solid 1px $blue;
+// DROPDOWN
+.dropdown-toggle {
+  background-color: $primary;
+  color: $white;
+  font-weight: 500;
 }
 
-.form-control:focus {
-  box-shadow: none;
+.dropdown-toggle:hover {
+  background-color: shade-color($primary, 30%);
+  color: $white;
+}
+
+.dropdown-toggle:focus {
+  background-color: $primary;
+  color: $white;
   outline: solid 2px $red;
   outline-offset: 2px;
-}
-
-.form-control.is-invalid + .input-group-text {
-  border-color: $red;
 }
