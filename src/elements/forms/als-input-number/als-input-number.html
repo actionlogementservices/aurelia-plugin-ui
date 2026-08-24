@@ -30,7 +30,8 @@
         aria-describedby.bind="ariaDescribedby"
         focus.trigger="handleFocus($event)"
         keydown.trigger="handleKeyDown($event)"
-        blur.trigger="handleBlur()" />
+        change.trigger="handleChange($event)"
+        blur.trigger="handleBlur($event)" />
         <div if.bind="type === 'currency'" class="input-group-text" aria-hidden="true">
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path
