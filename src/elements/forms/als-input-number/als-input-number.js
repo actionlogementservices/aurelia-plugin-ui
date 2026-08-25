@@ -1,4 +1,4 @@
-import { bindable, bindingMode, useView } from 'aurelia-framework';
+import { bindable, bindingMode, computedFrom, useView } from 'aurelia-framework';
 
 const authorizedKeyList = new Set([
   '0',
@@ -18,7 +18,10 @@ const authorizedKeyList = new Set([
   'Backspace',
   'Delete',
   'Enter',
-  'Tab'
+  'Tab',
+  'Home',
+  'End',
+  'Escape'
 ]);
 
 @useView('./als-input-number.html')
@@ -91,7 +94,64 @@ export class AlsInputNumber {
   /** Pristine @type {boolean} */
   pristine = true;
 
+  /** onFocus @type {(event: FocusEvent) => void} */
+  @bindable({ defaultBindingMode: bindingMode.toView })
+  onFocus;
+
+  /** onChange @type {(event: Event) => void} */
+  @bindable({ defaultBindingMode: bindingMode.toView })
+  onChange;
+
+  /** onBlur @type {(event: FocusEvent) => void} */
+  @bindable({ defaultBindingMode: bindingMode.toView })
+  onBlur;
+
+  /**
+   * Ids of the element(s) describing the input, exposed via `aria-describedby`: the always-present
+   * range hint, plus the error message once the field is invalid.
+   * @type {string}
+   */
+  @computedFrom('id', 'isError')
+  get ariaDescribedby() {
+    const ids = [`${this.id}-hint`];
+
+    if (this.isError) {
+      ids.push(`${this.id}-error`);
+    }
+
+    return ids.join(' ');
+  }
+
+  /**
+   * Visually hidden hint describing the accepted value range, since `min`/`max` have no native
+   * effect or accessible exposure on a `type="text"` input.
+   * @type {string}
+   */
+  @computedFrom('min', 'max')
+  get rangeHint() {
+    if (this.max !== undefined && this.max !== null) {
+      return `Valeur comprise entre ${this.min} et ${this.max}.`;
+    }
+
+    return `Valeur minimum : ${this.min}.`;
+  }
+
   constructor() {}
+
+  /**
+   * Marks the field as touched so live validation can start, and forwards the focus event.
+   * @param {FocusEvent} event The focus event
+   * @returns {boolean} true to continue processing, false to cancel
+   */
+  handleFocus(event) {
+    this.pristine = false;
+
+    if (this.onFocus) {
+      this.onFocus(event);
+    }
+
+    return true;
+  }
 
   /**
    * Custom handler to prevent typing anything other than a number or to edit the field.
@@ -125,7 +185,12 @@ export class AlsInputNumber {
     return true;
   }
 
-  handleBlur() {
+  /**
+   * Handle blur event to validate the value and forward the event to the parent component.
+   * @param {FocusEvent} event The blur event
+   * @returns {boolean} true to continue processing, false to cancel
+   */
+  handleBlur(event) {
     this.validate(this.value);
 
     return true;
