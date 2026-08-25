@@ -1,4 +1,4 @@
-import { bindable, bindingMode, useView } from 'aurelia-framework';
+import { bindable, bindingMode, computedFrom, useView } from 'aurelia-framework';
 
 @useView('./als-multi-select.html')
 export class AlsMultiSelect {
@@ -70,6 +70,19 @@ export class AlsMultiSelect {
   /** onBlur @type {(event: FocusEvent) => void} */
   @bindable({ defaultBindingMode: bindingMode.toView })
   onBlur;
+
+  /**
+   * Accessible name for the dropdown toggle, reflecting the current selection count so assistive
+   * technology users know how many items are selected without opening the menu.
+   * @type {string}
+   */
+  @computedFrom('label', 'placeholder', 'value.length')
+  get toggleAriaLabel() {
+    const base = this.label || this.placeholder || 'Sélectionner';
+    const count = this.value?.length || 0;
+
+    return `${base} (${count} sélectionné${count > 1 ? 's' : ''})`;
+  }
 
   constructor() {}
 

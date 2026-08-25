@@ -36,11 +36,32 @@ export class AlsDropdown {
   @bindable({ defaultBindingMode: bindingMode.toView })
   label = '';
 
+  /** Accessible name applied to the toggle button, overriding its visible content. @type {string} */
+  @bindable({ defaultBindingMode: bindingMode.toView })
+  ariaLabel;
+
+  /** Id(s) of the element(s) describing the toggle button, e.g. an error message. @type {string} */
+  @bindable({ defaultBindingMode: bindingMode.toView })
+  ariaDescribedby;
+
+  /** Accessible name applied to the dropdown menu, e.g. to group a set of checkboxes. @type {string} */
+  @bindable({ defaultBindingMode: bindingMode.toView })
+  menuAriaLabel;
+
+  /** Whether the dropdown menu is currently open, reflected in `aria-expanded`. @type {boolean} */
+  expanded = false;
+
   /** Unique id to identify the custom element instance. @type {string} */ uniqueId = generateUniqueId();
   /** Html container of the custom element. @type {HTMLTemplateElement} */ _container;
   /** Html toggle button element. @type {HTMLButtonElement} */ _toggle;
   /** Html dropdown menu element. @type {HTMLUListElement} */ _menu;
   /** Bootstrap dropdown. @type {Dropdown} */ _dropdown;
+  /** Bound handler used to track the dropdown open state. @type {() => void} */ _handleShow = () => {
+    this.expanded = true;
+  };
+  /** Bound handler used to track the dropdown closed state. @type {() => void} */ _handleHide = () => {
+    this.expanded = false;
+  };
 
   /** onFocus @type {(event: FocusEvent) => void} */
   @bindable({ defaultBindingMode: bindingMode.toView })
@@ -66,6 +87,8 @@ export class AlsDropdown {
     this._menu = this._container.querySelector(`#menu-${this.uniqueId}`);
     this.wrapChildren();
     this._dropdown = Dropdown.getOrCreateInstance(this._toggle, { autoClose: this.autoClose });
+    this._toggle.addEventListener('show.bs.dropdown', this._handleShow);
+    this._toggle.addEventListener('hide.bs.dropdown', this._handleHide);
   }
 
   /**
@@ -86,6 +109,8 @@ export class AlsDropdown {
    * Defines the logic triggered when the custom element is removed from the DOM.
    */
   detached() {
+    this._toggle.removeEventListener('show.bs.dropdown', this._handleShow);
+    this._toggle.removeEventListener('hide.bs.dropdown', this._handleHide);
     this._dropdown?.dispose();
   }
 

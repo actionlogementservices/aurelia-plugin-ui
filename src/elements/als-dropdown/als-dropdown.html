@@ -6,13 +6,20 @@
       class="btn dropdown-toggle ${toggleClass} ${autosize ? 'w-100' : ''}"
       disabled.bind="disabled"
       data-bs-toggle="dropdown"
-      aria-expanded="false"
+      aria-expanded.bind="expanded ? 'true' : 'false'"
+      aria-label.bind="ariaLabel"
+      aria-describedby.bind="ariaDescribedby"
       focus.trigger="handleFocus($event)"
       blur.trigger="handleBlur($event)"
       >
       <slot name="toggle">${label}</slot>
     </button>
-    <ul id="menu-${uniqueId}" class="dropdown-menu ${menuClass} ${autosize ? 'w-100' : ''}" aria-labelledby="toggle-${uniqueId}">
+    <ul
+      id="menu-${uniqueId}"
+      class="dropdown-menu ${menuClass} ${autosize ? 'w-100' : ''}"
+      aria-labelledby="toggle-${uniqueId}"
+      role.bind="menuAriaLabel ? 'group' : null"
+      aria-label.bind="menuAriaLabel">
       <slot></slot>
     </ul>
   </div>

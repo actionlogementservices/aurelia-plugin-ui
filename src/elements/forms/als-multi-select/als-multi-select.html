@@ -8,6 +8,9 @@
       unique-id.bind="id"
       auto-close="outside"
       label.bind="label || placeholder || 'Sélectionner'"
+      aria-label.bind="toggleAriaLabel"
+      aria-describedby.bind="isError ? id + '-error' : null"
+      menu-aria-label.bind="label || placeholder || 'Sélectionner'"
       disabled.bind="disabled"
       on-focus.bind="handleButtonFocus">
       <span slot="toggle">
@@ -21,11 +24,12 @@
           disabled.bind="disabled"
           checked.bind="checkedItems[$index]"
           value.bind="item.value"
+          aria-required.bind="required"
           change.trigger="handleChange($event, item, $index)"/>
           <label class="form-check-label" for="${id}-${item.value}">${item.label}</label>
       </div>
     </als-dropdown>
 
-    <small if.bind="!fieldOnly" show.bind="isError" class="text-danger">${errorMessage}</small>
+    <small if.bind="!fieldOnly" show.bind="isError" id="${id}-error" class="text-danger">${errorMessage}</small>
   </div>
 </template>
