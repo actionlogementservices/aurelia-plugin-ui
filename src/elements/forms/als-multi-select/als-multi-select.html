@@ -16,6 +16,18 @@
       <span slot="toggle">
         ${placeholder || 'Sélectionner'}
       </span>
+      <div class="form-check">
+        <input
+          type="checkbox"
+          class="form-check-input"
+          id="${id}-select-all"
+          disabled.bind="disabled"
+          checked.one-way="allSelected"
+          indeterminate.bind="isIndeterminate"
+          change.trigger="handleToggleAll($event)"/>
+          <label class="form-check-label" for="${id}-select-all">Tout sélectionner</label>
+      </div>
+      <hr class="dropdown-divider" aria-hidden="true"/>
       <div class="form-check" repeat.for="item of items">
         <input
           type="checkbox"

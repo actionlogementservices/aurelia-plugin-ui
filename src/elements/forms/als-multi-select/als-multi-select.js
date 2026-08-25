@@ -84,6 +84,24 @@ export class AlsMultiSelect {
     return `${base} (${count} sélectionné${count > 1 ? 's' : ''})`;
   }
 
+  /**
+   * Whether every item is currently selected.
+   * @type {boolean}
+   */
+  @computedFrom('value.length', 'items.length')
+  get allSelected() {
+    return this.items.length > 0 && this.value.length === this.items.length;
+  }
+
+  /**
+   * Whether some, but not all, items are currently selected.
+   * @type {boolean}
+   */
+  @computedFrom('value.length', 'items.length')
+  get isIndeterminate() {
+    return this.value.length > 0 && this.value.length < this.items.length;
+  }
+
   constructor() {}
 
   attached() {
@@ -117,6 +135,25 @@ export class AlsMultiSelect {
     } else {
       this.value.push(item.value);
       this.checkedItems[index] = true;
+    }
+
+    this.validate();
+
+    return true;
+  }
+
+  /**
+   * Handles the change event on the select-all checkbox, selecting or deselecting every item.
+   * @param {Event} event The change event
+   * @returns {boolean} true to continue processing, false to cancel
+   */
+  handleToggleAll(event) {
+    if (this.allSelected) {
+      this.value = [];
+      this.checkedItems = this.items.map(() => false);
+    } else {
+      this.value = this.items.map(item => item.value);
+      this.checkedItems = this.items.map(() => true);
     }
 
     this.validate();

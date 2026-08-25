@@ -95,7 +95,9 @@ export class AlsDropdown {
    * Wraps the children of the dropdown menu in `<li class="dropdown-item">` elements, as required by bootstrap.
    */
   wrapChildren() {
-    const children = Array.from(this._menu.childNodes).filter(child => child.nodeType === Node.ELEMENT_NODE);
+    const children = Array.from(this._menu.childNodes).filter(
+      child => child.nodeType === Node.ELEMENT_NODE && !/dropdown-/g.test(child.className)
+    );
 
     for (const child of children) {
       const item = document.createElement('li');
