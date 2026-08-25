@@ -24,7 +24,7 @@
         disabled.bind="disabled"
         readonly.bind="readonly"
         input-mask.bind="type"
-        value.one-time="value | formInputNumberFormat: type"
+        value.to-view="value | formInputNumberFormat: type"
         value.from-view="value | cleanInputMask"
         focus.trigger="pristine = false"
         keydown.trigger="handleKeyDown($event)"
