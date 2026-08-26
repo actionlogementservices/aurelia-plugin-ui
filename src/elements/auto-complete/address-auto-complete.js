@@ -1,4 +1,12 @@
-import { inject, Factory, bindable, bindingMode, NewInstance, observable, TaskQueue } from 'aurelia-framework';
+import {
+  inject,
+  Factory,
+  bindable,
+  bindingMode,
+  NewInstance,
+  observable,
+  TaskQueue
+} from 'aurelia-framework';
 import { HttpClient } from 'aurelia-fetch-client';
 import { AureliaConfiguration } from 'aurelia-configuration';
 import { generateUniqueId } from '../../core/functions';

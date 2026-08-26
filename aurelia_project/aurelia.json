@@ -33,7 +33,8 @@
       "js": "src/**/*.js",
       "css": "src/**/*.css",
       "html": "src/**/*.html",
-      "json": "src/**/*.json"
+      "json": "src/**/*.json",
+      "scss": "src/styles/override*.scss"
     }
   },
   "markupProcessor": {
@@ -46,6 +47,15 @@
     "source": [
       "dev-app/**/*.css",
       "src/**/*.css"
+    ]
+  },
+  "scssProcessor": {
+    "source": [
+      "src/styles/custom.scss"
+    ],
+    "watchSource": [
+      "src/styles/custom.scss",
+      "src/styles/override*.scss"
     ]
   },
   "jsonProcessor": {

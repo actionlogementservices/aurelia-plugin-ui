@@ -28,6 +28,10 @@ export class SimpleTable {
   @bindable({ defaultBindingMode: bindingMode.toView })
   datasource;
 
+  /** Meta Data @type { any } */
+  @bindable({ defaultBindingMode: bindingMode.toView })
+  metadata;
+
   /** Enable/Disable the custom element to prevent user modification. @type {boolean} */
   @bindable({ defaultBindingMode: bindingMode.toView })
   disabled = false;
@@ -64,11 +68,20 @@ export class SimpleTable {
   @bindable({ defaultBindingMode: bindingMode.toView })
   warningTemplateText = `Seuls les {maxRows} premiers résultats sont affichés.`;
 
+  /** Whether we can disable some rows or not. @type {boolean} */
+  @bindable({ defaultBindingMode: bindingMode.oneTime })
+  disableableRows = false;
+
+  /** Property name to check to disable a row. @type {string} */
+  @bindable({ defaultBindingMode: bindingMode.oneTime })
+  disablePropName = 'disabled';
+
   /** Unique id to identify the custom element instance. @type {string} */ uniqueId = generateUniqueId();
   /** Html container of the custom element. @type {HTMLTemplateElement} */ _container;
   /** Displayed items. @type {(T & {selected?: boolean})[]} */ items = [];
   /** The total count of items including not displayed one. @type {number} */ totalCount = 0;
   /** Cells tooltips @type {Tooltip[]} */ _tooltips;
+  /** Count of selectable items @type {number} */ selectableItemCount = this.items.length;
 
   /**
    * Creates an instance of the `simple-table` custom element.
@@ -106,6 +119,7 @@ export class SimpleTable {
       // the datasource is a simple array of items
       this.totalCount = this.datasource.length;
       this.items = this.datasource.slice(0, this.maxRows);
+      this.calculateSelectableItemCount();
       this.addSelectionTooltips();
       return;
     }
@@ -114,8 +128,39 @@ export class SimpleTable {
       // the datasource is a { items, totalCount } object
       this.totalCount = totalCount;
       this.items = items.slice(0, this.maxRows);
+      this.calculateSelectableItemCount();
       this.addSelectionTooltips();
     }
+  }
+
+  /**
+   * Calculate the number of selectable items.
+   */
+  calculateSelectableItemCount() {
+    // If some rows are not disableable then EVERY item is selectable
+    if (!this.disableableRows) {
+      this.selectableItemCount = this.items.length;
+      return;
+    }
+
+    // eslint-disable-next-line unicorn/prevent-abbreviations
+    const propName = this.disablePropName;
+
+    const itemsWithProperty = this.items.filter(
+      item => Object.hasOwnProperty.call(item, propName) && typeof item[propName] === 'boolean'
+    ).length;
+
+    // Still check if all the items has the property just in case
+    if (itemsWithProperty !== this.items.length) {
+      this.selectableItemCount = this.items.length;
+      return;
+    }
+
+    // From here - the disableableRows is true AND all the items have the boolean property
+    this.selectableItemCount = this.items.filter(
+      // @ts-ignore
+      item => !item[propName]
+    ).length;
   }
 
   /**
@@ -145,7 +190,12 @@ export class SimpleTable {
    */
   toggleItemSelection(item, event) {
     // no selection
-    if (!this.valueKey || this.selectionMode === 'none') return true;
+    if (
+      !this.valueKey ||
+      this.selectionMode === 'none' ||
+      (this.disableableRows && item[this.disablePropName] === true)
+    )
+      return true;
     // click on button, a, ...
     const target = /** @type {HTMLElement} */ (event.target);
     if (target?.closest('a, button, input, select, textarea')) {
@@ -179,7 +229,12 @@ export class SimpleTable {
     const selectionCount = this.selectedItems.length;
     // all checked => uncheck all otherwise check all
     this.selectedItems =
-      selectionCount === this.items.length || this.selectionMode === 'single' ? [] : [...this.items];
+      selectionCount === this.selectableItemCount || this.selectionMode === 'single' ? [] : [...this.items];
+
+    if (this.disableableRows) {
+      this.selectedItems = this.selectedItems.filter(item => !item[this.disablePropName]);
+    }
+
     this.synchronizeSelection();
     if (notify) {
       this.triggerChangeEvent(this.selectedItems);

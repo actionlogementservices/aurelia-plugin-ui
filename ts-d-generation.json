@@ -1,7 +1,9 @@
 {
   "compilerOptions": {
     "lib": [
-      "es2022"
+      "es2023",
+      "es2023.intl",
+      "dom"
     ],
     "downlevelIteration": true,
     "allowJs": true,

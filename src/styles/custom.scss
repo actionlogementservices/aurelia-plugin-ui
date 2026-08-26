@@ -1,0 +1,10 @@
+// Include functions first (so you can manipulate colors, SVGs, calc, etc)
+@import "../../node_modules/bootstrap/scss/functions";
+
+// Include any default variable overrides here
+@import "./override-variables.scss";
+
+@import "../../node_modules/bootstrap/scss/bootstrap";
+
+// Then add additional custom code here
+@import "./override-components.scss";

@@ -11,7 +11,9 @@ import { Adresse } from 'resources/elements/auto-complete/adresse';
 
 export const wait = delay => new Promise(resolve => setTimeout(resolve, delay));
 
-/** @typedef {{ id: number, name: string; email: string; color: string }} Item */
+/** @typedef {{ disabled: boolean, id: number, name: string; headcount: number, headcountMinusOne: number, email: string; color: string }} Item */
+/** @typedef {{ name: string; email: string; age: number, height: number, money: number }} FormData */
+/** @typedef {OptionsFlags<FormData> = {[Property in keyof FormData]: boolean;}} FormError */
 
 @inject(
   NewInstance.of(AutoCompleteController),
@@ -39,6 +41,10 @@ export class App {
   /** @type {string} */ dialogStatus = 'Dialog not opened';
   /** @type {boolean} */ dialogFullscreen = false;
   /** @type {boolean} */ dialogLocked = false;
+  /** @type {FormData} */ formData;
+  /** @type {FormError} */ formErrors;
+  /** @type {boolean} */ isFormValid = false;
+  /** @type {boolean} */ errorName = false;
 
   /**
    * @param {AutoCompleteController} controller
@@ -57,13 +63,33 @@ export class App {
     this.toast = toast;
     this.lock = lock;
     this.dialog = dialog;
+
+    this.formData = {
+      name: '',
+      email: '',
+      age: 0,
+      height: 0,
+      money: 0,
+    };
+
+    this.formErrors = {
+      name: false,
+      email: false,
+      age: false,
+      height: false,
+      money: false,
+    };
+
     const itemsList = [];
     for (let index = 0; index < 120; index++) {
+      const disabled = Math.random() < 0.5;
       const id = index;
       const name = faker.person.fullName();
+      const headcount = Math.round(Math.random()*100)
+      const headcountMinusOne = headcount - Math.round(Math.random()*(headcount - 1))
       const email = faker.internet.email();
       const color = faker.color.human();
-      itemsList.push({ id, name, email, color, showItemDetails: item => this.showItemDetails(item) });
+      itemsList.push({ disabled, id, name, headcount, headcountMinusOne, email, color, showItemDetails: item => this.showItemDetails(item) });
     }
     setTimeout(() => {
       this.itemsList = itemsList;
@@ -79,12 +105,12 @@ export class App {
     // );
     this.itemsController.configure(
       async text => {
-        await wait(200);
+        await wait(600);
         return this.itemsList.filter(item => item.name.toUpperCase().includes(text.toUpperCase()));
       },
       undefined,
       async values => {
-        await wait(200);
+        await wait(600);
         return this.itemsList.filter(item => values.includes(item.id));
       }
     );
@@ -183,5 +209,20 @@ export class App {
   @computedFrom('selectedDialogMode')
   get isDialogModalMode() {
     return this.selectedDialogMode === 'modal';
+  }
+
+  validateForm() {
+    this.isFormValid = Object.values(this.formErrors).every(error => !error);
+    return this.isFormValid;
+  }
+
+  handleSubmit() {
+    if (this.validateForm()) {
+      this.toast.success('Form submitted successfully!');
+    } else {
+      this.toast.error('Form has errors. Please fix them before submitting.');
+    }
+
+    return false; // Prevent default form submission behavior
   }
 }

@@ -37,11 +37,15 @@ function configure(aurelia) {
     PLATFORM.moduleName('./elements/lock/lock'),
     PLATFORM.moduleName('./elements/input-datepicker/input-datepicker'),
 
+    PLATFORM.moduleName('./elements/forms/als-input-number/als-input-number'),
+    PLATFORM.moduleName('./elements/forms/als-input-text/als-input-text'),
+
     PLATFORM.moduleName('./attributes/input-mask'),
     PLATFORM.moduleName('./attributes/no-submit'),
 
-    PLATFORM.moduleName('./value-converters/date-format'),
     PLATFORM.moduleName('./value-converters/clean-input-mask'),
+    PLATFORM.moduleName('./value-converters/date-format'),
+    PLATFORM.moduleName('./value-converters/form-input-number-format'),
     PLATFORM.moduleName('./value-converters/number-format')
   ]);
 }
