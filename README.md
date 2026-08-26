@@ -612,6 +612,7 @@ Prevent user interaction with Bootstrap back drop.
 
   ```html
   <simple-table
+    parent-ref="$this"
     datasource.bind="itemsList"
     selected-items.bind="selectedItems"
     selection-mode="multiple"
@@ -664,7 +665,7 @@ Prevent user interaction with Bootstrap back drop.
       </div>
     </column>
     <column>
-      <button class="btn btn-secondary" click.trigger="item.showItemDetails(item)">Details</button>
+      <button class="btn btn-secondary" click.trigger="parentRef.showItemDetails(item)">Details</button>
     </column>
   </simple-table>
   ```
@@ -684,6 +685,7 @@ Prevent user interaction with Bootstrap back drop.
   | `metadata` | Any type of extra data that is not part of the data source | Any | none |
   | `disableableRows` | Are rows disableable | `true` or `false` | `false` |
   | `disablePropName` | Property name to check if row is disabled | Any string | `disabled` |
+  | `parent-ref` | Direct reference to the parent component view model. Gives access to the actual class, method and properties  | Any class | `none` |
 
 - You can specify the optional following attributes on the `column` element :
   | Attribute name | Role | Possible values | Default value |
