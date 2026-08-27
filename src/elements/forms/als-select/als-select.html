@@ -1,0 +1,21 @@
+<template>
+  <div class="form-group">
+    <label if.bind="!fieldOnly" for.bind="id" class="form-label text-primary">
+      ${label || placeholder || 'Sélectionner'}<span class="text-danger">${required ? ' *' : ''}</span>
+    </label>
+    <select
+      id.bind="id"
+      name.bind="name"
+      class="form-select input-group ${isError ? 'is-invalid' : ''}"
+      aria-label.bind="label || placeholder || 'Sélectionner'"
+      disabled.bind="disabled"
+      focus.trigger="handleFocus($event)"
+      change.trigger="handleChange($event)"
+      blur.trigger="handleBlur($event)"
+      value.bind="value">
+      <option selected value="">${placeholder || 'Sélectionner'}</option>
+      <option repeat.for="item of items" value.bind="item.value">${item.label}</option>
+    </select>
+    <small if.bind="!fieldOnly" show.bind="isError" class="text-danger">${errorMessage}</small>
+  </div>
+</template>
