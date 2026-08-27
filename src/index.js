@@ -42,6 +42,9 @@ function configure(aurelia) {
     PLATFORM.moduleName('./elements/forms/als-input-number/als-input-number'),
     PLATFORM.moduleName('./elements/forms/als-input-text/als-input-text'),
     PLATFORM.moduleName('./elements/forms/als-multi-select/als-multi-select'),
+    PLATFORM.moduleName('./elements/forms/als-input-password/als-input-password'),
+    PLATFORM.moduleName('./elements/forms/als-select/als-select'),
+    PLATFORM.moduleName('./elements/forms/als-datepicker/als-datepicker'),
 
     PLATFORM.moduleName('./attributes/input-mask'),
     PLATFORM.moduleName('./attributes/no-submit'),

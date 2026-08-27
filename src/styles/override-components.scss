@@ -37,10 +37,6 @@
 }
 
 // FORM CONTROL
-.form-control:hover {
-  outline: solid 1px $blue;
-}
-
 .form-control:focus {
   box-shadow: none;
   outline: solid 2px $red;
@@ -83,4 +79,31 @@
   color: $white;
   outline: solid 2px $red;
   outline-offset: 2px;
+}
+
+// INPUT
+.input-group {
+  border-radius: $border-radius;
+
+  .form-control:has(+ .input-group-text) {
+    border-right: 0;
+  }
+
+  button.input-group-text {
+    appearance: none;
+    cursor: pointer;
+  }
+
+  button.input-group-text:focus-visible {
+    outline: 2px solid $primary;
+    outline-offset: -2px;
+  }
+
+  &:hover {
+    box-shadow: 0 0 0 1px $primary;
+  }
+  &:focus {
+    outline: solid 2px $red;
+    outline-offset: 2px;
+  }
 }

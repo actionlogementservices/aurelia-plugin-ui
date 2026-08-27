@@ -609,6 +609,12 @@
                       </span>
                     </small>
                   </column>
+                  <column header="Input" cell-key="input" sortable="false" width="150px">
+                    <als-input-text
+                      id="input-$index"
+                      field-only="true"
+                      placeholder="test input"></als-input-text>
+                  </column>
                   <column header="Name" cell-key="name" sortable="true">
                     ${item.name}
                   </column>
@@ -701,7 +707,7 @@
                       <div class="col">
                         <als-input-number label="Age" id="age" name="age" required="true" value.bind="formData.age" min="18"
                           max="150" is-error.bind="formErrors.age"></als-input-number>
-                        <p>AGE duplicate = ${formData.age} | isError = ${formErrors.age}</p>
+                        <p>AGE (clone) = ${formData.age} | isError = ${formErrors.age}</p>
                       </div>
                     </div>
                     <div class="row">
@@ -718,12 +724,57 @@
                     </div>
                     <div class="row">
                       <div class="col">
+                        <als-datepicker
+                          id="birthDate"
+                          label="Date de naissance"
+                          min-date.bind="mindateString"
+                          max-date.bind="maxDateString"
+                          value.bind="formData.birthdate"
+                          is-error.bind="formErrors.birthdate"></als-datepicker>
+                        <p>BIRTHDATE = ${formData.birthdate} | isError = ${formErrors.birthdate}</p>
+                      </div>
+                      <div class="col">
+                        <als-input-password
+                          label="Password"
+                          id="password"
+                          name="password"required="true"
+                          value.bind="formData.password"
+                          placeholder="Votre mot de passe"
+                          pristine.bind="pwdPristine"
+                          is-error.bind="!pwdPristine && !pwdConfirmPristine && pwdMismatch"
+                        ></als-input-password>
+                        <p>PASSWORD = ${formData.password} | isError = ${pwdMismatch}</p>
+                      </div>
+                      <div class="col">
+                        <als-input-password
+                          label="Confirmer le mot de passe"
+                          id="confirmPassword"
+                          name="confirmPassword"
+                          required="true"
+                          value.bind="formData.confirmPassword"
+                          placeholder="Confirmez votre mot de passe"
+                          is-error.bind="!pwdPristine && !pwdConfirmPristine && pwdMismatch"
+                          pristine.bind="pwdConfirmPristine"
+                          error-message.bind="!pwdConfirmPristine && pwdMismatch ? 'Les mots de passe ne correspondent pas.' : ''"
+                        ></als-input-password>
+                        <p>CONFIRM PASSWORD = ${formData.confirmPassword} | isError = ${pwdMismatch}</p>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col">
                         <als-multi-select id="years" label="Years" name="years" required="true" value.bind="formData.years"
                           items.bind="yearOptions" is-error.bind="formErrors.years">
                         </als-multi-select>
                         <p>YEARS = [${formData.years}] | isError = ${formErrors.years}</p>
                       </div>
-                      <div class="col"></div>
+                      <div class="col">
+                        <div>
+                          <als-select label="Profil" id="profile" name="profile" required="true"
+                            items.bind="formProfileItems" value.bind="formData.profile" placeholder="Sélectionner un profil"
+                            is-error.bind="formErrors.profile"></als-select>
+                          <p>PROFILE = ${formData.profile} | isError = ${formErrors.profile}</p>
+                        </div>
+                      </div>
                     </div>
                     <div class="row">
                       <div class="col">
