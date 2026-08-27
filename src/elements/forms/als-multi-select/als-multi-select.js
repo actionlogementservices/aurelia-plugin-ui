@@ -2,8 +2,6 @@ import { bindable, bindingMode, computedFrom, useView } from 'aurelia-framework'
 
 @useView('./als-multi-select.html')
 export class AlsMultiSelect {
-  /** Bootstrap dropdown. @type {Dropdown} */ _dropdown;
-
   /** Id @type {string} */
   @bindable({ defaultBindingMode: bindingMode.toView })
   // @ts-ignore
