@@ -24,9 +24,11 @@
         disabled.bind="disabled"
         readonly.bind="readonly"
         input-mask.bind="type"
-        value.one-time="value | formInputNumberFormat: type"
+        value.to-view="value | formInputNumberFormat: type"
         value.from-view="value | cleanInputMask"
-        focus.trigger="pristine = false"
+        aria-invalid.bind="isError ? 'true' : 'false'"
+        aria-describedby.bind="ariaDescribedby"
+        focus.trigger="handleFocus($event)"
         keydown.trigger="handleKeyDown($event)"
         blur.trigger="handleBlur()" />
         <div if.bind="type === 'currency'" class="input-group-text" aria-hidden="true">
@@ -37,6 +39,7 @@
           </svg>
         </div>
     </div>
-    <small if.bind="!fieldOnly" show.bind="isError" class="text-danger">${errorMessage}</small>
+    <small if.bind="!fieldOnly" id="${id}-hint" class="visually-hidden">${rangeHint}</small>
+    <small if.bind="!fieldOnly" show.bind="isError" id="${id}-error" role="alert" class="text-danger">${errorMessage}</small>
   </div>
 </template>
