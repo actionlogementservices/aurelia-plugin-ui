@@ -1,8 +1,0 @@
-.input-group {
-  .form-control:has(+ .input-group-text) {
-    border-right: 0;
-  }
-  .input-group-text {
-    border-left: 0;
-  }
-}
