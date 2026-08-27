@@ -27,6 +27,8 @@ $neutral-900:  #4A4F56 !default;
 $primary:   #003F7A !default;
 $secondary: #E41D4B !default;
 
+$border-radius: 0.25rem !default;
+
 // Fonts
 $font-family-base: 'Roboto', 'Helvetica Neue', Arial, sans-serif !default;
 $small-font-size: 0.75rem !default;
@@ -42,7 +44,6 @@ $focus-ring-color: $red !default;
 $btn-font-weight: 600 !default;
 
 // Input
-$input-border-radius: 0.25rem !default;
 $input-focus-border-color: neutral-300 !default;
 $input-focus-width:  1px !default;
 $input-group-addon-bg: $white !default;

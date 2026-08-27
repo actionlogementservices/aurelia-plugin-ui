@@ -139,15 +139,18 @@ export class AlsInputNumber {
   constructor() {}
 
   /**
-   * Marks the field as touched so live validation can start, and forwards the focus event.
+   * Custom handler to handle focus event and call onFocus callback if provided.
    * @param {FocusEvent} event The focus event
    * @returns {boolean} true to continue processing, false to cancel
    */
   handleFocus(event) {
-    this.pristine = false;
+    if (this.pristine) {
+      this.pristine = false;
+    }
 
     if (this.onFocus) {
       this.onFocus(event);
+      return true;
     }
 
     return true;
@@ -186,11 +189,29 @@ export class AlsInputNumber {
   }
 
   /**
-   * Handle blur event to validate the value and forward the event to the parent component.
+   * Custom handler to handle change event and call onChange callback if provided.
+   * @param {Event} event The change event
+   * @returns {boolean} true to continue processing, false to cancel
+   */
+  handleChange(event) {
+    if (this.onChange) {
+      this.onChange(event);
+      return true;
+    }
+
+    return true;
+  }
+
+  /**
+   * Custom handler to handle blur event and call onBlur callback if provided.
    * @param {FocusEvent} event The blur event
    * @returns {boolean} true to continue processing, false to cancel
    */
   handleBlur(event) {
+    if (this.onBlur) {
+      this.onBlur(event);
+    }
+
     this.validate(this.value);
 
     return true;

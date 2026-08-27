@@ -683,8 +683,8 @@ Prevent user interaction with Bootstrap back drop.
   | `warning-template-text` | Warning template text shown when not all items are displayed. Must contain the `{maxRows}` token | Any string with `{maxRows}` | `Seuls les {maxRows} premiers résultats sont affichés.` |
   | `result-text` | Text displayed after the # of items | Any string | `résultat(s).` |
   | `metadata` | Any type of extra data that is not part of the data source | Any | none |
-  | `disableableRows` | Are rows disableable | `true` or `false` | `false` |
-  | `disablePropName` | Property name to check if row is disabled | Any string | `disabled` |
+  | `disableable-rows` | Are rows disableable | `true` or `false` | `false` |
+  | `disable-prop-name` | Property name to check if row is disabled | Any string | `disabled` |
   | `parent-ref` | Direct reference to the parent component view model. Gives access to the actual class, method and properties  | Any class | `none` |
 
 - You can specify the optional following attributes on the `column` element :
@@ -731,24 +731,34 @@ Implements **mask feature** on html input leveraging the [npm inputmask package]
 Form input have been included in this package, for now we have number and text inputs.
 It includes form label and form message.
 
-#### <als-form-input-number>
+#### <als-input-number>
 
 It includes most of the base html input attributes. You can also specify the following attributes to this element :
   | Attribute name | Role | Possible values | Default value |
-  | --- | --- | --- | --- |  
+  | --- | --- | --- | --- |
   | `type` | The type of formatting | `integer`, `decimal` or `currency` | `integer` |
   | `label` | The input label, asterisk is automatically added if the field is required | Any string | None |
   | `field-only` | Flag to hide label and error message | `true` or `false` | `false` |
   | `is-error` | Two-way bound property to know if the field is in error state | `true` or `false` | `false` |
   | `error-message` | To set a custom error message | Any string | None |
 
-#### <als-form-input-text>
+#### <als-input-text>
 
 It includes most of the base html input attributes. You can also specify the following attributes to this element :
   | Attribute name | Role | Possible values | Default value |
-  | --- | --- | --- | --- |  
+  | --- | --- | --- | --- |
   | `type` | The type of formatting | `text`, `email` | `text` |
   | `label` | The input label, asterisk is automatically added if the field is required | Any string | None |
+  | `field-only` | Flag to hide label and error message | `true` or `false` | `false` |
+  | `is-error` | Two-way bound property to know if the field is in error state | `true` or `false` | `false` |
+  | `error-message` | To set a custom error message | Any string | None |
+
+#### <als-multi-select>
+
+It includes most of the base html input attributes. You can specify the following attributes to this element :
+  | Attribute name | Role | Possible values | Default value |
+  | --- | --- | --- | --- |
+  | `items` | The items to be displayed | Any array | None |
   | `field-only` | Flag to hide label and error message | `true` or `false` | `false` |
   | `is-error` | Two-way bound property to know if the field is in error state | `true` or `false` | `false` |
   | `error-message` | To set a custom error message | Any string | None |
