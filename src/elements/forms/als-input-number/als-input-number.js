@@ -1,4 +1,5 @@
 import { bindable, bindingMode, computedFrom, useView } from 'aurelia-framework';
+import { FormInput } from '../forms-input';
 
 const authorizedKeyList = new Set([
   '0',
@@ -24,35 +25,14 @@ const authorizedKeyList = new Set([
   'Escape'
 ]);
 
+/**
+ * @augments FormInput<number>
+ */
 @useView('./als-input-number.html')
-export class AlsInputNumber {
-  /** Id @type {string} */
-  @bindable({ defaultBindingMode: bindingMode.toView })
-  // @ts-ignore
-  id;
-
-  /** Name @type {string} */
-  @bindable({ defaultBindingMode: bindingMode.toView })
-  // @ts-ignore
-  name;
-
+export class AlsInputNumber extends FormInput {
   /** Type @type {'integer' | 'decimal' | 'currency'} */
   @bindable({ defaultBindingMode: bindingMode.toView })
   type = 'integer';
-
-  /** Label @type {string} */
-  @bindable({ defaultBindingMode: bindingMode.toView })
-  // @ts-ignore
-  label;
-
-  /** required @type {boolean} */
-  @bindable({ defaultBindingMode: bindingMode.toView })
-  required = true;
-
-  /** Value @type {number} */
-  @bindable({ defaultBindingMode: bindingMode.twoWay })
-  // @ts-ignore
-  value;
 
   /** Min value @type {number} */
   @bindable({ defaultBindingMode: bindingMode.toView })
@@ -66,45 +46,6 @@ export class AlsInputNumber {
   /** Step @type {number} */
   @bindable({ defaultBindingMode: bindingMode.oneTime })
   step = 1;
-
-  /** Placeholder text @type {string} */
-  @bindable({ defaultBindingMode: bindingMode.toView })
-  placeholder = '';
-
-  /** Readonly @type {boolean} */
-  @bindable({ defaultBindingMode: bindingMode.toView })
-  readonly = false;
-
-  /** Disabled @type {boolean} */
-  @bindable({ defaultBindingMode: bindingMode.oneTime })
-  disabled = false;
-
-  /** Field only @type {boolean} */
-  @bindable({ defaultBindingMode: bindingMode.oneTime })
-  fieldOnly = false;
-
-  /** Error @type {boolean} */
-  @bindable({ defaultBindingMode: bindingMode.twoWay })
-  isError = false;
-
-  /** Error message @type {string} */
-  @bindable({ defaultBindingMode: bindingMode.toView })
-  errorMessage = '';
-
-  /** Pristine @type {boolean} */
-  pristine = true;
-
-  /** onFocus @type {(event: FocusEvent) => void} */
-  @bindable({ defaultBindingMode: bindingMode.toView })
-  onFocus;
-
-  /** onChange @type {(event: Event) => void} */
-  @bindable({ defaultBindingMode: bindingMode.toView })
-  onChange;
-
-  /** onBlur @type {(event: FocusEvent) => void} */
-  @bindable({ defaultBindingMode: bindingMode.toView })
-  onBlur;
 
   /**
    * Ids of the element(s) describing the input, exposed via `aria-describedby`: the always-present
@@ -136,24 +77,8 @@ export class AlsInputNumber {
     return `Valeur minimum : ${this.min}.`;
   }
 
-  constructor() {}
-
-  /**
-   * Custom handler to handle focus event and call onFocus callback if provided.
-   * @param {FocusEvent} event The focus event
-   * @returns {boolean} true to continue processing, false to cancel
-   */
-  handleFocus(event) {
-    if (this.pristine) {
-      this.pristine = false;
-    }
-
-    if (this.onFocus) {
-      this.onFocus(event);
-      return true;
-    }
-
-    return true;
+  constructor() {
+    super();
   }
 
   /**
@@ -162,6 +87,8 @@ export class AlsInputNumber {
    * @returns {boolean} true to continue processing, false to cancel
    */
   handleKeyDown(event) {
+    this.pristine = false;
+
     if (
       this.type === 'decimal' &&
       ((event.shiftKey && event.key === '.') || event.key === '.' || event.key === ',')
@@ -189,62 +116,33 @@ export class AlsInputNumber {
   }
 
   /**
-   * Custom handler to handle change event and call onChange callback if provided.
-   * @param {Event} event The change event
-   * @returns {boolean} true to continue processing, false to cancel
-   */
-  handleChange(event) {
-    if (this.onChange) {
-      this.onChange(event);
-      return true;
-    }
-
-    return true;
-  }
-
-  /**
-   * Custom handler to handle blur event and call onBlur callback if provided.
-   * @param {FocusEvent} event The blur event
-   * @returns {boolean} true to continue processing, false to cancel
-   */
-  handleBlur(event) {
-    if (this.onBlur) {
-      this.onBlur(event);
-    }
-
-    this.validate(this.value);
-
-    return true;
-  }
-
-  /**
-   * Validate number value against basic rules
+   * Validate number-specific rules.
    * @param {number} value Value to validate
-   * @returns {boolean} true if value is valid
+   * @returns {boolean} true if valid, false otherwise
    */
-  validate(value) {
-    if ((value === undefined || value === null) && this.required) {
-      this.isError = true;
-      this.errorMessage = `Ce champ est obligatoire.`;
-      return false;
+  validateValue(value) {
+    if (this.isValueEmpty(value)) {
+      return true;
     }
 
     if (!isFinite(value)) {
       this.isError = true;
       this.errorMessage = `La valeur n'est pas un nombre valide.`;
       return false;
-    } else if (value < this.min) {
+    }
+
+    if (value < this.min) {
       this.isError = true;
       this.errorMessage = `La valeur minimum est ${this.min}.`;
       return false;
-    } else if (this.max && this.max !== null && value > this.max) {
+    }
+
+    if (this.max !== undefined && this.max !== null && value > this.max) {
       this.isError = true;
       this.errorMessage = `La valeur maximum est ${this.max}.`;
       return false;
     }
 
-    this.isError = false;
-    this.errorMessage = '';
     return true;
   }
 }
