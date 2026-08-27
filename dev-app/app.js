@@ -12,7 +12,7 @@ import { Adresse } from 'resources/elements/auto-complete/adresse';
 export const wait = delay => new Promise(resolve => setTimeout(resolve, delay));
 
 /** @typedef {{ disabled: boolean, id: number, name: string; headcount: number, headcountMinusOne: number, email: string; color: string }} Item */
-/** @typedef {{ name: string; email: string; age: number, height: number, money: number, years: Array<number> }} FormData */
+/** @typedef {{ name: string; email: string; password: string; confirmPassword: string; profile: string; age: number, birthdate: string, height: number, money: number }} FormData */
 /** @typedef {OptionsFlags<FormData> = {[Property in keyof FormData]: boolean;}} FormError */
 
 @inject(
@@ -43,9 +43,12 @@ export class App {
   /** @type {boolean} */ dialogLocked = false;
   /** @type {FormData} */ formData;
   /** @type {FormError} */ formErrors;
+  /** @type {boolean} */ pwdPristine = true;
+  /** @type {boolean} */ pwdConfirmPristine = true;
   /** @type {boolean} */ isFormValid = false;
   /** @type {boolean} */ errorName = false;
   /** @type {Array<{label: string, value: number}>} */ yearOptions = [];
+  /** @type {Array<{label: string, value: string}>} */ formProfileItems;
 
   /**
    * @param {AutoCompleteController} controller
@@ -82,7 +85,11 @@ export class App {
     this.formData = {
       name: '',
       email: '',
-      age: 20,
+      password: '',
+      confirmPassword: '',
+      profile: '',
+      age: 21,
+      birthdate: new Date().toISOString(),
       height: 0,
       money: 0,
       years: [2026]
@@ -91,11 +98,21 @@ export class App {
     this.formErrors = {
       name: false,
       email: false,
+      password: false,
+      confirmPassword: false,
+      profile: false,
       age: false,
+      birthdate: false,
       height: false,
       money: false,
       years: false
     };
+
+    this.formProfileItems = [
+      { label: 'Utilisateur', value: 'user' },
+      { label: 'Manager', value: 'manager' },
+      { label: 'Administrateur', value: 'admin' }
+    ];
 
     const itemsList = [];
     for (let index = 0; index < 120; index++) {
@@ -226,6 +243,12 @@ export class App {
   @computedFrom('selectedDialogMode')
   get isDialogModalMode() {
     return this.selectedDialogMode === 'modal';
+  }
+
+  @computedFrom('formData.password', 'formData.confirmPassword')
+  get pwdMismatch() {
+    const mismatch = this.formData.confirmPassword !== this.formData.password;
+    return mismatch;
   }
 
   validateForm() {
