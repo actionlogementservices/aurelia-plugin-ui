@@ -32,6 +32,7 @@ function configure(aurelia) {
     PLATFORM.moduleName('./elements/simple-table/column'),
 
     PLATFORM.moduleName('./elements/als-dropdown/als-dropdown'),
+    PLATFORM.moduleName('./elements/als-gtag/als-gtag'),
 
     PLATFORM.moduleName('./elements/breadcrumbs/breadcrumbs'),
     PLATFORM.moduleName('./elements/environment-ribbon/environment-ribbon'),
