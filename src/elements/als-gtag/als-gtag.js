@@ -22,7 +22,7 @@ export class AlsGtag {
 
   /**
    * Injects the Google Tag Manager script and its noscript iframe fallback.
-   * @param {Window}   window browser global object
+   * @param {Window | typeof globalThis}   window browser global object
    * @param {Document} document browser document
    * @param {string} s script element tag name
    * @param {string} l data layer tag name
@@ -37,16 +37,16 @@ export class AlsGtag {
     });
     // eslint-disable-next-line unicorn/prefer-query-selector
     const scriptElements = document.getElementsByTagName(s)[0];
-    const gtagScriptElement = document.createElement(s);
+    const gtagScriptElement = /** @type {HTMLScriptElement} */ (document.createElement(s));
     // eslint-disable-next-line eqeqeq
     const dl = l == 'dataLayer' ? '' : '&l=' + l;
     gtagScriptElement.async = true;
     gtagScriptElement.src = 'https://www.googletagmanager.com/gtm.js?id=' + tagId + dl;
     scriptElements.parentNode.insertBefore(gtagScriptElement, scriptElements);
 
-    const iframe = document.createElement('IFRAME');
-    iframe.setAttribute('height', 0);
-    iframe.setAttribute('width', 0);
+    const iframe = document.createElement('iframe');
+    iframe.setAttribute('height', '0');
+    iframe.setAttribute('width', '0');
     iframe.style.display = 'none';
     iframe.style.visibility = 'hidden';
     iframe.src = 'https://www.googletagmanager.com/ns.html?id=' + tagId;
