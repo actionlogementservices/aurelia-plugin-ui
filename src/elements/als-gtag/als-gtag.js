@@ -1,16 +1,33 @@
 import { bindable, bindingMode, noView } from 'aurelia-framework';
 
+/**
+ * Implements the **`als-gtag` custom element** that injects the Google Tag Manager script and noscript fallback.
+ * Use a single instance near the root of the application.
+ * @category element
+ */
 @noView
 export class AlsGtag {
+  /** Google Tag Manager Id. @type {string} */
   @bindable({ defaultBindingMode: bindingMode.toView })
   tagId = 'GTM-XXXXXX';
 
   constructor() {}
 
+  /**
+   * Defines the logic triggered when the custom element is added to the DOM.
+   */
   attached() {
     this.addGoogleTag(globalThis, document, 'script', 'dataLayer', this.tagId);
   }
 
+  /**
+   * Injects the Google Tag Manager script and its noscript iframe fallback.
+   * @param {Window}   window browser global object
+   * @param {Document} document browser document
+   * @param {string} s script element tag name
+   * @param {string} l data layer tag name
+   * @param {string} tagId Google Tag Manager container identifier
+   */
   addGoogleTag(window, document, s, l, tagId) {
     window[l] = window[l] || [];
     window[l].push({

@@ -726,6 +726,24 @@ Implements **mask feature** on html input leveraging the [npm inputmask package]
   value.from-view="amount | cleanInputMask" />
 ```
 
+### `als-gtag` custom element
+
+Injects the Google Tag Manager script and its noscript iframe fallback into the application.
+
+- Use the `<als-gtag>` element once, near the root of your application (e.g. in `app.html`).
+- Data bind or set the `tag-id` attribute to your Google Tag Manager container identifier.
+
+  ```html
+  <als-gtag tag-id="GTM-ABC1234"></als-gtag>
+  ```
+
+- You can specify the optional following attributes :
+  | Attribute name | Role | Possible values | Default value |
+  |--- |---|--- |---|
+  | `tag-id` | Google Tag Manager container identifier | Any string | `GTM-XXXXXX` |
+
+> Do not render more than one instance, as each instance adds another Google Tag Manager script and fallback iframe.
+
 ### Forms
 
 Form input have been included in this package, for now we have number and text inputs.
