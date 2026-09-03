@@ -1,0 +1,25 @@
+.multi-select-toggle {
+  width: 100%;
+  border: var(--bs-border-width) solid var(--bs-border-color);
+  background-color: var(--bs-white);
+  color: var(--bs-body-color);
+  font-weight: 500;
+
+  &:hover {
+    border: var(--bs-border-width) solid var(--bs-border-color);
+    background-color: var(--bs-white);
+    color: var(--bs-body-color);
+  }
+
+  &:focus, &.show {
+    background-color: var(--bs-white);
+    color: var(--bs-body-color);
+    outline: 2px solid var(--bs-red) !important;
+    outline-offset: 2px;
+    box-shadow: 0 0 0 1px transparent;
+  }
+}
+
+.multi-select-menu {
+  width: 100%;
+}
