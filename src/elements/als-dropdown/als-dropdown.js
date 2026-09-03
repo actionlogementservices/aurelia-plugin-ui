@@ -62,6 +62,11 @@ export class AlsDropdown {
   /** Bound handler used to track the dropdown closed state. @type {() => void} */ _handleHide = () => {
     this.expanded = false;
   };
+  /**
+   * Observes the menu for projected content added after `attached()`, e.g. from async-bound `repeat.for` items.
+   * @type {MutationObserver}
+   */
+  _menuObserver;
 
   /** onFocus @type {(event: FocusEvent) => void} */
   @bindable({ defaultBindingMode: bindingMode.toView })
@@ -86,6 +91,10 @@ export class AlsDropdown {
     this._toggle = this._container.querySelector(`#toggle-${this.uniqueId}`);
     this._menu = this._container.querySelector(`#menu-${this.uniqueId}`);
     this.wrapChildren();
+    // Projected content bound to async-populated data (e.g. `repeat.for` over items loaded after `attached()`)
+    // can be inserted into the menu after this initial pass, so keep wrapping as it arrives.
+    this._menuObserver = new MutationObserver(() => this.wrapChildren());
+    this._menuObserver.observe(this._menu, { childList: true });
     this._dropdown = Dropdown.getOrCreateInstance(this._toggle, { autoClose: this.autoClose });
     this._toggle.addEventListener('show.bs.dropdown', this._handleShow);
     this._toggle.addEventListener('hide.bs.dropdown', this._handleHide);
@@ -96,7 +105,7 @@ export class AlsDropdown {
    */
   wrapChildren() {
     const children = Array.from(this._menu.children).filter(
-      child => child.nodeType === Node.ELEMENT_NODE && !/dropdown-/g.test(child.className)
+      child => child.nodeType === Node.ELEMENT_NODE && !child.className.startsWith('dropdown-')
     );
 
     for (const child of children) {
@@ -111,6 +120,7 @@ export class AlsDropdown {
    * Defines the logic triggered when the custom element is removed from the DOM.
    */
   detached() {
+    this._menuObserver?.disconnect();
     this._toggle.removeEventListener('show.bs.dropdown', this._handleShow);
     this._toggle.removeEventListener('hide.bs.dropdown', this._handleHide);
     this._dropdown?.dispose();
