@@ -1,4 +1,6 @@
 <template>
+  <require from="./als-multi-select.css"></require>
+
   <div class="form-group">
     <label if.bind="!fieldOnly" for.bind="id" class="form-label text-primary">
       ${label || placeholder || 'Sélectionner'}<span class="text-danger">${required ? ' *' : ''}</span>
@@ -12,7 +14,9 @@
       aria-describedby.bind="isError ? id + '-error' : null"
       menu-aria-label.bind="label || placeholder || 'Sélectionner'"
       disabled.bind="disabled"
-      on-focus.bind="handleButtonFocus">
+      on-focus.bind="handleButtonFocus"
+      toggle-class="multi-select-toggle"
+      menu-class="multi-select-menu">
       <span slot="toggle">
         ${placeholder || 'Sélectionner'}
       </span>
@@ -27,8 +31,8 @@
           change.trigger="handleToggleAll($event)"/>
           <label class="form-check-label" for="${id}-select-all">Tout sélectionner</label>
       </div>
-      <hr class="dropdown-divider" aria-hidden="true"/>
-      <div class="form-check" repeat.for="item of items">
+      <hr if.bind="items && items.length > 0" class="dropdown-divider" aria-hidden="true"/>
+      <div if.bind="items && items.length > 0" class="form-check" repeat.for="item of items">
         <input
           type="checkbox"
           class="form-check-input"

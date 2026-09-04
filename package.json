@@ -23,13 +23,14 @@
     "build": "au build-plugin --env prod",
     "doc": "jsdoc -c ./.jsdoc.json",
     "prepare": "npm run build && npx tsc -p ts-d-generation.json && cpx src/types.d.ts dist/types",
+    "pretest": "au lint",
+    "preversion": "au test",
+    "publish:local": "npx yalc publish --push",
     "release": "release-it",
     "start": "au run",
-    "pretest": "au lint",
     "test": "au test",
     "update:browserslist": "browserslist --update-db",
     "upgrade": "npx npm-upgrade",
-    "preversion": "au test",
     "watch": "au build-plugin --watch"
   },
   "browserslist": [

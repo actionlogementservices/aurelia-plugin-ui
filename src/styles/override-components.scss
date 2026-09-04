@@ -68,19 +68,17 @@
 
 // DROPDOWN
 .dropdown-toggle {
-  background-color: $primary;
-  color: $white;
-  font-weight: 500;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
-.dropdown-toggle:hover {
-  background-color: shade-color($primary, 30%);
-  color: $white;
+.dropdown-toggle::after {
+  content: unset;
 }
 
 .dropdown-toggle:focus {
-  background-color: $primary;
-  color: $white;
   outline: solid 2px $red;
   outline-offset: 2px;
+  box-shadow: 0 0 0 1px transparent;
 }
