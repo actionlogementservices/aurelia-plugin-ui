@@ -1,4 +1,4 @@
-import { bindable, bindingMode, useView } from 'aurelia-framework';
+import { bindable, bindingMode, computedFrom, useView } from 'aurelia-framework';
 import { FormInput } from '../forms-input';
 
 /**
@@ -9,6 +9,15 @@ export class AlsInputText extends FormInput {
   /** Type @type {'text' | 'email'} */
   @bindable({ defaultBindingMode: bindingMode.toView })
   type = 'text';
+
+  /**
+   * Id of the element describing the error, exposed via `aria-describedby` once the field is invalid.
+   * @type {string}
+   */
+  @computedFrom('id', 'isError')
+  get ariaDescribedby() {
+    return this.isError ? `${this.id}-error` : '';
+  }
 
   /**
    * Validate text-specific rules.

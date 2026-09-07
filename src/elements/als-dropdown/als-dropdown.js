@@ -44,6 +44,10 @@ export class AlsDropdown {
   @bindable({ defaultBindingMode: bindingMode.toView })
   ariaDescribedby;
 
+  /** Applied to the toggle button to expose invalid state to assistive technology. @type {boolean|'true'|'false'} */
+  @bindable({ defaultBindingMode: bindingMode.toView })
+  ariaInvalid;
+
   /** Accessible name applied to the dropdown menu, e.g. to group a set of checkboxes. @type {string} */
   @bindable({ defaultBindingMode: bindingMode.toView })
   menuAriaLabel;

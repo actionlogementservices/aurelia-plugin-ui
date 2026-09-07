@@ -1,4 +1,4 @@
-import { bindable, bindingMode, useView } from 'aurelia-framework';
+import { bindable, bindingMode, computedFrom, useView } from 'aurelia-framework';
 import { FormInput } from '../forms-input';
 
 /**
@@ -11,6 +11,15 @@ export class AlsSelect extends FormInput {
   @bindable({ defaultBindingMode: bindingMode.oneTime })
   // @ts-ignore
   items;
+
+  /**
+   * Id of the element describing the error, exposed via `aria-describedby` once the field is invalid.
+   * @type {string}
+   */
+  @computedFrom('id', 'isError')
+  get ariaDescribedby() {
+    return this.isError ? `${this.id}-error` : '';
+  }
 
   /**
    * Select-specific validation hook.

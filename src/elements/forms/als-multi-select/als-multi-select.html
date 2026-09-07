@@ -12,6 +12,7 @@
       label.bind="label || placeholder || 'Sélectionner'"
       aria-label.bind="toggleAriaLabel"
       aria-describedby.bind="isError ? id + '-error' : null"
+      aria-invalid.bind="isError ? 'true' : 'false'"
       menu-aria-label.bind="label || placeholder || 'Sélectionner'"
       disabled.bind="disabled"
       on-focus.bind="handleButtonFocus"
@@ -49,6 +50,6 @@
       </div>
     </als-dropdown>
 
-    <small if.bind="!fieldOnly" show.bind="isError" id="${id}-error" class="text-danger">${errorMessage}</small>
+    <small if.bind="!fieldOnly" show.bind="isError" id="${id}-error" role="alert" class="text-danger">${errorMessage}</small>
   </div>
 </template>
