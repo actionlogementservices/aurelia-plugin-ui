@@ -14,6 +14,7 @@
       blur.trigger="handleBlur($event)"
       value.bind="value">
       <option selected value="">${placeholder || 'Sélectionner'}</option>
+      <option if.bind="!items || items.length === 0" value="">Aucun élément disponible</option>
       <option repeat.for="item of items" value.bind="item.value">${item.label}</option>
     </select>
     <small if.bind="!fieldOnly" show.bind="isError" class="text-danger">${errorMessage}</small>
