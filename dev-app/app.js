@@ -43,6 +43,7 @@ export class App {
   /** @type {boolean} */ dialogLocked = false;
   /** @type {FormData} */ formData;
   /** @type {FormError} */ formErrors;
+  /** @type {FormError} */ formErrorMessages;
   /** @type {boolean} */ pwdPristine = true;
   /** @type {boolean} */ pwdConfirmPristine = true;
   /** @type {boolean} */ isFormValid = false;
@@ -107,6 +108,19 @@ export class App {
       height: false,
       money: false,
       years: false
+    };
+
+    this.formErrorMessages = {
+      name: '',
+      email: '',
+      password: '',
+      confirmPassword: '',
+      profile: '',
+      age: '',
+      birthdate: '',
+      height: '',
+      money: '',
+      years: ''
     };
 
     this.formProfileItems = [

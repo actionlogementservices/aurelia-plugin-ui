@@ -684,7 +684,7 @@
             <div class="accordion-body">
               <div class="d-flex justify-content-start align-items-center gap-3">
                 <div class="flex-fill">
-                  <form novalidate class="container-fluid">
+                  <form class="container-fluid">
                     <div class="row">
                       <div class="col">
                         <als-input-text label="Name" id="name" name="name" required="true" value.bind="formData.name"
@@ -701,12 +701,12 @@
                     <div class="row">
                       <div class="col">
                         <als-input-number label="Age" id="age" name="age" required="true" value.bind="formData.age" min="18"
-                          max="150" is-error.bind="formErrors.age"></als-input-number>
+                          max="150" is-error.bind="formErrors.age" error-message.bind="formErrorMessages.age"></als-input-number>
                         <p>AGE = ${formData.age} | isError = ${formErrors.age}</p>
                       </div>
                       <div class="col">
-                        <als-input-number label="Age" id="age" name="age" required="true" value.bind="formData.age" min="18"
-                          max="150" is-error.bind="formErrors.age"></als-input-number>
+                        <als-input-number label="Age" id="age-clone" name="age" required="true" value.bind="formData.age" min="18"
+                          max="150" is-error.bind="formErrors.age" error-message.bind="formErrorMessages.age"></als-input-number>
                         <p>AGE (clone) = ${formData.age} | isError = ${formErrors.age}</p>
                       </div>
                     </div>

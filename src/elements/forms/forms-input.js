@@ -54,7 +54,7 @@ export class FormInput {
   isError = false;
 
   /** Error message @type {string} */
-  @bindable({ defaultBindingMode: bindingMode.toView })
+  @bindable({ defaultBindingMode: bindingMode.twoWay })
   errorMessage = '';
 
   /** Pristine @type {boolean} */
