@@ -22,6 +22,7 @@
         pattern.bind="type === 'email' ? '^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$' : null"
         focus.trigger="handleFocus($event)"
         keydown.trigger="handleKeyDown($event)"
+        change.trigger="handleChange($event)"
         blur.trigger="handleBlur($event)"
         value.bind="value" />
     </div>

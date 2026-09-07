@@ -25,6 +25,7 @@
         max-date.bind="maxDate"
         aria-invalid.bind="isError ? 'true' : 'false'"
         aria-describedby.bind="ariaDescribedby"
+        focus.trigger="handleFocus($event)"
         change.trigger="handleChange($event)"
         blur.trigger="handleBlur($event)"></input-datepicker>
       <div class="input-group-text" aria-hidden="true">
