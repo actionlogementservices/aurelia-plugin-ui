@@ -14,10 +14,6 @@ export class AlsInputPassword extends FormInput {
   @bindable({ defaultBindingMode: bindingMode.toView })
   autocomplete = 'current-password';
 
-  constructor() {
-    super();
-  }
-
   /**
    * Validate password-specific rules.
    * @param {string} value Value to validate

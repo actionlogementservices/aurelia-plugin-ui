@@ -73,8 +73,6 @@ export class FormInput {
   @bindable({ defaultBindingMode: bindingMode.toView })
   onBlur;
 
-  constructor() {}
-
   /**
    * Handle focus event.
    * @param {FocusEvent} event The focus event

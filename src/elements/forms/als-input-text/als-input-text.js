@@ -10,17 +10,13 @@ export class AlsInputText extends FormInput {
   @bindable({ defaultBindingMode: bindingMode.toView })
   type = 'text';
 
-  constructor() {
-    super();
-  }
-
   /**
    * Validate text-specific rules.
    * @param {string} value Value to validate
    * @returns {boolean} true if valid, false otherwise
    */
   validateValue(value) {
-    if (this.type === 'email' && value && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
+    if (this.type === 'email' && value && !/^[^\s@]+@[^\s@.]+\.[^\s@]+$/.test(value)) {
       this.isError = true;
       this.errorMessage = "L'adresse email n'est pas valide.";
       return false;

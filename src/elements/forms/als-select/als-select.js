@@ -12,10 +12,6 @@ export class AlsSelect extends FormInput {
   // @ts-ignore
   items;
 
-  constructor() {
-    super();
-  }
-
   /**
    * Select-specific validation hook.
    * @param {T} value Value to validate

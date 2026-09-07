@@ -35,10 +35,6 @@ export class AlsDatepicker extends FormInput {
     return this.isError ? `${this.id}-error` : '';
   }
 
-  constructor() {
-    super();
-  }
-
   /**
    * Validate date-specific rules.
    * @param {string} value date value to validate

@@ -77,10 +77,6 @@ export class AlsInputNumber extends FormInput {
     return `Valeur minimum : ${this.min}.`;
   }
 
-  constructor() {
-    super();
-  }
-
   /**
    * Custom handler to prevent typing anything other than a number or to edit the field.
    * @param {KeyboardEvent} event The keyboard event
@@ -125,7 +121,7 @@ export class AlsInputNumber extends FormInput {
       return true;
     }
 
-    if (!isFinite(value)) {
+    if (!Number.isFinite(value)) {
       this.isError = true;
       this.errorMessage = `La valeur n'est pas un nombre valide.`;
       return false;
