@@ -17,10 +17,10 @@
       on-focus.bind="handleButtonFocus"
       toggle-class="multi-select-toggle"
       menu-class="multi-select-menu">
-      <span slot="toggle">
-        ${placeholder || 'Sélectionner'}
+      <span slot="toggle" class="multi-select-toggle-text" title.bind="value.length > 0 ? selectedLabelsText : null">
+        ${value.length > 0 ? selectedLabelsText : (placeholder || 'Sélectionner')}
       </span>
-      <div class="form-check">
+      <div if.bind="items && items.length > 0" class="form-check">
         <input
           type="checkbox"
           class="form-check-input"
@@ -30,6 +30,9 @@
           indeterminate.bind="isIndeterminate"
           change.trigger="handleToggleAll($event)"/>
           <label class="form-check-label" for="${id}-select-all">Tout sélectionner</label>
+      </div>
+      <div if.bind="!items || items.length === 0">
+        <span>Aucun élément disponible</span>
       </div>
       <hr if.bind="items && items.length > 0" class="dropdown-divider" aria-hidden="true"/>
       <div if.bind="items && items.length > 0" class="form-check" repeat.for="item of items">
