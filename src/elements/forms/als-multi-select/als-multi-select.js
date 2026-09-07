@@ -82,7 +82,7 @@ export class AlsMultiSelect extends FormInput {
    * @param {number} index The index of the item that was selected or deselected
    * @returns {boolean} true to continue processing, false to cancel
    */
-  handleChange(event, item, index) {
+  handleItemChange(event, item, index) {
     if (this.value.includes(item.value)) {
       this.value = this.value.filter(v => v !== item.value);
       this.checkedItems[index] = false;
@@ -91,12 +91,7 @@ export class AlsMultiSelect extends FormInput {
       this.checkedItems[index] = true;
     }
 
-    this.pristine = false;
-
-    if (this.onChange) {
-      this.onChange(event);
-    }
-
+    super.handleChange(event);
     this.validate(this.value);
 
     return true;
@@ -116,12 +111,7 @@ export class AlsMultiSelect extends FormInput {
       this.checkedItems = this.items.map(() => true);
     }
 
-    this.pristine = false;
-
-    if (this.onChange) {
-      this.onChange(event);
-    }
-
+    super.handleChange(event);
     this.validate(this.value);
 
     return true;

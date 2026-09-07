@@ -44,7 +44,7 @@
           checked.bind="checkedItems[$index]"
           value.bind="item.value"
           aria-required.bind="required"
-          change.trigger="handleChange($event, item, $index)"/>
+          change.trigger="handleItemChange($event, item, $index)"/>
           <label class="form-check-label" for="${id}-${item.value}">${item.label}</label>
       </div>
     </als-dropdown>
