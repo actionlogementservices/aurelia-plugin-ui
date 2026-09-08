@@ -90,7 +90,7 @@ export class App {
       password: '',
       confirmPassword: '',
       profile: '',
-      age: 21,
+      age: undefined,
       birthdate: new Date().toISOString(),
       height: 0,
       money: 0,
@@ -247,7 +247,7 @@ export class App {
   }
 
   async showDialog() {
-    const { wasCancelled, output } = await this.dialog.open({
+    const { wasCancelled } = await this.dialog.open({
       viewModel: ExempleDialog,
       view: this.isDialogModalMode ? './exemple-dialog.html' : './exemple-offcanvas.html',
       mode: this.selectedDialogMode,
