@@ -12,7 +12,7 @@ import { Adresse } from 'resources/elements/auto-complete/adresse';
 export const wait = delay => new Promise(resolve => setTimeout(resolve, delay));
 
 /** @typedef {{ disabled: boolean, id: number, name: string; headcount: number, headcountMinusOne: number, email: string; color: string }} Item */
-/** @typedef {{ name: string; email: string; age: number, height: number, money: number, years: Array<number> }} FormData */
+/** @typedef {{ name: string; email: string; password: string; confirmPassword: string; profile: string; age: number, birthdate: string, height: number, money: number }} FormData */
 /** @typedef {OptionsFlags<FormData> = {[Property in keyof FormData]: boolean;}} FormError */
 
 @inject(
@@ -43,9 +43,13 @@ export class App {
   /** @type {boolean} */ dialogLocked = false;
   /** @type {FormData} */ formData;
   /** @type {FormError} */ formErrors;
+  /** @type {FormError} */ formErrorMessages;
+  /** @type {boolean} */ pwdPristine = true;
+  /** @type {boolean} */ pwdConfirmPristine = true;
   /** @type {boolean} */ isFormValid = false;
   /** @type {boolean} */ errorName = false;
   /** @type {Array<{label: string, value: number}>} */ yearOptions = [];
+  /** @type {Array<{label: string, value: string}>} */ formProfileItems;
 
   /**
    * @param {AutoCompleteController} controller
@@ -66,6 +70,7 @@ export class App {
     this.dialog = dialog;
 
     this.yearOptions = [
+      { label: 'Année 2016', value: 2016 },
       { label: 'Année 2017', value: 2017 },
       { label: 'Année 2018', value: 2018 },
       { label: 'Année 2019', value: 2019 },
@@ -82,31 +87,69 @@ export class App {
     this.formData = {
       name: '',
       email: '',
-      age: 20,
+      password: '',
+      confirmPassword: '',
+      profile: '',
+      age: undefined,
+      birthdate: new Date().toISOString(),
       height: 0,
       money: 0,
-      years: [2026]
+      years: []
     };
 
     this.formErrors = {
       name: false,
       email: false,
+      password: false,
+      confirmPassword: false,
+      profile: false,
       age: false,
+      birthdate: false,
       height: false,
       money: false,
       years: false
     };
 
+    this.formErrorMessages = {
+      name: '',
+      email: '',
+      password: '',
+      confirmPassword: '',
+      profile: '',
+      age: '',
+      birthdate: '',
+      height: '',
+      money: '',
+      years: ''
+    };
+
+    this.formProfileItems = [
+      { label: 'Utilisateur', value: 'user' },
+      { label: 'Manager', value: 'manager' },
+      { label: 'Administrateur', value: 'admin' }
+    ];
+
     const itemsList = [];
     for (let index = 0; index < 120; index++) {
-      const disabled = Math.random() < 0.5;
+      const disabled = faker.datatype.boolean();
       const id = index;
       const name = faker.person.fullName();
-      const headcount = Math.round(Math.random()*100)
-      const headcountMinusOne = headcount - Math.round(Math.random()*(headcount - 1))
+      const headcount = faker.number.int({ min: 0, max: 100 });
+      const headcountMinusOne = headcount > 0
+        ? headcount - faker.number.int({ min: 0, max: headcount - 1 })
+        : 0;
       const email = faker.internet.email();
       const color = faker.color.human();
-      itemsList.push({ disabled, id, name, headcount, headcountMinusOne, email, color, showItemDetails: item => this.showItemDetails(item) });
+      itemsList.push({
+        disabled,
+        id,
+        name,
+        headcount,
+        headcountMinusOne,
+        email,
+        color,
+        showItemDetails: item => this.showItemDetails(item)
+      });
     }
     setTimeout(() => {
       this.itemsList = itemsList;
@@ -204,7 +247,7 @@ export class App {
   }
 
   async showDialog() {
-    const { wasCancelled, output } = await this.dialog.open({
+    const { wasCancelled } = await this.dialog.open({
       viewModel: ExempleDialog,
       view: this.isDialogModalMode ? './exemple-dialog.html' : './exemple-offcanvas.html',
       mode: this.selectedDialogMode,
@@ -226,6 +269,12 @@ export class App {
   @computedFrom('selectedDialogMode')
   get isDialogModalMode() {
     return this.selectedDialogMode === 'modal';
+  }
+
+  @computedFrom('formData.password', 'formData.confirmPassword')
+  get pwdMismatch() {
+    const mismatch = this.formData.confirmPassword !== this.formData.password;
+    return mismatch;
   }
 
   validateForm() {
