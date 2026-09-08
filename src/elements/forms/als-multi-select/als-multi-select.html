@@ -32,9 +32,9 @@
           change.trigger="handleToggleAll($event)"/>
           <label class="form-check-label" for="${id}-select-all">Tout sélectionner</label>
       </div>
-      <div if.bind="!items || items.length === 0">
+      <li if.bind="!items || items.length === 0" class="dropdown-item">
         <span>Aucun élément disponible</span>
-      </div>
+      </li>
       <hr if.bind="items && items.length > 0" class="dropdown-divider" aria-hidden="true"/>
       <div if.bind="items && items.length > 0" class="form-check" repeat.for="item of items">
         <input
