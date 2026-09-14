@@ -1,0 +1,26 @@
+<template>
+  <require from="./als-pre-login.css"></require>
+  <require from="../../assets/icons/pre-login-logo.html"></require>
+
+  <div class="vh-100 d-flex flex-column position-relative">
+    <pre-login-logo class="als-logo"></pre-login-logo>
+
+    <div class="row g-0 flex-grow-1">
+      <div class="col d-flex flex-column justify-content-center align-items-center mx-4 mx-md-2 text-center">
+        <h2 class="fw-semibold">Mon espace de déclaration</h2>
+        <p class="mt-2">Accès réservé aux entreprises</p>
+        <button class="btn btn-secondary mt-2" click.delegate="handleButtonClick">Se connecter</button>
+        <hr class="border w-50 my-5" />
+        <p>Vous n'arrivez pas à vous connecter ? <a class="help-link" href.bind="helpUrl">Obtenez de l'aide</a></p>
+      </div>
+      <div class="d-none d-md-block col position-relative">
+        <img src="../../assets/images/pre-login-bg.png" alt=""
+          class="position-absolute top-0 start-0 w-100 h-100 object-fit-cover" />
+        <img src="src/assets/images/pre-login-bg.png" alt=""
+          class="position-absolute top-0 start-0 w-100 h-100 object-fit-cover" />
+      </div>
+    </div>
+
+    <als-footer links.bind="footerLinks" type="compact"></als-footer>
+  </div>
+</template>

@@ -6,33 +6,33 @@
 }
 
 .btn-primary {
-  background-color: $primary;
+  background-color: $als-blue;
   color: $white;
-  border: 1px solid $primary;
+  border: 1px solid $als-blue;
 }
 .btn-primary:hover {
-  background-color: shade-color($primary, 30%);
+  background-color: shade-color($als-blue, 30%);
 }
 
 .btn-secondary {
-  background-color: $secondary;
+  background-color: $als-red;
   color: $white;
-  border: 1px solid $secondary;
+  border: 1px solid $als-red;
 }
 .btn-secondary:hover {
-  background-color: shade-color($secondary, 30%);
+  background-color: shade-color($als-red, 30%);
 }
 
 .btn-tertiary {
   background-color: $white;
-  color: $primary;
-  border: 1px solid $primary;
+  color: $als-blue;
+  border: 1px solid $als-blue;
 }
 .btn-tertiary:focus {
-  border: 1px solid $primary;
+  border: 1px solid $als-blue;
 }
 .btn-tertiary:hover {
-  border: 1px solid $primary;
+  border: 1px solid $als-blue;
   background-color: $neutral-100;
 }
 
@@ -58,8 +58,8 @@
     font-weight: 600;
   }
   .accordion-button:hover {
-      background-color: $neutral-100;
-    }
+    background-color: $neutral-100;
+  }
 }
 
 // DROPDOWN
@@ -93,12 +93,12 @@
   }
 
   button.input-group-text:focus-visible {
-    outline: 2px solid $primary;
+    outline: 2px solid $als-blue;
     outline-offset: -2px;
   }
 
   &:hover {
-    box-shadow: 0 0 0 1px $primary;
+    box-shadow: 0 0 0 1px $als-blue;
   }
   &:focus {
     outline: solid 2px $red;

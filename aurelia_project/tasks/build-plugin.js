@@ -5,6 +5,7 @@ import { pluginCSS } from './process-css';
 import { pluginJson } from './process-json';
 import { buildPluginJavaScript } from './transpile';
 import processSCSS, { pluginSCSS } from './process-scss';
+import { pluginSvg } from './process-svg';
 import copyAssets from './copy-assets';
 import { CLIOptions } from 'aurelia-cli';
 
@@ -22,15 +23,18 @@ let build = gulp.series(
     pluginMarkup('dist/native-modules'),
     pluginCSS('dist/native-modules'),
     pluginJson('dist/native-modules'),
+    pluginSvg('dist/native-modules'),
     buildPluginJavaScript('dist/native-modules', 'es2015'),
 
-    // package.json "main" field pointing to dist/native-modules/index.js
+    // package.json "main" field pointing to dist/commonjs/index.js
     copyAssets('dist/commonjs'),
     pluginMarkup('dist/commonjs'),
     pluginCSS('dist/commonjs'),
     pluginJson('dist/commonjs'),
-    buildPluginJavaScript('dist/commonjs', 'commonjs'),
-  ), (done) => {
+    pluginSvg('dist/commonjs'),
+    buildPluginJavaScript('dist/commonjs', 'commonjs')
+  ),
+  done => {
     console.log('Finish building Aurelia plugin to dist/commonjs and dist/native-modules.');
     done();
   }
@@ -38,18 +42,12 @@ let build = gulp.series(
 
 let main;
 if (CLIOptions.hasFlag('watch')) {
-  main = gulp.series(
-    clean,
-    () => {
-      console.log('Watching plugin sources for changes ...');
-      return gulp.watch('src/**/*', { ignoreInitial: false }, build);
-    }
-  );
+  main = gulp.series(clean, () => {
+    console.log('Watching plugin sources for changes ...');
+    return gulp.watch('src/**/*', { ignoreInitial: false }, build);
+  });
 } else {
-  main = gulp.series(
-    clean,
-    build
-  );
+  main = gulp.series(clean, build);
 }
 
 export { main as default };

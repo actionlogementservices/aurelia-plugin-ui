@@ -22,6 +22,7 @@
   "scripts": {
     "build": "au build-plugin --env prod",
     "doc": "jsdoc -c ./.jsdoc.json",
+    "lint": "eslint src --fix && prettier --write src",
     "prepare": "npm run build && npx tsc -p ts-d-generation.json && cpx src/types.d.ts dist/types",
     "pretest": "au lint",
     "preversion": "au test",
