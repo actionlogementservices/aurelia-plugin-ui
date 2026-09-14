@@ -4,11 +4,15 @@ import { FormInput } from '../forms-input';
 /**
  * @augments FormInput<string>
  */
-@useView('./als-input-text.html')
-export class AlsInputText extends FormInput {
-  /** Type @type {'text' | 'email'} */
+@useView('./als-input-password.html')
+export class AlsInputPassword extends FormInput {
+  /** Type @type {'password' | 'text'} */
   @bindable({ defaultBindingMode: bindingMode.toView })
-  type = 'text';
+  type = 'password';
+
+  /** Autocomplete @type {string} */
+  @bindable({ defaultBindingMode: bindingMode.toView })
+  autocomplete = 'current-password';
 
   /**
    * Id of the element describing the error, exposed via `aria-describedby` once the field is invalid.
@@ -20,22 +24,24 @@ export class AlsInputText extends FormInput {
   }
 
   /**
-   * Validate text-specific rules.
+   * Validate password-specific rules.
    * @param {string} value Value to validate
    * @returns {boolean} true if valid, false otherwise
    */
   validateValue(value) {
-    if (this.type === 'email' && value && !/^[^\s@]+@[^\s@.]+\.[^\s@]+$/.test(value)) {
-      this.isError = true;
-      this.errorMessage = "L'adresse email n'est pas valide.";
-      return false;
-    }
-
     return true;
   }
 
   /**
-   * Custom handler to prevent typing anything other than a number or to edit the field.
+   * Toggle between masking and revealing the password value.
+   * @returns {void}
+   */
+  togglePasswordVisibility() {
+    this.type = this.type === 'password' ? 'text' : 'password';
+  }
+
+  /**
+   * Handle keyboard events.
    * @param {KeyboardEvent} event The keyboard event
    * @returns {boolean} true to continue processing, false to cancel
    */

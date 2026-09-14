@@ -23,3 +23,10 @@
 .multi-select-menu {
   width: 100%;
 }
+
+.multi-select-toggle-text {
+  display: block;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}

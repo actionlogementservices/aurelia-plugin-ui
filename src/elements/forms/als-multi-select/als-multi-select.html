@@ -12,15 +12,16 @@
       label.bind="label || placeholder || 'Sélectionner'"
       aria-label.bind="toggleAriaLabel"
       aria-describedby.bind="isError ? id + '-error' : null"
+      aria-invalid.bind="isError ? 'true' : 'false'"
       menu-aria-label.bind="label || placeholder || 'Sélectionner'"
       disabled.bind="disabled"
       on-focus.bind="handleButtonFocus"
       toggle-class="multi-select-toggle"
       menu-class="multi-select-menu">
-      <span slot="toggle">
-        ${placeholder || 'Sélectionner'}
+      <span slot="toggle" class="multi-select-toggle-text" title.bind="value.length > 0 ? selectedLabelsText : null">
+        ${value.length > 0 ? selectedLabelsText : (placeholder || 'Sélectionner')}
       </span>
-      <div class="form-check">
+      <div if.bind="items && items.length > 0" class="form-check">
         <input
           type="checkbox"
           class="form-check-input"
@@ -31,6 +32,9 @@
           change.trigger="handleToggleAll($event)"/>
           <label class="form-check-label" for="${id}-select-all">Tout sélectionner</label>
       </div>
+      <li if.bind="!items || items.length === 0" class="dropdown-item">
+        <span>Aucun élément disponible</span>
+      </li>
       <hr if.bind="items && items.length > 0" class="dropdown-divider" aria-hidden="true"/>
       <div if.bind="items && items.length > 0" class="form-check" repeat.for="item of items">
         <input
@@ -41,11 +45,11 @@
           checked.bind="checkedItems[$index]"
           value.bind="item.value"
           aria-required.bind="required"
-          change.trigger="handleChange($event, item, $index)"/>
+          change.trigger="handleItemChange($event, item, $index)"/>
           <label class="form-check-label" for="${id}-${item.value}">${item.label}</label>
       </div>
     </als-dropdown>
 
-    <small if.bind="!fieldOnly" show.bind="isError" id="${id}-error" class="text-danger">${errorMessage}</small>
+    <small if.bind="!fieldOnly" show.bind="isError" id="${id}-error" role="alert" class="text-danger">${errorMessage}</small>
   </div>
 </template>

@@ -1,73 +1,22 @@
 import { bindable, bindingMode, computedFrom, useView } from 'aurelia-framework';
+import { FormInput } from '../forms-input';
 
+/**
+ * @augments FormInput<Array<any>>
+ */
 @useView('./als-multi-select.html')
-export class AlsMultiSelect {
-  /** Id @type {string} */
-  @bindable({ defaultBindingMode: bindingMode.toView })
-  // @ts-ignore
-  id;
-
-  /** Name @type {string} */
-  @bindable({ defaultBindingMode: bindingMode.toView })
-  // @ts-ignore
-  name;
-
-  /** Label @type {string} */
-  @bindable({ defaultBindingMode: bindingMode.toView })
-  // @ts-ignore
-  label;
-
-  /** required @type {boolean} */
-  @bindable({ defaultBindingMode: bindingMode.toView })
-  required = true;
-
-  /** Value @type {Array<{label: string, value: any}>} */
+export class AlsMultiSelect extends FormInput {
+  /** Items @type {Array<{label: string, value: any}>} */
   @bindable({ defaultBindingMode: bindingMode.oneTime })
   // @ts-ignore
   items;
 
   /** Value @type {Array<any>} */
   @bindable({ defaultBindingMode: bindingMode.twoWay })
-  // @ts-ignore
-  value;
+  value = [];
 
   /** Checked items @type {Array<boolean>} */
   checkedItems = [];
-
-  /** Placeholder text @type {string} */
-  @bindable({ defaultBindingMode: bindingMode.toView })
-  placeholder = '';
-
-  /** Readonly @type {boolean} */
-  @bindable({ defaultBindingMode: bindingMode.toView })
-  readonly = false;
-
-  /** Disabled @type {boolean} */
-  @bindable({ defaultBindingMode: bindingMode.oneTime })
-  disabled = false;
-
-  /** Field only @type {boolean} */
-  @bindable({ defaultBindingMode: bindingMode.oneTime })
-  fieldOnly = false;
-
-  /** Error @type {boolean} */
-  @bindable({ defaultBindingMode: bindingMode.twoWay })
-  isError = false;
-
-  /** Error message @type {string} */
-  @bindable({ defaultBindingMode: bindingMode.toView })
-  errorMessage = '';
-
-  /** Pristine @type {boolean} */
-  pristine = true;
-
-  /** onFocus @type {(event: FocusEvent) => void} */
-  @bindable({ defaultBindingMode: bindingMode.toView })
-  onFocus;
-
-  /** onBlur @type {(event: FocusEvent) => void} */
-  @bindable({ defaultBindingMode: bindingMode.toView })
-  onBlur;
 
   /**
    * Accessible name for the dropdown toggle, reflecting the current selection count so assistive
@@ -80,6 +29,19 @@ export class AlsMultiSelect {
     const count = this.value?.length || 0;
 
     return `${base} (${count} sélectionné${count > 1 ? 's' : ''})`;
+  }
+
+  /**
+   * Comma-separated labels of the selected items, shown in the toggle button in place of the
+   * placeholder once at least one item is selected. Truncated visually via CSS, not here.
+   * @type {string}
+   */
+  @computedFrom('value.length', 'items.length')
+  get selectedLabelsText() {
+    return this.items
+      .filter(item => this.value.includes(item.value))
+      .map(item => item.label)
+      .join(', ');
   }
 
   /**
@@ -100,8 +62,6 @@ export class AlsMultiSelect {
     return this.value.length > 0 && this.value.length < this.items.length;
   }
 
-  constructor() {}
-
   attached() {
     this.checkedItems = this.items.map(item => this.value.includes(item.value));
   }
@@ -111,13 +71,9 @@ export class AlsMultiSelect {
    * @param {FocusEvent} event The event
    * @returns {boolean} true to continue processing, false to cancel
    */
-  handleButtonFocus(event) {
-    if (this.pristine) {
-      this.pristine = false;
-    }
-
-    return true;
-  }
+  handleButtonFocus = event => {
+    return this.handleFocus(event);
+  };
 
   /**
    * Handles the change event when an item is selected or deselected.
@@ -126,7 +82,7 @@ export class AlsMultiSelect {
    * @param {number} index The index of the item that was selected or deselected
    * @returns {boolean} true to continue processing, false to cancel
    */
-  handleChange(event, item, index) {
+  handleItemChange(event, item, index) {
     if (this.value.includes(item.value)) {
       this.value = this.value.filter(v => v !== item.value);
       this.checkedItems[index] = false;
@@ -135,7 +91,8 @@ export class AlsMultiSelect {
       this.checkedItems[index] = true;
     }
 
-    this.validate();
+    super.handleChange(event);
+    this.validate(this.value);
 
     return true;
   }
@@ -154,22 +111,36 @@ export class AlsMultiSelect {
       this.checkedItems = this.items.map(() => true);
     }
 
-    this.validate();
+    super.handleChange(event);
+    this.validate(this.value);
 
     return true;
   }
 
   /**
-   * Validates the current selection and sets the error state accordingly.
-   * @returns {void}
+   * Override base class method to provide a custom emptiness check for multi-select.
+   * @param {Array<any>} value Value to inspect
+   * @returns {boolean} true when value should be considered empty
    */
-  validate() {
-    if (this.required && this.value.length === 0) {
-      this.isError = true;
-      this.errorMessage = 'Veuillez sélectionner au moins un élément.';
-    } else {
-      this.isError = false;
-      this.errorMessage = '';
-    }
+  isValueEmpty(value) {
+    return !Array.isArray(value) || value.length === 0;
+  }
+
+  /**
+   * Validate the current selection.
+   * @param {Array<any>} value Value to validate
+   * @returns {boolean} true if valid, false otherwise
+   */
+  validateValue(value) {
+    return true;
+  }
+
+  /**
+   * Validate the selection, using a selection-specific required message.
+   * @param {Array<any>} value Value to validate
+   * @returns {boolean} true if valid, false otherwise
+   */
+  validate(value) {
+    return super.validate(value, 'Veuillez sélectionner au moins un élément.');
   }
 }

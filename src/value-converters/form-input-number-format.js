@@ -24,7 +24,7 @@ const currencyOptions = {
 };
 
 @valueConverter('formInputNumberFormat')
-export class formInputNumberFormatValueConverter {
+export class FormInputNumberFormatValueConverter {
   /**
    * Converts the value of the javascript model to the html view.
    * @param {string} value value from javascript model
