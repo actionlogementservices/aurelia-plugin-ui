@@ -3,7 +3,8 @@
 
   <div class="form-group">
     <label if.bind="!fieldOnly" for.bind="id" class="form-label text-primary">
-      ${label || placeholder || 'Sélectionner'}<span class="text-danger">${required ? ' *' : ''}</span>
+      ${label || placeholder || 'Sélectionner'}
+      <span class="text-danger">${required ? ' *' : ''}</span>
     </label>
 
     <als-dropdown
@@ -29,8 +30,8 @@
           disabled.bind="disabled"
           checked.one-way="allSelected"
           indeterminate.bind="isIndeterminate"
-          change.trigger="handleToggleAll($event)"/>
-          <label class="form-check-label" for="${id}-select-all">Tout sélectionner</label>
+          change.trigger="handleToggleAll($event)" />
+        <label class="form-check-label" for="${id}-select-all">Tout sélectionner</label>
       </div>
       <li if.bind="!items || items.length === 0" class="dropdown-item">
         <span>Aucun élément disponible</span>
