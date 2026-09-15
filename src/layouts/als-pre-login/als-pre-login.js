@@ -6,13 +6,6 @@ export class AlsPreLogin {
   helpUrl = '#';
 
   /**
-   * Callback function to be executed when the "Se connecter" button is clicked.
-   * @type {Function}
-   */
-  @bindable({ defaultBindingMode: bindingMode.toView })
-  onConnectButtonClickUrl;
-
-  /**
    * Callback function to be executed when the "Se Connecter" button is clicked.
    * @type {Function}
    */
