@@ -10,7 +10,7 @@ export class AlsFooter {
   @bindable({ defaultBindingMode: bindingMode.oneTime })
   type = 'default';
 
-  /** Links displayed in the footer. @type {string[]} */
+  /** Links displayed in the footer. @type {Array<{ text: string, url: string }>} */
   @bindable({ defaultBindingMode: bindingMode.oneTime })
   links = [];
 

@@ -21,7 +21,7 @@
       </div>
       <div if.bind="type === 'compact'" class="col d-flex justify-content-center fw-semibold">
         <template repeat.for="link of links">
-          <a href="${link}" class="text-decoration-none">${link}</a>
+          <a target="_blank" rel="noopener" href.bind="link.url" class="text-decoration-none">${link.text}</a>
           <div if.bind="!$last" class="vr ms-3 me-3"></div>
         </template>
       </div>
@@ -78,7 +78,7 @@
         <span class="">Accessibilité : non conforme</span>
         <div class="vr ms-3 me-3"></div>
         <template repeat.for="link of links">
-          <a href="${link}" class="text-decoration-none">${link}</a>
+          <a href="${link.url}" class="text-decoration-none">${link.text}</a>
           <div if.bind="!$last" class="vr ms-3 me-3"></div>
         </template>
       </div>

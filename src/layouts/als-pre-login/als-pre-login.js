@@ -11,10 +11,10 @@ export class AlsPreLogin {
 
   /**
    * Footer links.
-   * @type {Array<string>}
+   * @type {Array<{ text: string, url: string }>}
    */
   @bindable({ defaultBindingMode: bindingMode.oneTime })
-  footerLinks = [];
+  footerLinks;
 
   /**
    * Footer type.
