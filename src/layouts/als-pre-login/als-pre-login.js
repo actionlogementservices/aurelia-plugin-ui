@@ -3,6 +3,20 @@ import { bindable, bindingMode, customElement } from 'aurelia-framework';
 @customElement('als-pre-login')
 export class AlsPreLogin {
   /**
+   * Title of the pre-login page.
+   * @type {string}
+   */
+  @bindable({ defaultBindingMode: bindingMode.oneTime })
+  title = 'Mon espace de déclaration';
+
+  /**
+   * Description of the pre-login page.
+   * @type {string}
+   */
+  @bindable({ defaultBindingMode: bindingMode.oneTime })
+  subtitle = 'Accès réservé aux entreprises';
+
+  /**
    * URL of the help page.
    * @type {string}
    */
