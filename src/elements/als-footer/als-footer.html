@@ -1,67 +1,62 @@
 <template>
   <require from="./als-footer.css"></require>
 
-  <footer class="als-footer ${type === 'compact' ? 'compact' : ''}">
+  <footer class="als-footer ${type === 'compact' ? 'compact' : ''}" role="contentinfo">
     <div class="social-media-container row gx-0 d-flex justify-content-between align-items-center">
       <div class="col d-flex justify-content-start align-items-center">
-        <svg width="27" height="31" viewBox="0 0 27 31" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path
-            d="M19.2408 18.3882H25.5129C26.2203 18.3882 26.8333 18.9554 26.8333 19.6645V22.3589C26.8333 22.8316 26.5975 23.257 26.1731 23.4934L14.0533 30.4894C13.6289 30.7258 13.1573 30.7258 12.7329 30.4894L0.613055 23.4461C0.471586 23.3516 0.330117 23.2098 0.235793 23.0679C0.0471444 22.7843 0 22.4534 0 22.1225V8.31959C0 7.84688 0.235793 7.42145 0.660235 7.1851L12.78 0.189084C12.9687 0.0472709 13.2044 0 13.4402 0C13.676 0 13.9118 0.094542 14.1005 0.189084L26.1731 7.1851C26.4561 7.37417 26.6919 7.65781 26.7862 7.98868C26.8805 8.3196 26.8333 8.69775 26.6447 8.98138C26.2674 9.59589 25.4657 9.83225 24.8527 9.45409L13.4874 2.88349L13.4402 2.83621L2.68805 9.02866L2.6409 9.0759V21.5553L13.3459 27.795L13.3931 27.8422L24.1924 21.6498L24.2396 21.6026V21.0353H17.9203C17.1658 21.0353 16.5999 20.4208 16.5999 19.7118V9.73769C16.5999 8.98138 17.213 8.41412 17.9203 8.41412C18.6749 8.41412 19.2408 9.02866 19.2408 9.73769V18.3882Z"
-            fill="#E41D4B" />
-          <path
-            fill-rule="evenodd"
-            clip-rule="evenodd"
-            d="M4.1528 19.189L8.72723 9.07311C8.91269 8.70123 9.32617 8.42082 9.78828 8.41156C10.2504 8.42083 10.6639 8.70202 10.8494 9.12035L14.9522 19.2362C15.0465 19.5198 15.0465 19.8508 14.9522 20.1344C14.7635 20.5598 14.3391 20.8434 13.8675 20.8434C13.3959 20.8907 12.9715 20.5598 12.7829 20.1344L12.0755 18.3381H7.12383L6.27498 20.1816C5.992 20.7489 5.28463 21.0325 4.71871 20.7489C4.1528 20.4653 3.86987 19.7562 4.1528 19.189ZM8.16132 15.9745H11.0852L9.71755 12.5238L8.16132 15.9745Z"
-            fill="#E41D4B" />
-          <path
-            d="M9.78828 8.41156C9.79613 8.4114 9.80399 8.41132 9.81187 8.41132H9.76469C9.77257 8.41132 9.78043 8.4114 9.78828 8.41156Z"
-            fill="#E41D4B" />
-        </svg>
-        <span class="fw-semibold ms-1 d-none d-sm-inline">Faciliter le logement pour favoriser l'emploi</span>
+        <a class="text-decoration-none" href.bind="logoUrl" target="_blank" rel="noopener noreferrer"
+          aria-label.bind="getExternalLinkLabel('Action Logement')"
+          title.bind="getExternalLinkLabel('Action Logement')">
+          <svg width="27" height="31" viewBox="0 0 27 31" fill="none" xmlns="http://www.w3.org/2000/svg"
+            aria-hidden="true" focusable="false">
+            <path
+              d="M19.2408 18.3882H25.5129C26.2203 18.3882 26.8333 18.9554 26.8333 19.6645V22.3589C26.8333 22.8316 26.5975 23.257 26.1731 23.4934L14.0533 30.4894C13.6289 30.7258 13.1573 30.7258 12.7329 30.4894L0.613055 23.4461C0.471586 23.3516 0.330117 23.2098 0.235793 23.0679C0.0471444 22.7843 0 22.4534 0 22.1225V8.31959C0 7.84688 0.235793 7.42145 0.660235 7.1851L12.78 0.189084C12.9687 0.0472709 13.2044 0 13.4402 0C13.676 0 13.9118 0.094542 14.1005 0.189084L26.1731 7.1851C26.4561 7.37417 26.6919 7.65781 26.7862 7.98868C26.8805 8.3196 26.8333 8.69775 26.6447 8.98138C26.2674 9.59589 25.4657 9.83225 24.8527 9.45409L13.4874 2.88349L13.4402 2.83621L2.68805 9.02866L2.6409 9.0759V21.5553L13.3459 27.795L13.3931 27.8422L24.1924 21.6498L24.2396 21.6026V21.0353H17.9203C17.1658 21.0353 16.5999 20.4208 16.5999 19.7118V9.73769C16.5999 8.98138 17.213 8.41412 17.9203 8.41412C18.6749 8.41412 19.2408 9.02866 19.2408 9.73769V18.3882Z"
+              fill="#E41D4B" />
+            <path fill-rule="evenodd" clip-rule="evenodd"
+              d="M4.1528 19.189L8.72723 9.07311C8.91269 8.70123 9.32617 8.42082 9.78828 8.41156C10.2504 8.42083 10.6639 8.70202 10.8494 9.12035L14.9522 19.2362C15.0465 19.5198 15.0465 19.8508 14.9522 20.1344C14.7635 20.5598 14.3391 20.8434 13.8675 20.8434C13.3959 20.8907 12.9715 20.5598 12.7829 20.1344L12.0755 18.3381H7.12383L6.27498 20.1816C5.992 20.7489 5.28463 21.0325 4.71871 20.7489C4.1528 20.4653 3.86987 19.7562 4.1528 19.189ZM8.16132 15.9745H11.0852L9.71755 12.5238L8.16132 15.9745Z"
+              fill="#E41D4B" />
+            <path
+              d="M9.78828 8.41156C9.79613 8.4114 9.80399 8.41132 9.81187 8.41132H9.76469C9.77257 8.41132 9.78043 8.4114 9.78828 8.41156Z"
+              fill="#E41D4B" />
+          </svg>
+          <span class="fw-semibold ms-1 d-none d-sm-inline">
+            Faciliter le logement pour favoriser l'emploi
+          </span>
+        </a>
       </div>
       <div if.bind="type === 'compact'" class="col d-flex justify-content-center fw-semibold">
         <template repeat.for="link of links">
-          <a target="_blank" rel="noopener" href.bind="link.url" class="text-decoration-none">${link.text}</a>
-          <div if.bind="!$last" class="vr ms-3 me-3"></div>
+          <a target="_blank" rel="noopener noreferrer" href.bind="link.url" class="text-decoration-none"
+            aria-label.bind="getExternalLinkLabel(link.text)" title.bind="getExternalLinkLabel(link.text)">
+            ${link.text}
+          </a>
+          <div if.bind="!$last" class="vr ms-3 me-3" aria-hidden="true"></div>
         </template>
       </div>
-      <div
-        if.bind="!hideSocialMediaLinks && type === 'default'"
+      <div if.bind="!hideSocialMediaLinks && type === 'default'"
         class="col d-flex social-media-links d-flex justify-content-end align-items-center">
         <span class="d-none d-sm-inline">Retrouvez nous sur :</span>
         <div class="ms-2 d-flex">
-          <a class="social-media-icon" href.bind="linkedinUrl" target="_blank" rel="noopener noreferrer">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="11"
-              height="11"
-              fill="currentColor"
-              class="bi bi-linkedin"
-              viewBox="0 0 16 16">
+          <a class="social-media-icon" href.bind="linkedinUrl" target="_blank" rel="noopener noreferrer"
+            aria-label.bind="getExternalLinkLabel('LinkedIn')" title.bind="getExternalLinkLabel('LinkedIn')">
+            <svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" fill="currentColor" class="bi bi-linkedin"
+              viewBox="0 0 16 16" aria-hidden="true" focusable="false">
               <path
                 d="M0 1.146C0 .513.526 0 1.175 0h13.65C15.474 0 16 .513 16 1.146v13.708c0 .633-.526 1.146-1.175 1.146H1.175C.526 16 0 15.487 0 14.854zm4.943 12.248V6.169H2.542v7.225zm-1.2-8.212c.837 0 1.358-.554 1.358-1.248-.015-.709-.52-1.248-1.342-1.248S2.4 3.226 2.4 3.934c0 .694.521 1.248 1.327 1.248zm4.908 8.212V9.359c0-.216.016-.432.08-.586.173-.431.568-.878 1.232-.878.869 0 1.216.662 1.216 1.634v3.865h2.401V9.25c0-2.22-1.184-3.252-2.764-3.252-1.274 0-1.845.7-2.165 1.193v.025h-.016l.016-.025V6.169h-2.4c.03.678 0 7.225 0 7.225z" />
             </svg>
           </a>
-          <a class="social-media-icon ms-2" href.bind="twitterUrl" target="_blank" rel="noopener noreferrer">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="10"
-              height="10"
-              fill="currentColor"
-              class="bi bi-twitter-x"
-              viewBox="0 0 16 16">
+          <a class="social-media-icon ms-2" href.bind="twitterUrl" target="_blank" rel="noopener noreferrer"
+            aria-label.bind="getExternalLinkLabel('X')" title.bind="getExternalLinkLabel('X')">
+            <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" fill="currentColor" class="bi bi-twitter-x"
+              viewBox="0 0 16 16" aria-hidden="true" focusable="false">
               <path
                 d="M12.6.75h2.454l-5.36 6.142L16 15.25h-4.937l-3.867-5.07-4.425 5.07H.316l5.733-6.57L0 .75h5.063l3.495 4.633L12.601.75Zm-.86 13.028h1.36L4.323 2.145H2.865z" />
             </svg>
           </a>
-          <a class="social-media-icon ms-2" href.bind="youtubeUrl" target="_blank" rel="noopener noreferrer">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="12"
-              height="12"
-              fill="currentColor"
-              class="bi bi-youtube"
-              viewBox="0 0 16 16">
+          <a class="social-media-icon ms-2" href.bind="youtubeUrl" target="_blank" rel="noopener noreferrer"
+            aria-label.bind="getExternalLinkLabel('YouTube')" title.bind="getExternalLinkLabel('YouTube')">
+            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="currentColor" class="bi bi-youtube"
+              viewBox="0 0 16 16" aria-hidden="true" focusable="false">
               <path
                 d="M8.051 1.999h.089c.822.003 4.987.033 6.11.335a2.01 2.01 0 0 1 1.415 1.42c.101.38.172.883.22 1.402l.01.104.022.26.008.104c.065.914.073 1.77.074 1.957v.075c-.001.194-.01 1.108-.082 2.06l-.008.105-.009.104c-.05.572-.124 1.14-.235 1.558a2.01 2.01 0 0 1-1.415 1.42c-1.16.312-5.569.334-6.18.335h-.142c-.309 0-1.587-.006-2.927-.052l-.17-.006-.087-.004-.171-.007-.171-.007c-1.11-.049-2.167-.128-2.654-.26a2.01 2.01 0 0 1-1.415-1.419c-.111-.417-.185-.986-.235-1.558L.09 9.82l-.008-.104A31 31 0 0 1 0 7.68v-.123c.002-.215.01-.958.064-1.778l.007-.103.003-.052.008-.104.022-.26.01-.104c.048-.519.119-1.023.22-1.402a2.01 2.01 0 0 1 1.415-1.42c.487-.13 1.544-.21 2.654-.26l.17-.007.172-.006.086-.003.171-.007A100 100 0 0 1 7.858 2zM6.4 5.209v4.818l4.157-2.408z" />
             </svg>
@@ -69,23 +64,34 @@
         </div>
       </div>
       <div else class="col d-flex justify-content-end">
-        <span class="fw-semibold fs-sm-sm">Accessibilité : non conforme</span>
+        <a href="${accessibilityUrl}" target="_blank" rel="noopener noreferrer"
+          class="text-decoration-none fw-semibold fs-sm-sm" aria-label.bind="getExternalLinkLabel(accessibilityText)"
+          title.bind="getExternalLinkLabel(accessibilityText)">
+          ${accessibilityText}
+        </a>
       </div>
     </div>
 
-    <nav if.bind="type === 'default'" aria-label="Pied de page" class="links-container py-4">
+    <nav if.bind="type === 'default'" aria-label="Navigation du pied de page" class="links-container py-4">
       <div class="d-flex flex-wrap align-items-center row-gap-2">
-        <span class="">Accessibilité : non conforme</span>
-        <div class="vr ms-3 me-3"></div>
+        <a href="${accessibilityUrl}" target="_blank" rel="noopener noreferrer" class="text-decoration-none"
+          aria-label.bind="getExternalLinkLabel(accessibilityText)"
+          title.bind="getExternalLinkLabel(accessibilityText)">
+          ${accessibilityText}
+        </a>
+        <div class="vr ms-3 me-3" aria-hidden="true"></div>
         <template repeat.for="link of links">
-          <a href="${link.url}" class="text-decoration-none">${link.text}</a>
-          <div if.bind="!$last" class="vr ms-3 me-3"></div>
+          <a href="${link.url}" target="_blank" rel="noopener noreferrer" class="text-decoration-none"
+            aria-label.bind="getExternalLinkLabel(link.text)" title.bind="getExternalLinkLabel(link.text)">
+            ${link.text}
+          </a>
+          <div if.bind="!$last" class="vr ms-3 me-3" aria-hidden="true"></div>
         </template>
       </div>
-      <hr />
+      <hr aria-hidden="true" />
       <div class="d-flex align-items-center">
-        <span class="">©2026 Action Logement</span>
-        <div class="vr ms-3 me-3"></div>
+        <span>©2026 Action Logement</span>
+        <div class="vr ms-3 me-3" aria-hidden="true"></div>
         <span>
           Sauf mention explicite de propriété intellectuelle détenue par des tiers, les contenus de ce site
           sont proposées sous licence

@@ -1,4 +1,10 @@
 .als-footer {
+  a:focus-visible {
+    outline: 2px solid var(--als-red);
+    outline-offset: 2px;
+    border-radius: 0.25rem;
+  }
+
   .social-media-container {
     min-height: 64px;
     background-color: var(--bs-neutral-50);
@@ -27,6 +33,11 @@
         border-style: solid;
         border-color: var(--als-blue);
         border-radius: 50%;
+
+        &:focus-visible {
+          outline: 2px solid var(--als-red);
+          outline-offset: 2px;
+        }
       }
     }
   }
