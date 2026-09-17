@@ -6,6 +6,7 @@
     "resources": "../src",
     "core": "../src/core",
     "elements": "../src/elements",
+    "layouts": "../src/layouts",
     "attributes": "../src/attributes",
     "valueConverters": "../src/value-converters",
     "bindingBehaviors": "../src/binding-behaviors"
@@ -23,10 +24,7 @@
         ]
       ]
     },
-    "source": [
-      "dev-app/**/*.js",
-      "src/**/*.js"
-    ]
+    "source": ["dev-app/**/*.js", "src/**/*.js"]
   },
   "plugin": {
     "source": {
@@ -38,31 +36,20 @@
     }
   },
   "markupProcessor": {
-    "source": [
-      "dev-app/**/*.html",
-      "src/**/*.html"
-    ]
+    "source": ["dev-app/**/*.html", "src/**/*.html"]
+  },
+  "svgProcessor": {
+    "source": ["src/assets/**/*.svg"]
   },
   "cssProcessor": {
-    "source": [
-      "dev-app/**/*.css",
-      "src/**/*.css"
-    ]
+    "source": ["dev-app/**/*.css", "src/**/*.css"]
   },
   "scssProcessor": {
-    "source": [
-      "src/styles/custom.scss"
-    ],
-    "watchSource": [
-      "src/styles/custom.scss",
-      "src/styles/override*.scss"
-    ]
+    "source": ["src/styles/custom.scss"],
+    "watchSource": ["src/styles/custom.scss", "src/styles/override*.scss"]
   },
   "jsonProcessor": {
-    "source": [
-      "dev-app/**/*.json",
-      "src/**/*.json"
-    ]
+    "source": ["dev-app/**/*.json", "src/**/*.json"]
   },
   "platform": {
     "port": 9000,
@@ -90,9 +77,7 @@
     "bundles": [
       {
         "name": "app-bundle.js",
-        "source": [
-          "**/*"
-        ]
+        "source": ["**/*"]
       },
       {
         "name": "vendor-bundle.js",
@@ -120,10 +105,7 @@
       "plugins": [
         {
           "name": "text",
-          "extensions": [
-            ".html",
-            ".css"
-          ],
+          "extensions": [".html", ".css"],
           "stub": false
         }
       ]

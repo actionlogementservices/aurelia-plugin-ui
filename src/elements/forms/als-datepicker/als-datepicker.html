@@ -1,14 +1,15 @@
 <template>
   <require from="./als-datepicker.css"></require>
 
-    <div class="form-group">
+  <div class="form-group">
     <label
       class="form-label"
       if.bind="!fieldOnly"
       show.bind="label !== ''"
       for.bind="id"
       class="form-label text-primary">
-      ${label}<span class="text-danger">${required ? ' *' : ''}</span>
+      ${label}
+      <span class="text-danger">${required ? ' *' : ''}</span>
     </label>
     <div class="input-group">
       <input-datepicker
@@ -39,6 +40,8 @@
         </svg>
       </div>
     </div>
-    <small if.bind="!fieldOnly" show.bind="isError" id="${id}-error" role="alert" class="text-danger">${errorMessage}</small>
+    <small if.bind="!fieldOnly" show.bind="isError" id="${id}-error" role="alert" class="text-danger">
+      ${errorMessage}
+    </small>
   </div>
 </template>
