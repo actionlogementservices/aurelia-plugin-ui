@@ -9,6 +9,14 @@
   cursor: pointer;
 }
 
+.pre-login-title {
+  color: var(--als-blue);
+}
+
+.pre-login-subtitle {
+  color: #496380;
+}
+
 @media (max-width: 768px) {
   .als-logo svg {
     left: 50%;

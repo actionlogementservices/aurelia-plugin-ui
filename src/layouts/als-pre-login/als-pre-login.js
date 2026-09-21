@@ -7,7 +7,7 @@ export class AlsPreLogin {
    * @type {string}
    */
   @bindable({ defaultBindingMode: bindingMode.oneTime })
-  title = 'Mon espace de déclaration';
+  title = 'Mon Espace de Déclaration';
 
   /**
    * Description of the pre-login page.
