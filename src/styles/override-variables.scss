@@ -1,31 +1,50 @@
-$blue:    #0d6efd !default;
-$indigo:  #6610f2 !default;
-$purple:  #6f42c1 !default;
-$pink:    #d63384 !default;
-$red:     #FF0018 !default;
-$orange:  #fd7e14 !default;
-$yellow:  #FFB200 !default;
-$green:   #198754 !default;
-$teal:    #20c997 !default;
-$cyan:    #0080FF !default;
+$neutral-25: #f8f9fb !default;
+$neutral-50: #edf1f5 !default;
+$neutral-100: #e3e8ef !default;
+$neutral-200: #d8e0ea !default;
+$neutral-300: #ced7e4 !default;
+$neutral-400: #c4cfde !default;
+$neutral-500: #b9c6d8 !default;
+$neutral-600: #9da8b8 !default;
+$neutral-700: #818b97 !default;
+$neutral-800: #666d77 !default;
+$neutral-900: #4a4f56 !default;
 
-$white:    #FFFFFF !default;
-$black:    #000000 !default;
+$als-blue: #003f7a !default;
+$als-red: #e41d4b !default;
 
-$neutral-25:   #F8F9FB !default;
-$neutral-50:   #EDF1F5 !default;
-$neutral-100:  #E3E8EF !default;
-$neutral-200:  #D8E0EA !default;
-$neutral-300:  #CED7E4 !default;
-$neutral-400:  #C4CFDE !default;
-$neutral-500:  #B9C6D8 !default;
-$neutral-600:  #9DA8B8 !default;
-$neutral-700:  #818B97 !default;
-$neutral-800:  #666D77 !default;
-$neutral-900:  #4A4F56 !default;
+$blue: #0d6efd !default;
+$indigo: #6610f2 !default;
+$purple: #6f42c1 !default;
+$pink: #d63384 !default;
+$red: #ff0018 !default;
+$orange: #fd7e14 !default;
+$yellow: #ffb200 !default;
+$green: #198754 !default;
+$teal: #20c997 !default;
+$cyan: #0080ff !default;
 
-$primary:   #003F7A !default;
-$secondary: #E41D4B !default;
+$white: #ffffff !default;
+$black: #000000 !default;
+
+:root {
+  --als-blue: #{$als-blue};
+  --als-red: #{$als-red};
+  --bs-neutral-25: #{$neutral-25};
+  --bs-neutral-50: #{$neutral-50};
+  --bs-neutral-100: #{$neutral-100};
+  --bs-neutral-200: #{$neutral-200};
+  --bs-neutral-300: #{$neutral-300};
+  --bs-neutral-400: #{$neutral-400};
+  --bs-neutral-500: #{$neutral-500};
+  --bs-neutral-600: #{$neutral-600};
+  --bs-neutral-700: #{$neutral-700};
+  --bs-neutral-800: #{$neutral-800};
+  --bs-neutral-900: #{$neutral-900};
+}
+
+$primary: $als-blue !default;
+$secondary: $als-red !default;
 
 $border-radius: 0.25rem !default;
 
@@ -44,28 +63,30 @@ $focus-ring-color: $red !default;
 $btn-font-weight: 600 !default;
 
 // Input
-$input-focus-border-color: neutral-300 !default;
-$input-focus-width:  1px !default;
+$input-focus-border-color: $neutral-300 !default;
+$input-focus-width: 1px !default;
 $input-group-addon-bg: $white !default;
 
 // Forms
-$form-label-margin-bottom:              0.125rem !default;
-$form-label-font-size:                  1rem !default;
-$form-label-font-style:                 medium !default;
-$form-label-font-weight:                500 !default;
-$form-label-color:                      $primary !default;
+$form-label-margin-bottom: 0.125rem !default;
+$form-label-font-size: 1rem !default;
+$form-label-font-style: medium !default;
+$form-label-font-weight: 500 !default;
+$form-label-color: $primary !default;
 
 // Accordion
-$accordion-icon-active-color:  $primary !default;
-$accordion-padding-y:          0.75rem !default;
-$accordion-border-radius:      0 !default;
-$accordion-border-color:       $neutral-200 !default;
-$accordion-button-color:       $primary !default;
-$accordion-button-active-bg:   $white !default;
+$accordion-icon-active-color: $primary !default;
+$accordion-padding-y: 0.75rem !default;
+$accordion-border-radius: 0 !default;
+$accordion-border-color: $neutral-200 !default;
+$accordion-button-color: $primary !default;
+$accordion-button-active-bg: $white !default;
 $accordion-button-active-color: $primary !default;
-$accordion-icon-color:         $primary !default;
-$accordion-icon-active-color:  $primary !default;
+$accordion-icon-color: $primary !default;
+$accordion-icon-active-color: $primary !default;
 
 // Dropdown
 $dropdown-padding-y: 0.25rem !default;
 $dropdown-divider-margin-y: 0.25rem !default;
+
+$vr-border-width: 2px !default;

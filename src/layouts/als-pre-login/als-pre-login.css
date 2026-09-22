@@ -1,0 +1,25 @@
+.als-logo svg {
+  position: absolute;
+  top: 1rem;
+  left: 4rem;
+  height: 48px;
+}
+
+.help-link {
+  cursor: pointer;
+}
+
+.pre-login-title {
+  color: var(--als-blue);
+}
+
+.pre-login-subtitle {
+  color: #496380;
+}
+
+@media (max-width: 768px) {
+  .als-logo svg {
+    left: 50%;
+    transform: translateX(-50%);
+  }
+}

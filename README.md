@@ -781,6 +781,47 @@ It includes most of the base html input attributes. You can specify the followin
   | `is-error` | Two-way bound property to know if the field is in error state | `true` or `false` | `false` |
   | `error-message` | To set a custom error message | Any string | None |
 
+### Layout components
+
+Layout components are reusable page shells that compose branded sections with consistent styling.
+
+#### `als-pre-login`
+
+Pre-login landing page layout used for public access pages before authentication.
+
+![screenshot of the als-pre-login layout component](./doc/screenshot/als-pre-login.png)
+
+```html
+<als-pre-login
+  help-url="https://aide.example.com"
+  footer-type="compact"
+  footer-links.bind="footerLinks"
+  on-connect-button-click.call="goToLogin()"></als-pre-login>
+```
+
+```javascript
+export class LoginPage {
+  footerLinks = [
+    { text: 'Mentions légales', url: 'https://example.com/mentions-legales' },
+    { text: 'CGU', url: 'https://example.com/cgu' }
+  ];
+
+  goToLogin() {
+    // navigate to the login page or open the auth flow
+  }
+}
+```
+
+You can specify the following attributes :
+| Attribute name | Role | Possible values | Default value |
+|--- |---|--- |---|
+| `title` | Main title displayed in the pre-login panel | Any string | `Mon espace de déclaration` |
+| `subtitle` | Subtitle displayed below the title | Any string | `Accès réservé aux entreprises` |
+| `help-url` | URL for the help link displayed under the login action | Any string URL | `#` |
+| `footer-links` | Links displayed in the footer | Array of objects with `text` and `url` properties | `undefined` |
+| `footer-type` | Footer variant to render | `compact` or `default` | `compact` |
+| `on-connect-button-click` | Callback invoked when clicking the login button | Function | `undefined` |
+
 ## Compatibility
 
 This plugin has been tested on aurelia v1 with **webpack**.

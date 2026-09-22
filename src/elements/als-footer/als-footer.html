@@ -1,0 +1,96 @@
+<template>
+  <require from="./als-footer.css"></require>
+  <require from="../../assets/icons/als-logo.html"></require>
+  <require from="../../assets/icons/pre-login-linkedin.html"></require>
+  <require from="../../assets/icons/pre-login-twitter.html"></require>
+  <require from="../../assets/icons/pre-login-youtube.html"></require>
+
+  <footer class="als-footer ${type === 'compact' ? 'compact' : ''}" role="contentinfo">
+    <div class="social-media-container row gx-0 d-flex justify-content-between align-items-center">
+      <div class="col-2 col-md-4 d-flex justify-content-start align-items-center">
+        <a
+          class="text-decoration-none"
+          href.bind="logoUrl"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label.bind="getExternalLinkLabel('Action Logement')"
+          title.bind="getExternalLinkLabel('Action Logement')">
+          <als-logo></als-logo>
+          <span class="fw-semibold ms-1 d-none d-sm-inline">
+            Faciliter le logement pour favoriser l'emploi
+          </span>
+        </a>
+      </div>
+      <div if.bind="type === 'compact'" class="col-10 col-md-8 d-flex flex-md-row-reverse justify-content-start align-items-center flex-wrap fw-semibold">
+        <a href="${accessibilityUrl}" target="_blank" rel="noopener noreferrer"
+          class="text-decoration-none fw-semibold fs-sm-sm" aria-label.bind="getExternalLinkLabel(accessibilityText)"
+          title.bind="getExternalLinkLabel(accessibilityText)">
+          ${accessibilityText}
+        </a>
+        <div if.bind="links && links.length > 0" class="vr ms-3 me-3" aria-hidden="true"></div>
+        <template repeat.for="link of links">
+          <a target="_blank" rel="noopener noreferrer" href.bind="link.url" class="text-decoration-none"
+            aria-label.bind="getExternalLinkLabel(link.text)" title.bind="getExternalLinkLabel(link.text)">
+            ${link.text}
+          </a>
+          <div if.bind="!$last" class="vr ms-3 me-3" aria-hidden="true"></div>
+        </template>
+      </div>
+      <div
+        if.bind="!hideSocialMediaLinks && type === 'default'"
+        class="col d-flex social-media-links d-flex justify-content-end align-items-center">
+        <span class="d-none d-sm-inline">Retrouvez nous sur :</span>
+        <div class="ms-2 d-flex">
+          <a class="social-media-icon" href.bind="linkedinUrl" target="_blank" rel="noopener noreferrer"
+            aria-label.bind="getExternalLinkLabel('LinkedIn')" title.bind="getExternalLinkLabel('LinkedIn')">
+            <pre-login-linkedin></pre-login-linkedin>
+          </a>
+          <a class="social-media-icon ms-2" href.bind="twitterUrl" target="_blank" rel="noopener noreferrer"
+            aria-label.bind="getExternalLinkLabel('X')" title.bind="getExternalLinkLabel('X')">
+            <pre-login-twitter></pre-login-twitter>
+          </a>
+          <a class="social-media-icon ms-2" href.bind="youtubeUrl" target="_blank" rel="noopener noreferrer"
+            aria-label.bind="getExternalLinkLabel('YouTube')" title.bind="getExternalLinkLabel('YouTube')">
+            <pre-login-youtube></pre-login-youtube>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <nav if.bind="type === 'default'" aria-label="Navigation du pied de page" class="links-container py-4">
+      <div class="d-flex flex-wrap align-items-center row-gap-2">
+        <a
+          href="${accessibilityUrl}"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="text-decoration-none"
+          aria-label.bind="getExternalLinkLabel(accessibilityText)"
+          title.bind="getExternalLinkLabel(accessibilityText)">
+          ${accessibilityText}
+        </a>
+        <div class="vr ms-3 me-3" aria-hidden="true"></div>
+        <template repeat.for="link of links">
+          <a
+            href="${link.url}"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="text-decoration-none"
+            aria-label.bind="getExternalLinkLabel(link.text)"
+            title.bind="getExternalLinkLabel(link.text)">
+            ${link.text}
+          </a>
+          <div if.bind="!$last" class="vr ms-3 me-3" aria-hidden="true"></div>
+        </template>
+      </div>
+      <hr aria-hidden="true" />
+      <div class="d-flex align-items-center">
+        <span>©2026 Action Logement</span>
+        <div class="vr ms-3 me-3" aria-hidden="true"></div>
+        <span>
+          Sauf mention explicite de propriété intellectuelle détenue par des tiers, les contenus de ce site
+          sont proposées sous licence
+        </span>
+      </div>
+    </nav>
+  </footer>
+</template>

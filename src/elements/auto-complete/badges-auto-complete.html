@@ -3,7 +3,8 @@
   <div id="badges-auto-complete-${uniqueId}" class="dropdown">
     <!-- badges section -->
     <div show.bind="selectedItems.length > 0" class="badges-container container-fluid overflow-auto">
-      <span repeat.for="b of selectedItems"
+      <span
+        repeat.for="b of selectedItems"
         class="badge bg-secondary m-1 p-2 d-inline-flex align-items-center justify-content-center">
         <i class="bi bi-x-lg fs-6 me-2" role="button" click.trigger="removeItem(b)"></i>
         ${b[$parent.labelKey]}
@@ -29,7 +30,9 @@
       blur.trigger="onInputBlur()"
       keydown.trigger="manageKey($event.code)" />
     <!-- dropdown -->
-    <div id="dropDown-${uniqueId}" class="dropdown-menu dropdown-menu-scroll ${autosize ? 'dropdown-menu-autosize' : ''}"">
+    <div
+      id="dropDown-${uniqueId}"
+      class="dropdown-menu dropdown-menu-scroll ${autosize ? 'dropdown-menu-autosize' : ''}">
       <button
         repeat.for="item of items"
         type="button"

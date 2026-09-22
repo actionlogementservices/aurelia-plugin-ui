@@ -32,6 +32,7 @@ function configure(aurelia) {
     PLATFORM.moduleName('./elements/simple-table/column'),
 
     PLATFORM.moduleName('./elements/als-dropdown/als-dropdown'),
+    PLATFORM.moduleName('./elements/als-footer/als-footer'),
     PLATFORM.moduleName('./elements/als-gtag/als-gtag'),
 
     PLATFORM.moduleName('./elements/breadcrumbs/breadcrumbs'),
@@ -46,6 +47,8 @@ function configure(aurelia) {
     PLATFORM.moduleName('./elements/forms/als-input-password/als-input-password'),
     PLATFORM.moduleName('./elements/forms/als-select/als-select'),
     PLATFORM.moduleName('./elements/forms/als-datepicker/als-datepicker'),
+
+    PLATFORM.moduleName('./layouts/als-pre-login/als-pre-login'),
 
     PLATFORM.moduleName('./attributes/input-mask'),
     PLATFORM.moduleName('./attributes/no-submit'),
