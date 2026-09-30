@@ -17,6 +17,13 @@ export class AlsPreLogin {
   subtitle = 'Accès réservé aux entreprises';
 
   /**
+   * Path to the right image of the layout.
+   * @type {string}
+   */
+  @bindable({ defaultBindingMode: bindingMode.oneTime })
+  imgPath = '';
+
+  /**
    * URL of the help page.
    * @type {string}
    */
