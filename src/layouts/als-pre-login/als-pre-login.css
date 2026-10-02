@@ -10,11 +10,15 @@
 }
 
 .pre-login-title {
-  color: var(--als-blue);
+  color: #003f7a;
 }
 
 .pre-login-subtitle {
   color: #496380;
+}
+
+.right-block {
+  background-color: #003f7a;
 }
 
 @media (max-width: 768px) {

@@ -16,10 +16,11 @@
           <a class="help-link" href.bind="helpUrl">Obtenez de l'aide</a>
         </p>
       </div>
-      <div class="d-none d-md-block col position-relative">
+      <div class="d-none d-md-block col position-relative right-block">
         <img
-          src="../../assets/images/pre-login-bg.png"
-          alt=""
+          if.bind="imgPath !==''"
+          src.bind="imgPath"
+          alt="décor sur le côté droit de la page"
           class="position-absolute top-0 start-0 w-100 h-100 object-fit-cover" />
       </div>
     </div>
