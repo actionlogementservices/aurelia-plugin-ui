@@ -7,9 +7,14 @@
     "allowJs": true,
     "checkJs": false,
     "baseUrl": "./src",
+    "paths": {
+      "resources/*": ["./*"],
+      "valueConverters/*": ["./value-converters/*"],
+      "bindingBehaviors/*": ["./binding-behaviors/*"]
+    },
     "experimentalDecorators": true,
     "ignoreDeprecations": "6.0",
     "forceConsistentCasingInFileNames": true
   },
-  "include": ["src/**/*", "@types/*.d.ts"]
+  "include": ["src/**/*", "dev-app/**/*", "@types/*.d.ts"]
 }

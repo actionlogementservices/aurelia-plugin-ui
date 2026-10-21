@@ -33,6 +33,7 @@ node_modules
 # Compiled files
 /scripts
 /dev-app/environment.js
+/aurelia_project/environments/*.local.js
 /dist
 /test/coverage-jest
 

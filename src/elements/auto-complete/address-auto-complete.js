@@ -172,6 +172,7 @@ export class AddressAutoComplete {
   }
 
   addressCityChanged(newValue, oldValue) {
+    if (!this.value) return;
     Object.assign(this.value, {
       codePostal: newValue?.codePostal,
       codeCommune: newValue?.codeCommune,
@@ -182,7 +183,7 @@ export class AddressAutoComplete {
   addressNotListedChanged() {
     this._taskqueue.queueTask(() => {
       this.value = Object.assign(new Adresse(), {
-        complemet: this.value?.complement,
+        complement: this.value?.complement,
         isAddressNotListed: this.value?.isAddressNotListed
       });
       // @ts-ignore
@@ -190,10 +191,24 @@ export class AddressAutoComplete {
     });
   }
 
+  /**
+   * Synchronizes the city auto-complete with the value when the address is not listed.
+   */
+  syncAddressCity() {
+    if (!this.value?.isAddressNotListed) return;
+    this.addressCity = Object.assign(new Adresse(), {
+      codePostal: this.value.codePostal,
+      codeCommune: this.value.codeCommune,
+      commune: this.value.commune
+    });
+  }
+
+  valueChanged() {
+    this.syncAddressCity();
+  }
+
   bind() {
     this.setMode();
-    if (this.value?.isAddressNotListed) {
-      this.addressCity = Object.assign(new Adresse(), this.value);
-    }
+    this.syncAddressCity();
   }
 }

@@ -49,6 +49,7 @@ export class Adresse {
   constructor() {
     ValidationRules.ensure(x => x.numero)
       .required()
+      .when(x => !x.isAddressNotListed)
       .maxLength(8)
       .ensure(x => x.nomVoie)
       .required()
