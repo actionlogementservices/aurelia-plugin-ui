@@ -310,7 +310,7 @@ export class AutoComplete {
    */
   controllerChanged() {
     // if selection was first databound before controller re-trigger selection change
-    if (this.selectedItem) this.selectedItemChanged(this.selectedItem);
+    if (this.selectedItem) this.selectedItemChanged(/** @type {T} */ (this.selectedItem));
     else if (!isNil(this.selectedValue)) this.selectedValueChanged(this.selectedValue);
   }
 
