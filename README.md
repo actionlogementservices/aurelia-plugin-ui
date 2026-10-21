@@ -214,6 +214,46 @@ Prevent user interaction with Bootstrap back drop.
     }
   ```
 
+### Selection custom elements: `selected-*` attributes
+
+The selection custom elements expose the user selection in two complementary forms, kept in sync by the element:
+
+| Element | Selection | Item(s) attribute | Value(s) attribute | Items source |
+|---|---|---|---|---|
+| `simple-select` | single | `selected-item` | `selected-value` | `datasource` (in memory) |
+| `filterable-select` | single | `selected-item` | `selected-value` | `datasource` (in memory) |
+| `badges-select` | multiple | `selected-items` | `selected-values` | `datasource` (in memory) |
+| `auto-complete` | single | `selected-item` | `selected-value` | `controller` (on the fly) |
+| `badges-auto-complete` | multiple | `selected-items` | `selected-values` | `controller` (on the fly) |
+
+- `selected-item(s)` holds the selected item(s) themselves (objects of the datasource or returned by the controller).
+- `selected-value(s)` holds the `value-key` property of the selected item(s) (e.g. an id or a code). Set `value-key` accordingly.
+- Both attributes are two-way by default. Choose the binding that fits your viewmodel:
+
+  | Scenario | Binding | When to use it |
+  |---|---|---|
+  | Value only | `selected-value.bind="model.countryId"` | Your model stores the key (most common: it is what you save). |
+  | Item only | `selected-item.bind="country"` | Your model stores the whole object. |
+  | Value + item (recommended when you need both) | `selected-value.bind="model.countryId"` `selected-item.from-view="country"` | Your model stores the key, and you also need the full selected object (to display other properties, etc.). |
+  | Both two-way | `selected-value.bind="..."` `selected-item.bind="..."` | Supported, the element keeps both consistent whichever side changes. |
+
+  ```html
+  <simple-select
+    class="form-select"
+    datasource.bind="countries"
+    value-key="id"
+    label-key="name"
+    selected-value.bind="model.countryId"
+    selected-item.from-view="selectedCountry"></simple-select>
+  ```
+
+- How a value is resolved into an item:
+  - in-memory elements look for the item whose `value-key` property strictly equals (`===`) the value in the `datasource`. The datasource can be loaded after the value: the value is resolved as soon as the datasource is available.
+  - controller elements call the controller `getItems` function (see the `configure` method of the controller). The controller can be bound after the value. When the value changes again before the answer arrives, the outdated answer is ignored. Clearing the value does not call `getItems`.
+- A value that can't be resolved (not in the datasource, not found by the controller, or controller without `getItems`) **is kept** in your viewmodel: the element simply displays no selection for it.
+- For multiple selections, items are displayed in the order of `selected-values`.
+- Always **assign a new array** to `selected-values`/`selected-items` (e.g. `this.selectedValues = [...this.selectedValues, id]`): in place mutations like `push` are not detected.
+
 ### `simple-select` custom element
 
 **Single selection** dropdown element with databound in-memory datasource, and **customizable dropdown item template**, well adapted for small number of items (typically **less than 50**).
@@ -243,6 +283,7 @@ Prevent user interaction with Bootstrap back drop.
   ```
 
 - You can also retrieve user selection with an item property using `selected-value` and `value-key` attributes.
+  See [Selection custom elements: `selected-*` attributes](#selection-custom-elements-selected--attributes) for the possible binding combinations.
 
   ```html
   <simple-select
@@ -291,6 +332,7 @@ Prevent user interaction with Bootstrap back drop.
   ```
 
 - You can also retrieve user selection with an item property using `selected-value` and `value-key` attributes.
+  See [Selection custom elements: `selected-*` attributes](#selection-custom-elements-selected--attributes) for the possible binding combinations.
 
   ```html
   <filterable-select
@@ -319,7 +361,7 @@ Prevent user interaction with Bootstrap back drop.
 
 - Prepare a datasource in your viewmodel representing an array of items.
 - Use the [`<badges-select>`](./doc/src-elements-select_badges-select.md) element in your view and data bind the `datasource` attribute.
-- Data bind the `values` attribute to your viewmodel to retrieve user selection as an array os items.
+- Data bind the `selected-items` attribute to your viewmodel to retrieve user selection as an array of items.
 
   ```html
   <badges-select
@@ -331,7 +373,7 @@ Prevent user interaction with Bootstrap back drop.
 - Specify an optional template for the dropdown item
 
   ```html
-  <badges-select class="form-select" values.bind="selectedItems" datasource.bind="itemsList">
+  <badges-select class="form-select" selected-items.bind="selectedItems" datasource.bind="itemsList">
     <template replace-part="itemTemplate">
       <p class="fw-semibold my-1">${item.code}</p>
       <p class="my-1">${item.name}</p>
@@ -339,13 +381,14 @@ Prevent user interaction with Bootstrap back drop.
   </badges-select>
   ```
 
-- You can also retrieve user selection with an item property using `selected-value` and `value-key` attributes.
+- You can also retrieve user selection as an array of item properties using `selected-values` and `value-key` attributes.
+  See [Selection custom elements: `selected-*` attributes](#selection-custom-elements-selected--attributes) for the possible binding combinations.
 
   ```html
   <badges-select
     class="form-select"
     value-key="code"
-    selected-values.bind="selectedValue"
+    selected-values.bind="selectedValues"
     datasource.bind="itemsList"></badges-select>
   ```
 
@@ -428,6 +471,7 @@ Prevent user interaction with Bootstrap back drop.
   ```
 
 - You can also retrieve user selection with an item property using `selected-value` and `value-key` attributes.
+  See [Selection custom elements: `selected-*` attributes](#selection-custom-elements-selected--attributes) for the possible binding combinations.
 
   ```html
   <auto-complete
@@ -435,6 +479,16 @@ Prevent user interaction with Bootstrap back drop.
     value-key="code"
     selected-value.bind="selectedValue"
     controller.bind="itemsController"></auto-complete>
+  ```
+
+- To display an initial `selected-value` (e.g. an already saved form), pass a third callback to the controller that retrieves the items by their values, with the following signature: `(values: K[]) => Promise<T[]>`
+
+  ```javascript
+  activate() {
+    const searchItems = this._service.searchItems.bind(this._service);
+    const getItemsByCodes = codes => this._service.getItemsByCodes(codes);
+    this.itemsController.configure(searchItems, undefined, getItemsByCodes);
+  }
   ```
 
 - You can specify the optional following attributes :
@@ -472,13 +526,13 @@ Prevent user interaction with Bootstrap back drop.
     }
   ```
 
-- Use the [`<badges-auto-complete>`](./doc/src-elements-auto-complete_auto-complete.md) element in your view and data bind the `controller` attribute.
-- Data bind the `values` attribute to your viewmodel to retrieve user selection as an array of items.
+- Use the [`<badges-auto-complete>`](./doc/src-elements-auto-complete_badges-auto-complete.md) element in your view and data bind the `controller` attribute.
+- Data bind the `selected-items` attribute to your viewmodel to retrieve user selection as an array of items.
 
   ```html
   <badges-auto-complete
     class="form-control"
-    values.bind="selectedItem"
+    selected-items.bind="selectedItems"
     controller.bind="itemsController"></badges-auto-complete>
   ```
 
@@ -508,7 +562,7 @@ Prevent user interaction with Bootstrap back drop.
 - Specify an optional template for the dropdown item
 
   ```html
-  <badges-auto-complete class="form-control" values.bind="selectedItems" controller.bind="itemsController">
+  <badges-auto-complete class="form-control" selected-items.bind="selectedItems" controller.bind="itemsController">
     <template replace-part="itemTemplate">
       <p class="fw-semibold my-1">${item.code}</p>
       <p class="my-1">${item.fullName}</p>
@@ -516,14 +570,25 @@ Prevent user interaction with Bootstrap back drop.
   </badges-auto-complete>
   ```
 
-- You can also retrieve user selection with an item property using `selected-value` and `value-key` attributes.
+- You can also retrieve user selection as an array of item properties using `selected-values` and `value-key` attributes.
+  See [Selection custom elements: `selected-*` attributes](#selection-custom-elements-selected--attributes) for the possible binding combinations.
 
   ```html
   <badges-auto-complete
     class="form-control"
     value-key="code"
-    selected-value.bind="selectedValue"
+    selected-values.bind="selectedValues"
     controller.bind="itemsController"></badges-auto-complete>
+  ```
+
+- To display initial `selected-values` (e.g. an already saved form), pass a third callback to the controller that retrieves the items by their values, with the following signature: `(values: K[]) => Promise<T[]>`
+
+  ```javascript
+  activate() {
+    const searchItems = this._service.searchItems.bind(this._service);
+    const getItemsByCodes = codes => this._service.getItemsByCodes(codes);
+    this.itemsController.configure(searchItems, undefined, getItemsByCodes);
+  }
   ```
 
 - You can specify the optional following attributes :

@@ -10,7 +10,7 @@ import {
 } from 'aurelia-framework';
 import { Dropdown } from 'bootstrap';
 
-import { generateUniqueId, isNilOrEmpty, preventEventPropagation } from '../../core/functions';
+import { generateUniqueId, isNil, isNilOrEmpty, preventEventPropagation } from '../../core/functions';
 // import { setTraceDebugger } from '../../core/debug-tracer';
 
 /**
@@ -122,16 +122,17 @@ export class FilterableSelect {
    * Selects the specified item.
    * @param {T} item item clicked or selected
    * @param {boolean} notify should we dispatch custom element events?
+   * @param {boolean} keepValue should we keep the current selected value?
    */
-  selectItem(item, notify = true) {
+  selectItem(item, notify = true, keepValue = false) {
     if (this.isInvalidDatasource()) return;
     if (!this._input) {
       // input field is not yet loaded but datasource is ok so queue task
-      this._taskqueue.queueTask(() => this.selectItem(item, notify));
+      this._taskqueue.queueTask(() => this.selectItem(item, notify, keepValue));
       return;
     }
     // synchronizes selection
-    this.synchronizeSelection(item);
+    this.synchronizeSelection(item, keepValue);
     // sets the html input element content with the label
     this.setHtmlInputContent(item);
     if (item) {
@@ -151,11 +152,12 @@ export class FilterableSelect {
   /**
    * Synchronizes custom element selection.
    * @param {T} item item to select
+   * @param {boolean} keepValue should we keep the current selected value?
    */
-  synchronizeSelection(item) {
+  synchronizeSelection(item, keepValue = false) {
     this._guard = true;
     this.selectedItem = item;
-    if (!this.isInvalidValueKey()) this.selectedValue = item ? item[this.valueKey] : undefined;
+    if (!keepValue && !this.isInvalidValueKey()) this.selectedValue = item ? item[this.valueKey] : undefined;
     // ensures the _guard stays 'true' until after the change has been processed by the observer system
     this._taskqueue.queueMicroTask(() => {
       this._guard = false;
@@ -306,8 +308,11 @@ export class FilterableSelect {
   selectedValueChanged() {
     if (this._guard) return;
     if (this.isInvalidDatasource() || this.isInvalidValueKey()) return;
+    // nothing to do if the selected item already matches (e.g. both `selected-value` and `selected-item` are databound)
+    if (this.selectedItem?.[this.valueKey] === this.selectedValue) return;
     const selectedItem = this.datasource.find(item => item[this.valueKey] === this.selectedValue);
-    this.selectItem(selectedItem, false);
+    // keeps the databound value when it is not (yet) in the datasource
+    this.selectItem(selectedItem, false, !selectedItem);
   }
 
   /**
@@ -323,8 +328,8 @@ export class FilterableSelect {
    */
   datasourceChanged() {
     this.resetDropdownItems();
-    // if value was first databound before datasource re-trigger value change
+    // if selection was first databound before datasource re-trigger selection change
     if (this.selectedItem) this.selectedItemChanged();
-    else if (this.selectedValue) this.selectedValueChanged();
+    else if (!isNil(this.selectedValue)) this.selectedValueChanged();
   }
 }
