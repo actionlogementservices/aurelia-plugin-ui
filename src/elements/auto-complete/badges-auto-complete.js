@@ -163,11 +163,13 @@ export class BadgesAutoComplete {
   /**
    * Synchronizes custom element selection.
    * @param {(T|U)[]} items items to select
+   * @param {boolean} keepValues should we keep the current selected values?
    */
-  synchronizeSelection(items) {
+  synchronizeSelection(items, keepValues = false) {
     this._guard = true;
-    this.selectedItems = items ? [...items] : [];
-    if (!this.isInvalidValueKey()) this.selectedValues = this.selectedItems.map(item => item[this.valueKey]);
+    this.selectedItems = Array.isArray(items) ? items : [];
+    if (!keepValues && !this.isInvalidValueKey())
+      this.selectedValues = this.selectedItems.map(item => item[this.valueKey]);
     // ensures the _guard stays 'true' until after the change has been processed by the observer system
     this._taskqueue.queueMicroTask(() => {
       this._guard = false;
@@ -272,6 +274,18 @@ export class BadgesAutoComplete {
   }
 
   /**
+   * Checks if the selected items match the specified values.
+   * @param {K[]} values values to check
+   * @returns {boolean} true if they match, false otherwise
+   */
+  isSelectionMatching(values) {
+    const items = this.selectedItems || [];
+    return (
+      items.length === values.length && items.every((item, index) => item[this.valueKey] === values[index])
+    );
+  }
+
+  /**
    * Defines the logic triggered when user types data in the input field.
    * @param {string} inputValue user input
    */
@@ -293,22 +307,39 @@ export class BadgesAutoComplete {
 
   /**
    * Defines the logic triggered when `selected-items` attribute is databound.
+   * @param {undefined | (T|U)[]} newItems new `selected-items` value
    */
-  selectedItemsChanged() {
+  selectedItemsChanged(newItems) {
     if (this._guard) return;
-    if (!this.controller || !this.valueKey || this._guard) return;
-    if (!this.selectedItems) this.selectedItems = [];
+    this.synchronizeSelection(newItems);
   }
 
   /**
    * Defines the logic triggered when `selected-values` attribute is databound.
    * @param {undefined | K[]} newValues new `selected-values` value
    */
-  selectedValuesChanged(newValues) {
-    // if (this._guard) return;
-    // if (!this.controller) return;
-    // const itemsToSelect = await this.controller.getItems(newValues);
-    // this.synchronizeSelection(itemsToSelect);
+  async selectedValuesChanged(newValues) {
+    if (this._guard) return;
+    if (!this.controller || this.isInvalidValueKey()) return;
+    const values = Array.isArray(newValues) ? newValues : [];
+    // nothing to do if the selected items already match (e.g. both `selected-values` and `selected-items` are databound)
+    if (this.isSelectionMatching(values)) return;
+    const items = values.length > 0 ? await this.controller.getItems(values) : [];
+    // discards the result if the selection changed in the meantime
+    if (this.selectedValues !== newValues) return;
+    const newItems = values
+      .map(value => items.find(item => item?.[this.valueKey] === value))
+      .filter(item => item !== undefined);
+    // keeps the databound values even if the controller does not find some of them
+    this.synchronizeSelection(newItems, true);
+  }
+
+  /**
+   * Defines the logic triggered when `controller` attribute is databound.
+   */
+  controllerChanged() {
+    // if values were first databound before controller re-trigger values change
+    if (Array.isArray(this.selectedValues)) this.selectedValuesChanged(this.selectedValues);
   }
 
   /**

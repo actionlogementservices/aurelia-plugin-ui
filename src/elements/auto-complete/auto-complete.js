@@ -10,7 +10,7 @@ import {
 } from 'aurelia-framework';
 import { Dropdown } from 'bootstrap';
 
-import { generateUniqueId, isNilOrEmpty, preventEventPropagation } from '../../core/functions';
+import { generateUniqueId, isNil, isNilOrEmpty, preventEventPropagation } from '../../core/functions';
 // import { setTraceDebugger } from '../../core/debug-tracer';
 
 /** @template T,U @typedef {import('./auto-complete-controller').AutoCompleteController<T,U>} AutoCompleteController<T,U> */
@@ -131,16 +131,17 @@ export class AutoComplete {
    * Selects the specified item.
    * @param {U | T} item item clicked or selected
    * @param {boolean} notify should we dispatch custom element events?
+   * @param {boolean} keepValue should we keep the current selected value?
    */
-  selectItem(item, notify = true) {
+  selectItem(item, notify = true, keepValue = false) {
     if (!this.controller) return;
     // input field is not yet loaded but controller is ok so queue task
     if (!this._input) {
-      this._taskqueue.queueTask(() => this.selectItem(item, notify));
+      this._taskqueue.queueTask(() => this.selectItem(item, notify, keepValue));
       return;
     }
     // synchronizes selection
-    this.synchronizeSelection(item);
+    this.synchronizeSelection(item, keepValue);
     // sets the html input element content with the label
     this.setHtmlInputContent(item);
     if (item) {
@@ -157,11 +158,12 @@ export class AutoComplete {
   /**
    * Synchronizes custom element selection.
    * @param {U | T} item item to select
+   * @param {boolean} keepValue should we keep the current selected value?
    */
-  synchronizeSelection(item) {
+  synchronizeSelection(item, keepValue = false) {
     this._guard = true;
     this.selectedItem = item;
-    if (!this.isInvalidValueKey()) this.selectedValue = item ? item[this.valueKey] : undefined;
+    if (!keepValue && !this.isInvalidValueKey()) this.selectedValue = item ? item[this.valueKey] : undefined;
     // ensures the _guard stays 'true' until after the change has been processed by the observer system
     this._taskqueue.queueMicroTask(() => {
       this._guard = false;
@@ -279,8 +281,17 @@ export class AutoComplete {
   async selectedValueChanged(value) {
     if (this._guard) return;
     if (!this.controller) return;
+    // nothing to do if the selected item already matches (e.g. both `selected-value` and `selected-item` are databound)
+    if (this.selectedItem?.[this.valueKey] === value) return;
+    if (isNil(value)) {
+      this.selectItem(undefined, false);
+      return;
+    }
     const itemsToSelect = await this.controller.getItems([value]);
-    this.selectItem(itemsToSelect[0], false);
+    // discards the result if the selection changed in the meantime
+    if (this.selectedValue !== value) return;
+    // keeps the databound value when the controller does not find it
+    this.selectItem(itemsToSelect[0], false, !itemsToSelect[0]);
   }
 
   /**
@@ -292,6 +303,15 @@ export class AutoComplete {
     if (!this.controller) return;
     const selectedItem = this.controller.buildItemModel(value);
     this.selectItem(selectedItem, false);
+  }
+
+  /**
+   * Defines the logic triggered when `controller` attribute is databound.
+   */
+  controllerChanged() {
+    // if selection was first databound before controller re-trigger selection change
+    if (this.selectedItem) this.selectedItemChanged(this.selectedItem);
+    else if (!isNil(this.selectedValue)) this.selectedValueChanged(this.selectedValue);
   }
 
   /**

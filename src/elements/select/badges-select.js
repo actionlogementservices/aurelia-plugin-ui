@@ -150,11 +150,13 @@ export class BadgesSelect {
   /**
    * Synchronizes custom element selection.
    * @param {T[]} items items to select
+   * @param {boolean} keepValues should we keep the current selected values?
    */
-  synchronizeSelection(items) {
+  synchronizeSelection(items, keepValues = false) {
     this._guard = true;
-    this.selectedItems = Array.isArray(items) ? [...items] : [];
-    if (!this.isInvalidValueKey()) this.selectedValues = this.selectedItems.map(item => item[this.valueKey]);
+    this.selectedItems = Array.isArray(items) ? items : [];
+    if (!keepValues && !this.isInvalidValueKey())
+      this.selectedValues = this.selectedItems.map(item => item[this.valueKey]);
     this.filterDropdownItems();
     // ensures the _guard stays 'true' until after the change has been processed by the observer system
     this._taskqueue.queueMicroTask(() => {
@@ -277,6 +279,18 @@ export class BadgesSelect {
   }
 
   /**
+   * Checks if the selected items match the specified values.
+   * @param {K[]} values values to check
+   * @returns {boolean} true if they match, false otherwise
+   */
+  isSelectionMatching(values) {
+    const items = this.selectedItems || [];
+    return (
+      items.length === values.length && items.every((item, index) => item[this.valueKey] === values[index])
+    );
+  }
+
+  /**
    * Defines the logic triggered when user clicks outside of the html input element.
    */
   onInputBlur() {
@@ -314,11 +328,14 @@ export class BadgesSelect {
   selectedValuesChanged(newValues) {
     if (this._guard) return;
     if (this.isInvalidDatasource() || this.isInvalidValueKey()) return;
-    const newItems =
-      newValues?.length > 0
-        ? this.datasource.filter(item => newValues.includes(item && item[this.valueKey]))
-        : [];
-    this.synchronizeSelection(newItems);
+    const values = Array.isArray(newValues) ? newValues : [];
+    // nothing to do if the selected items already match (e.g. both `selected-values` and `selected-items` are databound)
+    if (this.isSelectionMatching(values)) return;
+    const newItems = values
+      .map(value => this.datasource.find(item => item?.[this.valueKey] === value))
+      .filter(item => item !== undefined);
+    // keeps the databound values even if some of them are not (yet) in the datasource
+    this.synchronizeSelection(newItems, true);
   }
 
   /**
@@ -333,12 +350,8 @@ export class BadgesSelect {
    * Defines the logic triggered when `datasource` attribute is databound.
    */
   datasourceChanged() {
-    this.resetDropdownItems();
     // if values was first databound before datasource re-trigger values change
-    if (Array.isArray(this.selectedValues)) {
-      this.selectedValuesChanged(this.selectedValues);
-    } else {
-      this.filterDropdownItems();
-    }
+    if (Array.isArray(this.selectedValues)) this.selectedValuesChanged(this.selectedValues);
+    this.filterDropdownItems();
   }
 }

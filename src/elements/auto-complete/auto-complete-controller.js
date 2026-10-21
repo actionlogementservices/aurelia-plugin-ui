@@ -39,7 +39,7 @@ export class AutoCompleteController {
    * @returns {Promise<(U | T)[]>} corresponding results
    */
   async getItems(itemValues) {
-    if (!itemValues || !Array.isArray(itemValues)) return;
+    if (!this._getItems || !Array.isArray(itemValues)) return [];
     const items = await this._getItems(itemValues);
     return items?.map(item => this._buildItemModel(item)) || [];
   }
