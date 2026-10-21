@@ -1,6 +1,10 @@
+import { AureliaConfiguration } from 'aurelia-configuration';
 import environment from './environment';
 
 export function configure(aurelia) {
+  // private urls are defined in the git-ignored aurelia_project/environments/<env>.local.js
+  aurelia.container.get(AureliaConfiguration).set('api.address', environment.addressApiUrl);
+
   aurelia.use
     .standardConfiguration()
     // load the plugin ../src

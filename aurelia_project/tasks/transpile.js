@@ -15,7 +15,10 @@ const buildOptions = new Configuration(project.build.options);
 const useCache = buildOptions.isApplicable('cache');
 
 function configureEnvironment() {
-  return gulp.src(`aurelia_project/environments/${env}.js`, {
+  // an optional, git-ignored `<env>.local.js` overrides `<env>.js` (e.g. for private urls)
+  const localEnvFile = `aurelia_project/environments/${env}.local.js`;
+  const envFile = fs.existsSync(localEnvFile) ? localEnvFile : `aurelia_project/environments/${env}.js`;
+  return gulp.src(envFile, {
       since: gulp.lastRun(configureEnvironment)
     })
     .pipe(rename('environment.js'))

@@ -199,6 +199,15 @@ export class Home {
     });
   }
 
+  setSelectedCustomAddress() {
+    this.selectedAdresse = Adresse.fromObject({
+      isAddressNotListed: true,
+      nomVoie: 'Avenue des Champs Elysées',
+      codePostal: '75008',
+      commune: 'Paris'
+    });
+  }
+
   showInfo() {
     this.toast.info('Info!');
   }
