@@ -40,9 +40,13 @@ export class SimpleTable {
   @bindable({ defaultBindingMode: bindingMode.toView })
   disabled = false;
 
-  /** Maximal number of displayed rows. @type {number} */
-  @bindable({ defaultBindingMode: bindingMode.toView })
-  maxRows = 50;
+  /**
+   * Maximal number of displayed rows, the page size when paginated (defaults: 50, 10 when paginated).
+   * Two-way: with a `{ items, totalCount }` datasource, the parent reloads the page when the user changes it.
+   * @type {number | undefined}
+   */
+  @bindable({ defaultBindingMode: bindingMode.twoWay })
+  maxRows;
 
   /** CSS max height of the table. @type {string} */
   @bindable({ defaultBindingMode: bindingMode.toView })
@@ -72,6 +76,10 @@ export class SimpleTable {
   @bindable({ defaultBindingMode: bindingMode.toView })
   warningTemplateText = `Seuls les {maxRows} premiers résultats sont affichés.`;
 
+  /** Text corresponding to 'items per page'. @type {string} */
+  @bindable({ defaultBindingMode: bindingMode.toView })
+  pageSizeText = 'éléments par page';
+
   /** Whether we can disable some rows or not. @type {boolean} */
   @bindable({ defaultBindingMode: bindingMode.oneTime })
   disableableRows = false;
@@ -80,12 +88,25 @@ export class SimpleTable {
   @bindable({ defaultBindingMode: bindingMode.oneTime })
   disablePropName = 'disabled';
 
+  /** Enable/Disable pagination, `maxRows` being the page size. @type {boolean} */
+  @bindable({ defaultBindingMode: bindingMode.toView })
+  paginated = false;
+
+  /**
+   * Current page (1-based).
+   * With a `{ items, totalCount }` datasource, the parent loads the page itself when it changes.
+   * @type {number}
+   */
+  @bindable({ defaultBindingMode: bindingMode.twoWay })
+  page = 1;
+
   /** Unique id to identify the custom element instance. @type {string} */ uniqueId = generateUniqueId();
   /** Html container of the custom element. @type {HTMLTemplateElement} */ _container;
   /** Displayed items. @type {(T & {selected?: boolean})[]} */ items = [];
   /** The total count of items including not displayed one. @type {number} */ totalCount = 0;
   /** Cells tooltips @type {Tooltip[]} */ _tooltips;
   /** Count of selectable items @type {number} */ selectableItemCount = this.items.length;
+  /** Sort applied to the whole array datasource when paginated @type {(a: T, b: T) => number} */ _sortComparer;
 
   /**
    * Creates an instance of the `simple-table` custom element.
@@ -108,7 +129,7 @@ export class SimpleTable {
    * Defines the logic triggered when the custom element is removed from the DOM.
    */
   detached() {
-    if (this._tooltips) [...this._tooltips].map(tooltip => tooltip?.dispose());
+    for (const tooltip of this._tooltips ?? []) tooltip?.dispose();
   }
 
   /**
@@ -122,7 +143,9 @@ export class SimpleTable {
     if (Array.isArray(this.datasource)) {
       // the datasource is a simple array of items
       this.totalCount = this.datasource.length;
-      this.items = this.datasource.slice(0, this.maxRows);
+      const source = this._sortComparer ? [...this.datasource].sort(this._sortComparer) : this.datasource;
+      const page = this.paginated ? this.page : 1;
+      this.items = source.slice((page - 1) * this.pageSize, page * this.pageSize);
       this.calculateSelectableItemCount();
       this.addSelectionTooltips();
       return;
@@ -131,7 +154,7 @@ export class SimpleTable {
     if (items && totalCount) {
       // the datasource is a { items, totalCount } object
       this.totalCount = totalCount;
-      this.items = items.slice(0, this.maxRows);
+      this.items = items.slice(0, this.pageSize);
       this.calculateSelectableItemCount();
       this.addSelectionTooltips();
     }
@@ -151,7 +174,7 @@ export class SimpleTable {
     const propName = this.disablePropName;
 
     const itemsWithProperty = this.items.filter(
-      item => Object.hasOwnProperty.call(item, propName) && typeof item[propName] === 'boolean'
+      item => Object.hasOwn(item, propName) && typeof item[propName] === 'boolean'
     ).length;
 
     // Still check if all the items has the property just in case
@@ -180,46 +203,67 @@ export class SimpleTable {
     // apply sort order to selected column.
     const sortOrder = isNil(columnToSort.sortOrder) || columnToSort.sortOrder === 'desc' ? 'asc' : 'desc';
     columnToSort.sortOrder = sortOrder;
+    const comparer = sortPerKey(sortOrder, columnToSort.sortType, columnToSort.cellKey);
+    if (this.paginated && Array.isArray(this.datasource)) {
+      // sort the whole datasource, not only the displayed page
+      this._sortComparer = comparer;
+      this.goToPage(1);
+      this.setDisplayedItems();
+      return;
+    }
+    // A paginated { items, totalCount } datasource is only sorted per page, emit a sort event if server sort is needed
     this.removeSelectionTooltips();
     // order items
-    this.items = this.items.sort(sortPerKey(sortOrder, columnToSort.sortType, columnToSort.cellKey));
+    this.items.sort(comparer);
     this.addSelectionTooltips();
+  }
+
+  /**
+   * Displays the specified page.
+   * @param {number} page page number (1-based)
+   */
+  goToPage(page) {
+    this.page = Math.min(Math.max(1, page), this.pageCount);
+  }
+
+  /**
+   * Changes the page size and restarts from the first page.
+   * @param {number | string} size new page size
+   */
+  changePageSize(size) {
+    this.maxRows = Number(size);
+    this.goToPage(1);
+    this.setDisplayedItems();
   }
 
   /**
    * Defines the logic triggered when item is clicked.
    * @param {T & {selected: boolean}} item item clicked or selected
    * @param {Event} event click event
-   * @returns {boolean} let event propagates
+   * @returns {boolean} always true: aurelia prevents the default action (links, inputs in cells) otherwise
    */
   toggleItemSelection(item, event) {
-    // no selection
-    if (
-      !this.valueKey ||
-      this.selectionMode === 'none' ||
-      (this.disableableRows && item[this.disablePropName] === true)
-    )
-      return true;
-    // click on button, a, ...
     const target = /** @type {HTMLElement} */ (event.target);
-    if (target?.closest('a, button, input, select, textarea')) {
-      return true;
+    const selectable =
+      this.valueKey &&
+      this.selectionMode !== 'none' &&
+      !(this.disableableRows && item[this.disablePropName] === true) &&
+      // click on button, a, ...
+      !target?.closest('a, button, input, select, textarea');
+    if (selectable) {
+      const index = this.selectedItems.indexOf(item);
+      if (index === -1) {
+        // not selected => select
+        this.selectedItems = this.selectionMode === 'multiple' ? [...this.selectedItems, item] : [item];
+      } else {
+        // selected => unselect
+        this.selectedItems.splice(index, 1);
+        this.selectedItems = [...this.selectedItems];
+      }
+      this.synchronizeSelection();
+      this.triggerChangeEvent(this.selectedItems);
+      this.triggerBlurEvent(this.selectedItems);
     }
-    // do selection logic
-    const actualSelection = this.selectedItems;
-    const index = actualSelection.indexOf(item);
-    if (index === -1) {
-      // not selected => select
-      this.selectedItems = this.selectionMode === 'multiple' ? [...this.selectedItems, item] : [item];
-    } else {
-      // selected => unselect
-      this.selectedItems.splice(index, 1);
-      this.selectedItems = [...this.selectedItems];
-    }
-    this.synchronizeSelection();
-    this.triggerChangeEvent(this.selectedItems);
-    this.triggerBlurEvent(this.selectedItems);
-
     return true;
   }
 
@@ -323,6 +367,15 @@ export class SimpleTable {
    * Defines the logic triggered when `datasource` attribute is databound.
    */
   datasourceChanged() {
+    // a new array datasource restarts from the first page (a { items, totalCount } one is already the requested page)
+    if (Array.isArray(this.datasource)) this.goToPage(1);
+    this.setDisplayedItems();
+  }
+
+  /**
+   * Defines the logic triggered when `page` attribute is databound.
+   */
+  pageChanged() {
     this.setDisplayedItems();
   }
 
@@ -349,17 +402,49 @@ export class SimpleTable {
    * Are all items displayed?
    * @returns {boolean} true if all items from the datasource are displayed
    */
-  @computedFrom('items', 'maxRows')
+  @computedFrom('items', 'maxRows', 'paginated')
   get allItemsDisplayed() {
-    return this.totalCount <= this.maxRows;
+    return this.paginated || this.totalCount <= this.pageSize;
+  }
+
+  /**
+   * Effective `maxRows`, a number even when set as a plain attribute.
+   * @returns {number} page size
+   */
+  @computedFrom('maxRows', 'paginated')
+  get pageSize() {
+    return Number(this.maxRows ?? (this.paginated ? 10 : 50));
+  }
+
+  /**
+   * Number of pages.
+   * @returns {number} page count (at least 1)
+   */
+  @computedFrom('totalCount', 'maxRows', 'paginated')
+  get pageCount() {
+    return Math.max(1, Math.ceil(this.totalCount / this.pageSize));
+  }
+
+  /**
+   * Page numbers to display: first, last and current ±1, `undefined` standing for an ellipsis.
+   * @returns {(number | undefined)[]} page numbers
+   */
+  @computedFrom('page', 'pageCount')
+  get pages() {
+    const pages = [];
+    for (let page = 1; page <= this.pageCount; page++) {
+      if (page === 1 || page === this.pageCount || Math.abs(page - this.page) <= 1) pages.push(page);
+      else if (pages.at(-1) !== undefined) pages.push(undefined);
+    }
+    return pages;
   }
 
   /**
    * Warning text regarding items not displayed.
    * @returns {string} warning message
    */
-  @computedFrom('maxRows', 'warningTemplateText')
+  @computedFrom('maxRows', 'paginated', 'warningTemplateText')
   get notDisplayedWarningText() {
-    return this.warningTemplateText.replace('{maxRows}', this.maxRows.toString());
+    return this.warningTemplateText.replace('{maxRows}', this.pageSize.toString());
   }
 }

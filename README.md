@@ -667,17 +667,17 @@ The selection custom elements expose the user selection in two complementary for
 
 ### `simple-table` custom element
 
-**Mutliple selection** and **scrollable** html table with custom **column template** and **in memory sorting**, well adapted for small number of items (typically **less than 100**).
+**Multiple selection** and **scrollable** html table with custom **column template** and **in memory sorting**, well adapted for small number of items (typically **less than 100**) or **paginated**.
 
 ![simple-table rendering](./doc/screenshot/simple-table-2.png)
 
 - Use the [`<simple-table>`](./doc/src-elements-simple-table_simple-table.md) element in your view and define [columns](./doc/src-elements-simple-table_column.md) with `header` and `cell-key` attributes and optionally a column template.
-- Data bind the `datasource` attribute to your viewmodel to retrieve user selection as array of items.
-- Data bind the `values` attribute to your viewmodel to retrieve user selection as an array of items.
+- Data bind the `datasource` attribute to your viewmodel to provide the items to display.
+- Data bind the `selected-items` attribute to your viewmodel to retrieve user selection as an array of items.
 
   ```html
   <simple-table
-    parent-ref="$this"
+    parent-ref.bind="$this"
     datasource.bind="itemsList"
     selected-items.bind="selectedItems"
     selection-mode="multiple"
@@ -738,7 +738,10 @@ The selection custom elements expose the user selection in two complementary for
   | Attribute name | Role | Possible values | Default value |
   |--- |---|--- |---|
   | `value-key` | Property of the item used to differentiate them | Any string representing a property present on the item | `name` |
-  | `max-rows` | Maximal number of displayed rows | Any number > 0 | `50` |
+  | `max-rows` | Maximal number of displayed rows, the page size when paginated (two-way binding) | Any number > 0 | `50`, `10` when paginated |
+  | `paginated` | Enable/disable the pagination | `true` or `false` | `false` |
+  | `page` | Current page, 1-based (two-way binding) | Any number > 0 | `1` |
+  | `page-size-text` | Text displayed next to the page size selector | Any string | `éléments par page` |
   | `max-height` | CSS max height of the table | Any css height expression | `500px` |
   | `selection-mode` | Selection mode | `none` or `single` or `multiple` | `none` |
   | `selected-items` | Selected items | Array of objects | `[]` |
@@ -751,6 +754,16 @@ The selection custom elements expose the user selection in two complementary for
   | `disableable-rows` | Are rows disableable | `true` or `false` | `false` |
   | `disable-prop-name` | Property name to check if row is disabled | Any string | `disabled` |
   | `parent-ref` | Direct reference to the parent component view model. Gives access to the actual class, method and properties  | Any class | `none` |
+
+- Pagination: set `paginated="true"`, a page size selector (`10`, `20`, `50` or `100`) is displayed next to the pagination.
+  - With an array `datasource`, pagination and sorting are done in memory on the whole array.
+  - With a `{ items, totalCount }` `datasource` (`pageResult` below), the parent loads the requested page itself: bind `page` and `max-rows` to viewmodel properties and reload on their change. Sorting then only applies to the displayed page.
+
+  ```html
+  <simple-table datasource.bind="pageResult" paginated="true" page.bind="page" max-rows.bind="pageSize">
+    ...
+  </simple-table>
+  ```
 
 - You can specify the optional following attributes on the `column` element :
   | Attribute name | Role | Possible values | Default value |

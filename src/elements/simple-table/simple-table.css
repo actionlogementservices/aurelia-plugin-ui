@@ -12,9 +12,13 @@ simple-table table thead th {
   z-index: 2;
 }
 
-simple-table table thead th a {
-  text-decoration: inherit;
+simple-table table thead th button {
+  font: inherit;
   color: inherit;
+  text-align: inherit;
+  background: none;
+  border: 0;
+  padding: 0;
 }
 
 simple-table table tbody tr.selection {
