@@ -120,3 +120,22 @@ export const isValidDate = (value, format = 'YYYY-MM-DD') => {
 export function preventEventPropagation(event) {
   event.stopPropagation();
 }
+
+/**
+ * Removes the input mask from a value of the html view.
+ * @param {string} value value from html view including the mask
+ * @returns {number | undefined} number or undefined in case of failure
+ */
+export function cleanInputMask(value) {
+  const cleanValue = value
+    .replaceAll(/\s?_?€?/g, '')
+    .replaceAll(',', '.')
+    .trim();
+
+  const parsedValue = Number.parseFloat(cleanValue);
+  if (Number.isNaN(parsedValue)) {
+    return;
+  }
+
+  return parsedValue;
+}
