@@ -1,0 +1,15 @@
+<template>
+  <require from="./als-field.css"></require>
+
+  <div class="form-group">
+    <label if.bind="label" for.bind="controlId" class="form-label text-primary">
+      ${label}
+      <span if.bind="required" class="text-danger" aria-hidden="true">*</span>
+    </label>
+    <div class="input-group">
+      <slot></slot>
+    </div>
+    <div if.bind="hint" id.bind="hintId" class="form-text">${hint}</div>
+    <small show.bind="errorMessage" id.bind="errorId" role="alert" class="text-danger">${errorMessage}</small>
+  </div>
+</template>

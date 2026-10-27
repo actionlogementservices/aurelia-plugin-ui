@@ -1,6 +1,6 @@
 import { computedFrom, inject, NewInstance } from 'aurelia-framework';
 import { faker } from '@faker-js/faker';
-import { Validator, ValidationControllerFactory } from 'aurelia-validation';
+import { Validator, ValidationControllerFactory, ValidationRules } from 'aurelia-validation';
 
 import { ExempleDialog } from '../dialogs/exemple-dialog';
 import { AutoCompleteController } from 'resources/elements/auto-complete/auto-complete-controller';
@@ -12,7 +12,7 @@ import { Adresse } from 'resources/elements/auto-complete/adresse';
 export const wait = delay => new Promise(resolve => setTimeout(resolve, delay));
 
 /** @typedef {{ disabled: boolean, id: number, name: string; headcount: number, headcountMinusOne: number, email: string; color: string }} Item */
-/** @typedef {{ name: string; email: string; age: number, height: number, money: number, years: Array<number> }} FormData */
+/** @typedef {{ name: string; email: string; age: number, height: number, money: number, password: string, year: number, years: Array<number> }} FormData */
 /** @typedef {OptionsFlags<FormData> = {[Property in keyof FormData]: boolean;}} FormError */
 
 @inject(
@@ -54,7 +54,8 @@ export class Home {
    * @param {LockService} lock
    * @param {DialogService} dialog
    */
-  constructor(controller, toast, lock, dialog) {
+  constructor(controller, toast, lock, dialog, validator, validationControllerFactory) {
+    this.validationController = validationControllerFactory.createForCurrentScope();
     this.maxDate.setMonth(this.maxDate.getMonth() + 1);
     this.mindate.setMonth(this.mindate.getMonth() - 1);
     this.maxDateString = this.maxDate.toISOString();
@@ -88,15 +89,33 @@ export class Home {
       age: 20,
       height: 0,
       money: 0,
+      password: '',
+      year: null,
       years: [2026]
     };
 
+    ValidationRules.ensure('name')
+      .required()
+      .ensure('email')
+      .required()
+      .email()
+      .ensure('age')
+      .required()
+      .range(18, 150)
+      .ensure('height')
+      .required()
+      .min(0)
+      .ensure('money')
+      .required()
+      .min(0)
+      .ensure('password')
+      .required()
+      .minLength(8)
+      .ensure('year')
+      .required()
+      .on(this.formData);
+
     this.formErrors = {
-      name: false,
-      email: false,
-      age: false,
-      height: false,
-      money: false,
       years: false
     };
 
@@ -249,13 +268,14 @@ export class Home {
     return this.selectedDialogMode === 'modal';
   }
 
-  validateForm() {
-    this.isFormValid = Object.values(this.formErrors).every(error => !error);
+  async validateForm() {
+    const { valid } = await this.validationController.validate();
+    this.isFormValid = valid && Object.values(this.formErrors).every(error => !error);
     return this.isFormValid;
   }
 
-  handleSubmit() {
-    if (this.validateForm()) {
+  async handleSubmit() {
+    if (await this.validateForm()) {
       this.toast.success('Form submitted successfully!');
     } else {
       this.toast.error('Form has errors. Please fix them before submitting.');

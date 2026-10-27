@@ -1,5 +1,7 @@
 import { valueConverter } from 'aurelia-framework';
 
+import { cleanInputMask } from '../core/functions';
+
 // Define the options for different number formats, to be synchronized with input-mask.js mask configurations.
 /** @type {Intl.NumberFormatOptions} */
 const integerOptions = {
@@ -23,6 +25,16 @@ const currencyOptions = {
   roundingMode: 'floor'
 };
 
+/**
+ * Implements a **`formInputNumberFormat` value converter** that formats a number for a masked input and parses
+ * the masked input back to a number. It works together with the `input-mask` attribute, using the same type.
+ * @category valueconverter
+ * @example
+ * <input
+ *     class="form-control"
+ *     input-mask="currency"
+ *     value.bind="montant | formInputNumberFormat:'currency' & validate" />
+ */
 @valueConverter('formInputNumberFormat')
 export class FormInputNumberFormatValueConverter {
   /**
@@ -53,5 +65,14 @@ export class FormInputNumberFormatValueConverter {
     }
 
     return new Intl.NumberFormat(locale, options).format(numberValue);
+  }
+
+  /**
+   * Converts the value of the html view to the javascript model.
+   * @param {string} value value from html view including the mask
+   * @returns {number | undefined} number or undefined in case of failure
+   */
+  fromView(value) {
+    return cleanInputMask(value);
   }
 }

@@ -5,6 +5,10 @@
  */
 
 import { PLATFORM } from 'aurelia-pal';
+import { validationMessages } from 'aurelia-validation';
+
+import { frenchValidationMessages } from './core/validation-messages';
+
 export { ToastService } from './core/toast-service/toast-service';
 export { LockService } from './core/lock-service/lock-service';
 export { DialogService } from './core/dialog-service/dialog-service';
@@ -19,6 +23,8 @@ export { Adresse } from './elements/auto-complete/adresse';
  * @param {FrameworkConfiguration} aurelia aurelia framework
  */
 function configure(aurelia) {
+  Object.assign(validationMessages, frenchValidationMessages);
+
   aurelia.globalResources([
     PLATFORM.moduleName('./elements/auto-complete/auto-complete'),
     PLATFORM.moduleName('./elements/auto-complete/badges-auto-complete'),
@@ -41,6 +47,8 @@ function configure(aurelia) {
     PLATFORM.moduleName('./elements/lock/lock'),
     PLATFORM.moduleName('./elements/input-datepicker/input-datepicker'),
 
+    PLATFORM.moduleName('./elements/forms/als-field/als-field'),
+    PLATFORM.moduleName('./elements/forms/als-password-toggle/als-password-toggle'),
     PLATFORM.moduleName('./elements/forms/als-input-number/als-input-number'),
     PLATFORM.moduleName('./elements/forms/als-input-text/als-input-text'),
     PLATFORM.moduleName('./elements/forms/als-multi-select/als-multi-select'),
@@ -50,6 +58,7 @@ function configure(aurelia) {
 
     PLATFORM.moduleName('./layouts/als-pre-login/als-pre-login'),
 
+    PLATFORM.moduleName('./attributes/input-filter'),
     PLATFORM.moduleName('./attributes/input-mask'),
     PLATFORM.moduleName('./attributes/no-submit'),
 
