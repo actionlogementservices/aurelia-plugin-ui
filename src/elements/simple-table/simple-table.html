@@ -21,21 +21,30 @@
         <tr>
           <!-- optional tick header -->
           <th if.bind="selectionMode != 'none'" class="selection">
-            <i
-              role="button"
-              click.trigger="toggleAllSelection()"
+            <button
+              type="button"
               if.bind="selectionMode == 'multiple'"
-              class="bi bi-check-all fs-5 ${items.length == selectedItems.length ? 'text-secondary' : 'text-light'}"></i>
+              disabled.bind="disabled"
+              click.trigger="toggleAllSelection()"
+              aria-label="Tout sélectionner">
+              <i
+                class="bi bi-check-all fs-5 ${items.length == selectedItems.length ? 'text-secondary' : 'text-light'}"
+                aria-hidden="true"></i>
+            </button>
           </th>
           <th repeat.for="column of columns" css="width: ${column.width}" scope="col" class="align-middle">
-            <a if.bind="column.sortable" role="button" click.trigger="sortDisplayedItems(column)">
+            <button
+              type="button"
+              if.bind="column.sortable"
+              disabled.bind="disabled"
+              click.trigger="sortDisplayedItems(column)">
               <compose
                 if.bind="column.headerTemplate"
                 view.bind="column.headerTemplate"
                 containerless></compose>
               <span if.bind="!column.headerTemplate">${column.header}</span>
-              <i role="button" class="bi bi-${column.sortIcon}"></i>
-            </a>
+              <i class="bi bi-${column.sortIcon}" aria-hidden="true"></i>
+            </button>
             <span if.bind="!column.sortable">
               <compose
                 if.bind="column.headerTemplate"
@@ -54,7 +63,7 @@
           class="align-middle ${item.selected ? 'table-secondary' : ''} ${selectionMode != 'none' ? 'selection' : ''}">
           <!-- optional tick cell -->
           <td if.bind="selectionMode != 'none'" class="py-0 align-middle selection">
-            <i role="button" if.bind="item.selected" class="bi bi-check text-secondary fs-5"></i>
+            <i if.bind="item.selected" class="bi bi-check text-secondary fs-5"></i>
           </td>
           <td
             repeat.for="column of columns"
@@ -68,5 +77,54 @@
         <tr if.bind="items.length == 0" class="table-info"><td colspan="100%">${noResultText}</td></tr>
       </tbody>
     </table>
+  </div>
+  <!-- pagination -->
+  <div if.bind="paginated" class="d-flex align-items-center gap-3 mt-2">
+    <label class="d-flex align-items-center gap-2 small">
+      <select
+        class="form-select form-select-sm w-auto"
+        disabled.bind="disabled"
+        change.trigger="changePageSize($event.target.value)">
+        <option repeat.for="size of [10, 20, 50, 100]" value.bind="size" selected.bind="size === pageSize">
+          ${size}
+        </option>
+      </select>
+      ${pageSizeText}
+    </label>
+    <nav if.bind="pageCount > 1" aria-label="Pagination" class="ms-auto">
+      <ul class="pagination pagination-sm justify-content-end mb-0">
+        <li class="page-item ${page <= 1 ? 'disabled' : ''}">
+          <button
+            type="button"
+            class="page-link"
+            disabled.bind="page <= 1"
+            click.trigger="goToPage(page - 1)"
+            aria-label="Page précédente">
+            <i class="bi bi-chevron-left"></i>
+          </button>
+        </li>
+        <li repeat.for="p of pages" class="page-item ${p === page ? 'active' : ''} ${p ? '' : 'disabled'}">
+          <span if.bind="!p" class="page-link">…</span>
+          <button
+            else
+            type="button"
+            class="page-link"
+            aria-current.bind="p === page ? 'page' : null"
+            click.trigger="goToPage(p)">
+            ${p}
+          </button>
+        </li>
+        <li class="page-item ${page >= pageCount ? 'disabled' : ''}">
+          <button
+            type="button"
+            class="page-link"
+            disabled.bind="page >= pageCount"
+            click.trigger="goToPage(page + 1)"
+            aria-label="Page suivante">
+            <i class="bi bi-chevron-right"></i>
+          </button>
+        </li>
+      </ul>
+    </nav>
   </div>
 </template>
