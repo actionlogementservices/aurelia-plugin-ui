@@ -911,3 +911,17 @@ The following peer dependencies are required:
 - `aurelia-fetch-client 1.8.2`,
 - `aurelia-configuration 2.0.0`.
 - `aurelia-validation 2.0.0`
+
+## Release
+
+The package is published on npm by the `Release` GitHub workflow, with npm trusted publishing (no npm token is stored in GitHub):
+
+1. In your pull request, bump the version with `npm run bump -- <major|minor|patch|prerelease>` (updates `package.json` and `package-lock.json` only).
+1. When the pull request is merged on `main`, the workflow runs the tests and **stages** the new version on npm.
+   Prerelease versions (e.g. `5.2.0-0`) are staged with the `next` dist-tag.
+1. The workflow creates a draft GitHub release and an issue assigned to the person who merged, as a reminder to:
+   - approve the staged version in the **Staged Packages** tab of the [npm package](https://www.npmjs.com/package/@actionlogementservices/aurelia-plugin-ui) (2FA required),
+   - publish the draft GitHub release, which creates the git tag,
+   - close the issue.
+
+If the staged version is rejected, delete the draft release and close the issue.
