@@ -52,7 +52,7 @@ jobs:
           else
             echo "publish=true" >> "$GITHUB_OUTPUT"
           fi
-          # prereleases (e.g. 5.1.0-0) go to the 'next' dist-tag, like release-it does
+          # prereleases (e.g. 5.1.0-0) go to the 'next' dist-tag
           if [[ "$VERSION" == *-* ]]; then
             echo "dist-tag=next" >> "$GITHUB_OUTPUT"
             echo "prerelease=--prerelease" >> "$GITHUB_OUTPUT"
