@@ -131,7 +131,7 @@
     "jsdoc": "^4.0.4",
     "jsdoc-escape-at": "^1.0.1",
     "kis-jsdoc-plugin": "^2.2.0",
-    "minimatch": "^10.0.1",
+    "minimatch": "^11.0.1",
     "open": "^8.4.2",
     "prettier": "^3.4.2",
     "promise-polyfill": "^8.3.0",
