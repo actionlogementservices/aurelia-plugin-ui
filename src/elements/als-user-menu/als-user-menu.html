@@ -1,0 +1,19 @@
+<template>
+  <require from="./als-user-menu.css"></require>
+
+  <als-dropdown toggle-class="als-user-menu-toggle" menu-class="dropdown-menu-end">
+    <span slot="toggle" class="d-flex flex-column align-items-center gap-1">
+      <span class="als-user-menu-avatar" aria-hidden="true">${initials}</span>
+      <span>${label}</span>
+    </span>
+    <a
+      repeat.for="item of items"
+      class="als-user-menu-item"
+      href.bind="item.href || '#'"
+      role.bind="item.href ? null : 'button'"
+      click.delegate="item.href || item.click()">
+      <i if.bind="item.icon" class="bi ${item.icon}" aria-hidden="true"></i>
+      ${item.label}
+    </a>
+  </als-dropdown>
+</template>
