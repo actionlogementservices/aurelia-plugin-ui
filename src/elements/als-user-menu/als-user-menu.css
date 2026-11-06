@@ -1,0 +1,68 @@
+als-user-menu {
+  --als-user-menu-color: var(--als-blue);
+
+  /* reset the form-select / dropdown-toggle look inherited from als-dropdown */
+  .als-user-menu-toggle {
+    width: auto;
+    padding: 0.25rem 0.5rem;
+    border: 0;
+    background: none;
+    color: var(--als-user-menu-color);
+    font-weight: 600;
+
+    &::after {
+      display: none;
+    }
+
+    &:focus {
+      box-shadow: none;
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--als-red);
+      outline-offset: 2px;
+    }
+
+    &:hover .als-user-menu-avatar {
+      transform: scale(1.15);
+    }
+  }
+
+  .als-user-menu-avatar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 50%;
+    background-color: var(--als-user-menu-color);
+    color: var(--bs-white);
+    transition: transform 0.2s ease-in-out;
+
+    @media (prefers-reduced-motion: reduce) {
+      transition: none;
+    }
+  }
+
+  .dropdown-menu {
+    --bs-dropdown-link-active-bg: var(--bs-neutral-100);
+
+    .dropdown-item {
+      padding: 0;
+    }
+  }
+
+  .als-user-menu-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.5rem 1rem;
+    color: var(--als-user-menu-color);
+    font-weight: 600;
+    text-decoration: none;
+
+    .bi {
+      font-size: 1.25rem;
+    }
+  }
+}
