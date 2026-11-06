@@ -11,7 +11,7 @@
       class="als-user-menu-item"
       href.bind="item.href || '#'"
       role.bind="item.href ? null : 'button'"
-      click.delegate="item.href || item.click()">
+      click.delegate="item.href ? true : item.click()">
       <i if.bind="item.icon" class="bi ${item.icon}" aria-hidden="true"></i>
       ${item.label}
     </a>
