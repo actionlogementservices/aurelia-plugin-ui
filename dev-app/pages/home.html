@@ -790,17 +790,22 @@
                     </div>
                     <div class="row">
                       <div class="col">
-                        <als-multi-select
-                          id="years"
-                          label="Years"
-                          name="years"
-                          required="true"
-                          value.bind="formData.years"
-                          items.bind="yearOptions"
-                          is-error.bind="formErrors.years"></als-multi-select>
-                        <p>YEARS = [${formData.years}] | isError = ${formErrors.years}</p>
+                        <als-field label="Years" required="true">
+                          <als-multi-select
+                            items.bind="yearOptions"
+                            value.bind="formData.years & validate"></als-multi-select>
+                        </als-field>
+                        <p>YEARS = [${formData.years}]</p>
                       </div>
-                      <div class="col"></div>
+                      <div class="col">
+                        <als-field label="Date" required="true">
+                          <als-datepicker
+                            value.bind="formData.date & validate"
+                            min-date.bind="mindateString"
+                            max-date.bind="maxDateString"></als-datepicker>
+                        </als-field>
+                        <p>DATE = ${formData.date}</p>
+                      </div>
                     </div>
                     <div class="row">
                       <div class="col">

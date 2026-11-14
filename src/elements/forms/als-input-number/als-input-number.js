@@ -26,6 +26,8 @@ const authorizedKeyList = new Set([
 ]);
 
 /**
+ * @deprecated use `<als-field><input class="form-control" input-mask="integer"
+ * value.bind="... | formInputNumberFormat:'integer' & validate"></als-field>` instead.
  * @augments FormInput<number>
  */
 @useView('./als-input-number.html')

@@ -2,6 +2,8 @@ import { bindable, bindingMode, computedFrom, useView } from 'aurelia-framework'
 import { FormInput } from '../forms-input';
 
 /**
+ * @deprecated use `<als-field><input type="password" class="form-control" value.bind="... & validate">
+ * <als-password-toggle></als-password-toggle></als-field>` instead.
  * @augments FormInput<string>
  */
 @useView('./als-input-password.html')

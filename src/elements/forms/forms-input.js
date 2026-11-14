@@ -2,6 +2,7 @@ import { bindable, bindingMode } from 'aurelia-framework';
 
 /**
  * Generic base for form inputs.
+ * @deprecated validate native inputs placed in an `als-field` with aurelia-validation (`& validate`) instead.
  * @template T
  */
 export class FormInput {

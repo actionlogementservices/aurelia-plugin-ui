@@ -1,3 +1,9 @@
+/* fills the als-field input-group like a native .form-select */
+als-multi-select {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
 .multi-select-toggle {
   width: 100%;
   border: var(--bs-border-width) solid var(--bs-border-color);
@@ -21,8 +27,9 @@
   }
 }
 
+/* at least as wide as the toggle, wider when a label needs it */
 .multi-select-menu {
-  width: 100%;
+  min-width: 100%;
 }
 
 .multi-select-toggle-text {

@@ -1,11 +1,33 @@
-import { bindable, bindingMode, computedFrom, useView } from 'aurelia-framework';
-import { FormInput } from '../forms-input';
+import { DOM, inject, bindable, bindingMode, useView } from 'aurelia-framework';
 
 /**
- * @augments FormInput<string> The date value is represented as an string.
+ * Implements the **`als-datepicker` custom element**: an `input-datepicker` with the calendar icon.
+ * Place it inside an `als-field` to get the label and the validation errors, e.g.
+ * `<als-field label="Date"><als-datepicker value.bind="model.date & validate"></als-datepicker></als-field>`.
+ *
+ * Like a native control, the element fires a `blur` event when the focus leaves it, so the default
+ * `& validate` trigger works.
+ * @category forms
  */
 @useView('./als-datepicker.html')
-export class AlsDatepicker extends FormInput {
+@inject(DOM.Element)
+export class AlsDatepicker {
+  /** Selected date in ISO string format. @type {string} */
+  @bindable({ defaultBindingMode: bindingMode.twoWay })
+  value;
+
+  /** Placeholder text @type {string} */
+  @bindable({ defaultBindingMode: bindingMode.toView })
+  placeholder = '';
+
+  /** Disabled @type {boolean} */
+  @bindable({ defaultBindingMode: bindingMode.toView })
+  disabled = false;
+
+  /** Readonly @type {boolean} */
+  @bindable({ defaultBindingMode: bindingMode.toView })
+  readonly = false;
+
   /** Auto-hide dropdown after selection @type {boolean} */
   @bindable({ defaultBindingMode: bindingMode.toView })
   autohide = true;
@@ -20,38 +42,28 @@ export class AlsDatepicker extends FormInput {
 
   /** Minimum selectable date in ISO string format, empty for no limit @type {string} */
   @bindable({ defaultBindingMode: bindingMode.toView })
-  minDate;
+  minDate = '';
 
   /** Maximum selectable date in ISO string format, empty for no limit @type {string} */
   @bindable({ defaultBindingMode: bindingMode.toView })
-  maxDate;
+  maxDate = '';
 
   /**
-   * Id of the element describing the error, exposed via `aria-describedby` once the field is invalid.
-   * @type {string}
+   * Creates an instance of AlsDatepicker.
+   * @param {Element} element the custom element
    */
-  @computedFrom('id', 'isError')
-  get ariaDescribedby() {
-    return this.isError ? `${this.id}-error` : '';
+  constructor(element) {
+    this.element = element;
   }
 
   /**
-   * Validate date-specific rules.
-   * @param {string} value date value to validate
-   * @returns {boolean} true if valid, false otherwise
+   * Fires `blur` on the custom element once the focus leaves it, as `& validate` listens to the target element.
+   * @param {FocusEvent} event the focusout event of an inner element
+   * @returns {boolean} true to continue processing
    */
-  validateValue(value) {
-    const convertedValue = new Date(value);
-    if (this.minDate && convertedValue < new Date(this.minDate)) {
-      this.isError = true;
-      this.errorMessage = 'La date est antérieure à la date minimale.';
-      return false;
-    }
-
-    if (this.maxDate && convertedValue > new Date(this.maxDate)) {
-      this.isError = true;
-      this.errorMessage = 'La date est postérieure à la date maximale.';
-      return false;
+  handleFocusout(event) {
+    if (!this.element.contains(/** @type {Node} */ (event.relatedTarget))) {
+      this.element.dispatchEvent(new FocusEvent('blur'));
     }
 
     return true;

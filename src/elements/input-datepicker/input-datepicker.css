@@ -16,6 +16,10 @@ input-datepicker.form-select.is-invalid input.form-control {
     16px 12px,
     calc(0.75em + 0.375rem) calc(0.75em + 0.375rem);
 }
+/* als-field marks the inner input as invalid, the border belongs to the host */
+input-datepicker.form-select:has(> input.is-invalid) {
+  border-color: var(--bs-form-invalid-border-color);
+}
 input-datepicker.form-select:focus-within {
   border-color: var(--bs-border-color);
   outline: solid 2px var(--bs-danger);

@@ -2,6 +2,7 @@ import { bindable, bindingMode, computedFrom, useView } from 'aurelia-framework'
 import { FormInput } from '../forms-input';
 
 /**
+ * @deprecated use `<als-field><select class="form-select" value.bind="... & validate">...</select></als-field>` instead.
  * @template T
  * @augments FormInput<T>
  */

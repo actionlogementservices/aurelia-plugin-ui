@@ -104,7 +104,11 @@ export class AlsField {
   }
 
   attached() {
-    this.control = this.element.querySelector('input, select, textarea');
+    // labelable element styled by bootstrap first: a custom control (als-multi-select, als-datepicker) contains
+    // other inputs than its main control, and may put the bootstrap class on its host element
+    this.control =
+      this.element.querySelector(':is(input, select, textarea, button):is(.form-control, .form-select)') ??
+      this.element.querySelector('input, select, textarea');
     if (this.control) {
       if (this.control.id) {
         this.controlId = this.control.id;
@@ -153,9 +157,11 @@ export class AlsField {
 
     for (const element of elements) {
       const invalid = errors.some(error => error.element === element);
-      element.classList.toggle('is-invalid', invalid);
-      element.setAttribute('aria-invalid', String(invalid));
-      toggleToken(element, 'aria-describedby', this.errorId, invalid);
+      // a custom element is the validation target, but its inner control is the one users and screen readers see
+      const control = element !== this.control && element.contains(this.control) ? this.control : element;
+      control.classList.toggle('is-invalid', invalid);
+      control.setAttribute('aria-invalid', String(invalid));
+      toggleToken(control, 'aria-describedby', this.errorId, invalid);
     }
 
     this.errors = errors;
