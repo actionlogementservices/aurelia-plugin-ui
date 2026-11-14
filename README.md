@@ -19,6 +19,7 @@ And several custom elements :
 - `auto-complete`, `badges-auto-complete`, `address-auto-complete`: custom elements that provides selection based on 'on-the-fly' requests to a server datasource.
 - `input-datepicker`: custom element that integrates the [vanilla-js datepicker](https://mymth.github.io/vanillajs-datepicker/#/) with Bootstrap style.
 - `simple-table`: custom element that implements a bootstrap style table with in-memory sorting and selection.
+- `als-field`, `als-multi-select`, `als-datepicker`, `als-password-toggle`: form fields with a common layout, validated with [aurelia-validation](https://aurelia.io/docs/plugins/validation) (see [Forms](#forms)).
 
 ## Installation
 
@@ -824,10 +825,121 @@ Injects the Google Tag Manager script and its noscript iframe fallback into the 
 
 ### Forms
 
-Form input have been included in this package, for now we have number and text inputs.
-It includes form label and form message.
+Form fields are **native controls** (`input`, `select`, `textarea`) or form custom elements (`als-multi-select`,
+`als-datepicker`) placed in an `<als-field>`, which adds the label, the hint and the validation error.
+Validation relies on [aurelia-validation](https://aurelia.io/docs/plugins/validation): register the plugin in your
+`main.js` and bind the values with `& validate`.
 
-#### <als-input-number>
+```javascript
+aurelia.use
+  .plugin(PLATFORM.moduleName('aurelia-validation'))
+  .plugin(PLATFORM.moduleName('@actionlogementservices/aurelia-plugin-ui'));
+```
+
+```javascript
+import { inject, NewInstance } from 'aurelia-framework';
+import { ValidationController, ValidationRules } from 'aurelia-validation';
+
+@inject(NewInstance.of(ValidationController))
+export class MyForm {
+  model = { name: '', age: undefined };
+
+  constructor(controller) {
+    this.controller = controller;
+    ValidationRules.ensure('name').required().ensure('age').required().range(18, 150).on(this.model);
+  }
+
+  async submit() {
+    const { valid } = await this.controller.validate();
+  }
+}
+```
+
+The plugin translates the aurelia-validation messages in French (`Ce champ est obligatoire.`...). As the label is
+displayed above the control, the messages do not repeat the property name.
+
+> **Deprecated:** `<als-input-number>`, `<als-input-text>`, `<als-input-password>` and `<als-select>` will be removed
+> in the next major version, use the components below instead.
+
+#### <als-field>
+
+Lays out a form control with the label, the required marker, a hint and the first validation error. The control is
+projected as is: every native attribute and Aurelia binding keeps working. When a `ValidationController` is available,
+the field displays the errors of the controls it contains, and sets `is-invalid`, `aria-invalid` and
+`aria-describedby` on them. The label is linked to the control by its `id`, generated when missing.
+
+```html
+<als-field label="Nom" required="true">
+  <input class="form-control" value.bind="model.name & validate" />
+</als-field>
+<als-field label="Âge" hint="Valeur comprise entre 18 et 150.">
+  <input class="form-control" input-mask="integer" value.bind="model.age | formInputNumberFormat:'integer' & validate" />
+</als-field>
+<als-field label="Année">
+  <select class="form-select" value.bind="model.year & validate">
+    <option model.bind="null">Sélectionner</option>
+    <option repeat.for="year of years" model.bind="year">${year}</option>
+  </select>
+</als-field>
+```
+
+  | Attribute name | Role | Possible values | Default value |
+  | --- | --- | --- | --- |
+  | `label` | Label displayed above the control | Any string | `''` |
+  | `required` | Displays the required marker, the rule itself is declared with `ValidationRules` | `true` or `false` | `false` |
+  | `hint` | Help text displayed below the control | Any string | `''` |
+
+#### <als-password-toggle>
+
+Button masking or revealing the password input of the same `als-field`, placed after the input.
+
+```html
+<als-field label="Mot de passe" required="true">
+  <input type="password" class="form-control" autocomplete="current-password" value.bind="model.password & validate" />
+  <als-password-toggle></als-password-toggle>
+</als-field>
+```
+
+#### `input-filter` custom attribute
+
+Removes the forbidden characters as soon as they are typed, pasted or autofilled. The value is either the predefined
+`email` filter or a regular expression matching the forbidden characters.
+
+```html
+<input type="email" class="form-control" input-filter="email" value.bind="model.email & validate" />
+<input class="form-control" input-filter="[^0-9]" value.bind="model.code & validate" />
+```
+
+#### `formInputNumberFormat` value converter
+
+Formats a number for an [`input-mask`](#input-mask-custom-attribute) input and parses the masked text back to a
+number. Use the same type for both: `integer` (default), `decimal` or `currency` (euros).
+
+```html
+<input class="form-control" input-mask="currency" value.bind="model.amount | formInputNumberFormat:'currency' & validate" />
+```
+
+#### <als-datepicker>
+
+An [`input-datepicker`](#input-datepicker-custom-element) with the calendar icon, to place inside an `als-field`.
+
+```html
+<als-field label="Date de début" required="true">
+  <als-datepicker value.bind="model.startDate & validate" min-date.bind="minDate"></als-datepicker>
+</als-field>
+```
+
+  | Attribute name | Role | Possible values | Default value |
+  | --- | --- | --- | --- |
+  | `value` | Two-way bound selected date | ISO string | None |
+  | `placeholder` | Text displayed when no date is selected | Any string | `''` |
+  | `disabled`, `readonly` | Disables the control or makes it read-only | `true` or `false` | `false` |
+  | `min-date`, `max-date` | Limits of the selectable dates, enforced by the calendar | ISO string | None |
+  | `disabled-days` | Days of week that cannot be selected (0 is Sunday) | Array of numbers | `[]` |
+  | `disabled-dates` | Dates that cannot be selected | Array of ISO strings | `[]` |
+  | `autohide` | Closes the calendar after a selection | `true` or `false` | `true` |
+
+#### <als-input-number> (deprecated)
 
 It includes most of the base html input attributes. You can also specify the following attributes to this element :
   | Attribute name | Role | Possible values | Default value |
@@ -838,7 +950,7 @@ It includes most of the base html input attributes. You can also specify the fol
   | `is-error` | Two-way bound property to know if the field is in error state | `true` or `false` | `false` |
   | `error-message` | To set a custom error message | Any string | None |
 
-#### <als-input-text>
+#### <als-input-text> (deprecated)
 
 It includes most of the base html input attributes. You can also specify the following attributes to this element :
   | Attribute name | Role | Possible values | Default value |
@@ -851,13 +963,24 @@ It includes most of the base html input attributes. You can also specify the fol
 
 #### <als-multi-select>
 
-It includes most of the base html input attributes. You can specify the following attributes to this element :
+A dropdown of checkboxes selecting several values. Place it inside an `als-field` to get the label and the validation errors, like a native control:
+
+```html
+<als-field label="Années" required="true">
+  <als-multi-select items.bind="years" value.bind="model.years & validate"></als-multi-select>
+</als-field>
+```
+
+```javascript
+ValidationRules.ensure('years').minItems(1).on(this.model); // `required()` accepts an empty array
+```
+
   | Attribute name | Role | Possible values | Default value |
   | --- | --- | --- | --- |
-  | `items` | The items to be displayed | Any array | None |
-  | `field-only` | Flag to hide label and error message | `true` or `false` | `false` |
-  | `is-error` | Two-way bound property to know if the field is in error state | `true` or `false` | `false` |
-  | `error-message` | To set a custom error message | Any string | None |
+  | `items` | The items to be displayed | Array of `{ label, value }` | `[]` |
+  | `value` | Two-way bound selected values | Any array | `[]` |
+  | `placeholder` | Text displayed when nothing is selected | Any string | `Sélectionner` |
+  | `disabled` | Disables the control | `true` or `false` | `false` |
 
 ### Layout components
 

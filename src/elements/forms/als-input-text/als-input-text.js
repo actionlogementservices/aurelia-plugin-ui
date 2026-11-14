@@ -2,6 +2,8 @@ import { bindable, bindingMode, computedFrom, useView } from 'aurelia-framework'
 import { FormInput } from '../forms-input';
 
 /**
+ * @deprecated use `<als-field><input class="form-control" value.bind="... & validate"></als-field>` instead,
+ * with the `email()` rule for emails.
  * @augments FormInput<string>
  */
 @useView('./als-input-text.html')

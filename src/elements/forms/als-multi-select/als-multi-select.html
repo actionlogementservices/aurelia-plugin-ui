@@ -1,61 +1,46 @@
 <template>
   <require from="./als-multi-select.css"></require>
 
-  <div class="form-group">
-    <label if.bind="!fieldOnly" for.bind="id" class="form-label text-primary">
-      ${label || placeholder || 'Sélectionner'}
-      <span class="text-danger">${required ? ' *' : ''}</span>
-    </label>
-
+  <div focusout.trigger="handleFocusout($event)">
     <als-dropdown
-      unique-id.bind="id"
       auto-close="outside"
-      label.bind="label || placeholder || 'Sélectionner'"
-      aria-label.bind="toggleAriaLabel"
-      aria-describedby.bind="isError ? id + '-error' : null"
-      aria-invalid.bind="isError ? 'true' : 'false'"
-      menu-aria-label.bind="label || placeholder || 'Sélectionner'"
+      aria-describedby="${uniqueId}-text"
+      menu-aria-label.bind="placeholder"
       disabled.bind="disabled"
-      on-focus.bind="handleButtonFocus"
       toggle-class="multi-select-toggle"
       menu-class="multi-select-menu">
       <span
         slot="toggle"
+        id="${uniqueId}-text"
         class="multi-select-toggle-text"
-        title.bind="value.length > 0 ? selectedLabelsText : null">
-        ${value.length > 0 ? selectedLabelsText : (placeholder || 'Sélectionner')}
+        title.bind="selectedLabelsText || null">
+        ${selectedLabelsText || placeholder}
       </span>
-      <div if.bind="items && items.length > 0" class="form-check">
+      <div if.bind="items.length > 0" class="form-check">
         <input
           type="checkbox"
           class="form-check-input"
-          id="${id}-select-all"
+          id="${uniqueId}-all"
           disabled.bind="disabled"
           checked.one-way="allSelected"
-          indeterminate.bind="isIndeterminate"
-          change.trigger="handleToggleAll($event)" />
-        <label class="form-check-label" for="${id}-select-all">Tout sélectionner</label>
+          indeterminate.one-way="isIndeterminate"
+          change.trigger="toggleAll()" />
+        <label class="form-check-label" for="${uniqueId}-all">Tout sélectionner</label>
       </div>
-      <li if.bind="!items || items.length === 0" class="dropdown-item">
+      <li if.bind="!items.length" class="dropdown-item">
         <span>Aucun élément disponible</span>
       </li>
-      <hr if.bind="items && items.length > 0" class="dropdown-divider" aria-hidden="true" />
-      <div if.bind="items && items.length > 0" class="form-check" repeat.for="item of items">
+      <hr if.bind="items.length > 0" class="dropdown-divider" aria-hidden="true" />
+      <div class="form-check" repeat.for="item of items">
         <input
           type="checkbox"
           class="form-check-input"
-          id="${id}-${item.value}"
+          id="${uniqueId}-${$index}"
           disabled.bind="disabled"
-          checked.bind="checkedItems[$index]"
-          value.bind="item.value"
-          aria-required.bind="required"
-          change.trigger="handleItemChange($event, item, $index)" />
-        <label class="form-check-label" for="${id}-${item.value}">${item.label}</label>
+          checked.one-way="selected.includes(item.value)"
+          change.trigger="toggleItem(item)" />
+        <label class="form-check-label" for="${uniqueId}-${$index}">${item.label}</label>
       </div>
     </als-dropdown>
-
-    <small if.bind="!fieldOnly" show.bind="isError" id="${id}-error" role="alert" class="text-danger">
-      ${errorMessage}
-    </small>
   </div>
 </template>

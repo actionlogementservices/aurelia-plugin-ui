@@ -12,8 +12,7 @@ import { Adresse } from 'resources/elements/auto-complete/adresse';
 export const wait = delay => new Promise(resolve => setTimeout(resolve, delay));
 
 /** @typedef {{ disabled: boolean, id: number, name: string; headcount: number, headcountMinusOne: number, email: string; color: string }} Item */
-/** @typedef {{ name: string; email: string; age: number, height: number, money: number, password: string, year: number, years: Array<number> }} FormData */
-/** @typedef {OptionsFlags<FormData> = {[Property in keyof FormData]: boolean;}} FormError */
+/** @typedef {{ name: string; email: string; age: number, height: number, money: number, password: string, year: number, years: Array<number>, date: string }} FormData */
 
 @inject(
   NewInstance.of(AutoCompleteController),
@@ -41,7 +40,6 @@ export class Home {
   /** @type {boolean} */ dialogFullscreen = false;
   /** @type {boolean} */ dialogLocked = false;
   /** @type {FormData} */ formData;
-  /** @type {FormError} */ formErrors;
   /** @type {boolean} */ isFormValid = false;
   /** @type {boolean} */ errorName = false;
   /** @type {Array<{label: string, value: number}>} */ yearOptions = [];
@@ -91,7 +89,8 @@ export class Home {
       money: 0,
       password: '',
       year: null,
-      years: [2026]
+      years: [2026],
+      date: null
     };
 
     ValidationRules.ensure('name')
@@ -113,11 +112,11 @@ export class Home {
       .minLength(8)
       .ensure('year')
       .required()
+      .ensure('years')
+      .minItems(1)
+      .ensure('date')
+      .required()
       .on(this.formData);
-
-    this.formErrors = {
-      years: false
-    };
 
     const itemsList = [];
     for (let index = 0; index < 120; index++) {
@@ -270,7 +269,7 @@ export class Home {
 
   async validateForm() {
     const { valid } = await this.validationController.validate();
-    this.isFormValid = valid && Object.values(this.formErrors).every(error => !error);
+    this.isFormValid = valid;
     return this.isFormValid;
   }
 

@@ -1,146 +1,106 @@
-import { bindable, bindingMode, computedFrom, useView } from 'aurelia-framework';
-import { FormInput } from '../forms-input';
+import { DOM, inject, bindable, bindingMode, computedFrom, useView } from 'aurelia-framework';
+
+import { generateUniqueId } from '../../../core/functions';
 
 /**
- * @augments FormInput<Array<any>>
+ * Implements the **`als-multi-select` custom element**: a dropdown of checkboxes selecting several values.
+ * Place it inside an `als-field` to get the label and the validation errors, e.g.
+ * `<als-field label="Années"><als-multi-select items.bind="items" value.bind="model.years & validate"></als-multi-select></als-field>`.
+ *
+ * Like a native control, the element fires a `blur` event when the focus leaves it, so the default
+ * `& validate` trigger works.
+ * @category forms
  */
 @useView('./als-multi-select.html')
-export class AlsMultiSelect extends FormInput {
+@inject(DOM.Element)
+export class AlsMultiSelect {
   /** Items @type {Array<{label: string, value: any}>} */
-  @bindable({ defaultBindingMode: bindingMode.oneTime })
-  // @ts-ignore
-  items;
+  @bindable({ defaultBindingMode: bindingMode.toView })
+  items = [];
 
-  /** Value @type {Array<any>} */
+  /** Selected values, always replaced by a new array so the binding (and `& validate`) sees the change. @type {Array<any>} */
   @bindable({ defaultBindingMode: bindingMode.twoWay })
   value = [];
 
-  /** Checked items @type {Array<boolean>} */
-  checkedItems = [];
+  /** Text displayed in the toggle button when nothing is selected. @type {string} */
+  @bindable({ defaultBindingMode: bindingMode.toView })
+  placeholder = 'Sélectionner';
+
+  /** Disabled @type {boolean} */
+  @bindable({ defaultBindingMode: bindingMode.toView })
+  disabled = false;
+
+  /** Prefix of the inner element ids. @type {string} */
+  uniqueId = `als-multi-select-${generateUniqueId()}`;
 
   /**
-   * Accessible name for the dropdown toggle, reflecting the current selection count so assistive
-   * technology users know how many items are selected without opening the menu.
-   * @type {string}
+   * Creates an instance of AlsMultiSelect.
+   * @param {Element} element the custom element
    */
-  @computedFrom('label', 'placeholder', 'value.length')
-  get toggleAriaLabel() {
-    const base = this.label || this.placeholder || 'Sélectionner';
-    const count = this.value?.length || 0;
-
-    return `${base} (${count} sélectionné${count > 1 ? 's' : ''})`;
+  constructor(element) {
+    this.element = element;
   }
 
   /**
-   * Comma-separated labels of the selected items, shown in the toggle button in place of the
-   * placeholder once at least one item is selected. Truncated visually via CSS, not here.
+   * Selected values, `value` may be null or undefined when bound to an empty model.
+   * @type {Array<any>}
+   */
+  @computedFrom('value')
+  get selected() {
+    return this.value || [];
+  }
+
+  /**
+   * Comma-separated labels of the selected items, shown in the toggle button. Truncated visually via CSS.
    * @type {string}
    */
-  @computedFrom('value.length', 'items.length')
+  @computedFrom('selected', 'items')
   get selectedLabelsText() {
-    return this.items
-      .filter(item => this.value.includes(item.value))
+    return (this.items || [])
+      .filter(item => this.selected.includes(item.value))
       .map(item => item.label)
       .join(', ');
   }
 
-  /**
-   * Whether every item is currently selected.
-   * @type {boolean}
-   */
-  @computedFrom('value.length', 'items.length')
+  /** @type {boolean} */
+  @computedFrom('selected', 'items')
   get allSelected() {
-    return this.items.length > 0 && this.value.length === this.items.length;
+    return this.items?.length > 0 && this.selected.length === this.items.length;
   }
 
-  /**
-   * Whether some, but not all, items are currently selected.
-   * @type {boolean}
-   */
-  @computedFrom('value.length', 'items.length')
+  /** @type {boolean} */
+  @computedFrom('selected', 'items')
   get isIndeterminate() {
-    return this.value.length > 0 && this.value.length < this.items.length;
-  }
-
-  attached() {
-    this.checkedItems = this.items.map(item => this.value.includes(item.value));
+    return this.selected.length > 0 && this.selected.length < (this.items?.length || 0);
   }
 
   /**
-   * Custom handler to handle button focus event.
-   * @param {FocusEvent} event The event
-   * @returns {boolean} true to continue processing, false to cancel
+   * Fires `blur` on the custom element once the focus leaves it, as `& validate` listens to the target element.
+   * @param {FocusEvent} event the focusout event of an inner element
+   * @returns {boolean} true to continue processing
    */
-  handleButtonFocus = event => {
-    return this.handleFocus(event);
-  };
-
-  /**
-   * Handles the change event when an item is selected or deselected.
-   * @param {Event} event The change event
-   * @param {{label: string, value: any}} item The item that was selected or deselected
-   * @param {number} index The index of the item that was selected or deselected
-   * @returns {boolean} true to continue processing, false to cancel
-   */
-  handleItemChange(event, item, index) {
-    if (this.value.includes(item.value)) {
-      this.value = this.value.filter(v => v !== item.value);
-      this.checkedItems[index] = false;
-    } else {
-      this.value.push(item.value);
-      this.checkedItems[index] = true;
+  handleFocusout(event) {
+    if (!this.element.contains(/** @type {Node} */ (event.relatedTarget))) {
+      this.element.dispatchEvent(new FocusEvent('blur'));
     }
 
-    super.handleChange(event);
-    this.validate(this.value);
-
     return true;
   }
 
   /**
-   * Handles the change event on the select-all checkbox, selecting or deselecting every item.
-   * @param {Event} event The change event
-   * @returns {boolean} true to continue processing, false to cancel
+   * Selects or deselects an item.
+   * @param {{label: string, value: any}} item the item
    */
-  handleToggleAll(event) {
-    if (this.allSelected) {
-      this.value = [];
-      this.checkedItems = this.items.map(() => false);
-    } else {
-      this.value = this.items.map(item => item.value);
-      this.checkedItems = this.items.map(() => true);
-    }
-
-    super.handleChange(event);
-    this.validate(this.value);
-
-    return true;
+  toggleItem(item) {
+    this.value = this.selected.includes(item.value)
+      ? this.selected.filter(value => value !== item.value)
+      : [...this.selected, item.value];
   }
 
   /**
-   * Override base class method to provide a custom emptiness check for multi-select.
-   * @param {Array<any>} value Value to inspect
-   * @returns {boolean} true when value should be considered empty
+   * Selects every item, or none when they are all selected.
    */
-  isValueEmpty(value) {
-    return !Array.isArray(value) || value.length === 0;
-  }
-
-  /**
-   * Validate the current selection.
-   * @param {Array<any>} value Value to validate
-   * @returns {boolean} true if valid, false otherwise
-   */
-  validateValue(value) {
-    return true;
-  }
-
-  /**
-   * Validate the selection, using a selection-specific required message.
-   * @param {Array<any>} value Value to validate
-   * @returns {boolean} true if valid, false otherwise
-   */
-  validate(value) {
-    return super.validate(value, 'Veuillez sélectionner au moins un élément.');
+  toggleAll() {
+    this.value = this.allSelected ? [] : this.items.map(item => item.value);
   }
 }

@@ -1,4 +1,8 @@
+/* fills the als-field input-group like a native .form-control */
 als-datepicker {
+  flex: 1 1 auto;
+  min-width: 0;
+
   .btn {
     color: var(--bs-body-color);
   }
