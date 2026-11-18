@@ -3,7 +3,7 @@ import { ValidationControllerFactory, ValidationRules } from 'aurelia-validation
 
 import { ToastService } from 'core/toast-service/toast-service';
 
-/** @typedef {{ name: string; email: string; age: number, height: number, money: number, password: string, year: number, years: Array<number>, date: string }} FormData */
+/** @typedef {{ name: string; email: string; age: number, height: number, money: number, password: string, year: number, years: Array<number>, date: string, civility: string, terms: boolean, interests: Array<string> }} FormData */
 
 @inject(ToastService, ValidationControllerFactory)
 export class AppLayout {
@@ -30,8 +30,22 @@ export class AppLayout {
     password: '',
     year: null,
     years: [2026],
-    date: null
+    date: null,
+    civility: null,
+    terms: false,
+    interests: []
   };
+
+  interestOptions = [
+    { label: 'Sport', value: 'sport' },
+    { label: 'Culture', value: 'culture' },
+    { label: 'Voyage', value: 'voyage' }
+  ];
+
+  civilityOptions = [
+    { label: 'Madame', value: 'MME' },
+    { label: 'Monsieur', value: 'M' }
+  ];
 
   /**
    * @param {ToastService} toast
@@ -71,6 +85,13 @@ export class AppLayout {
       .minItems(1)
       .ensure('date')
       .required()
+      .ensure('civility')
+      .required()
+      .ensure('terms')
+      .satisfies(value => value === true)
+      .withMessage("Vous devez accepter les conditions d'utilisation.")
+      .ensure('interests')
+      .minItems(1)
       .on(this.formData);
   }
 

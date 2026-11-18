@@ -134,6 +134,54 @@
         </div>
         <div class="row">
           <div class="col">
+            <als-field label="Civilité" required="true" group="true">
+              <div repeat.for="item of civilityOptions" class="form-check form-check-inline">
+                <input
+                  type="radio"
+                  class="form-check-input"
+                  id="civility-${item.value}"
+                  name="civility"
+                  model.bind="item.value"
+                  checked.bind="formData.civility & validate" />
+                <label class="form-check-label" for="civility-${item.value}">${item.label}</label>
+              </div>
+            </als-field>
+            <p>CIVILITY = ${formData.civility}</p>
+          </div>
+          <div class="col">
+            <als-field>
+              <div class="form-check">
+                <input
+                  type="checkbox"
+                  class="form-check-input"
+                  id="terms"
+                  name="terms"
+                  checked.bind="formData.terms & validate" />
+                <label class="form-check-label" for="terms">J'accepte les conditions d'utilisation</label>
+              </div>
+            </als-field>
+            <p>TERMS = ${formData.terms}</p>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col">
+            <als-field label="Centres d'intérêt" required="true" hint="Au moins un choix." group="true">
+              <div repeat.for="item of interestOptions" class="form-check">
+                <input
+                  type="checkbox"
+                  class="form-check-input"
+                  id="interest-${item.value}"
+                  model.bind="item.value"
+                  checked.bind="formData.interests & validate" />
+                <label class="form-check-label" for="interest-${item.value}">${item.label}</label>
+              </div>
+            </als-field>
+            <p>INTERESTS = [${formData.interests}]</p>
+          </div>
+          <div class="col"></div>
+        </div>
+        <div class="row">
+          <div class="col">
             <button class="btn btn-primary" type="button" click.trigger="handleSubmit()">SUBMIT</button>
           </div>
         </div>

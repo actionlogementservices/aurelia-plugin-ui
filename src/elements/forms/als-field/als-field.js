@@ -36,6 +36,10 @@ function toggleToken(element, attribute, token, force) {
  * When a `ValidationController` is available in the current scope, the field registers itself as a validation
  * renderer: the errors of the bindings targeting an element inside the field are displayed below the control,
  * which receives the bootstrap `is-invalid` class and the matching aria attributes.
+ *
+ * With `group="true"`, the field lays out a group of controls answering a single question (radio buttons,
+ * checkboxes, composite inputs): the label names the whole group (`role="group"` + `aria-labelledby`) instead of
+ * pointing to the first control, and the hint and the error message describe the group.
  * @category forms
  */
 @useView('./als-field.html')
@@ -52,6 +56,13 @@ export class AlsField {
   /** Help text displayed below the control, e.g. the accepted range of values. @type {string} */
   @bindable({ defaultBindingMode: bindingMode.toView })
   hint = '';
+
+  /**
+   * Lays out a group of controls (radio buttons, checkboxes, composite inputs) instead of a single control.
+   * @type {boolean}
+   */
+  @bindable({ defaultBindingMode: bindingMode.toView })
+  group = false;
 
   /** Projected control. @type {HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement | null} */
   control;
@@ -99,6 +110,25 @@ export class AlsField {
     return `${this.controlId}-hint`;
   }
 
+  /**
+   * Id of the group label, referenced by `aria-labelledby` on the group.
+   * @type {string}
+   */
+  @computedFrom('controlId')
+  get labelId() {
+    return `${this.controlId}-label`;
+  }
+
+  /**
+   * Ids of the hint and error message describing the group, or undefined when there are none.
+   * @type {string | undefined}
+   */
+  @computedFrom('hint', 'hintId', 'errorMessage', 'errorId')
+  get groupDescribedBy() {
+    const ids = [this.hint && this.hintId, this.errorMessage && this.errorId].filter(Boolean);
+    return ids.length > 0 ? ids.join(' ') : undefined;
+  }
+
   bind() {
     this.controller?.addRenderer(this);
   }
@@ -121,7 +151,8 @@ export class AlsField {
   }
 
   hintChanged() {
-    if (this.control) {
+    // a group is described as a whole, see groupDescribedBy
+    if (this.control && !this.group) {
       toggleToken(this.control, 'aria-describedby', this.hintId, Boolean(this.hint));
     }
   }
@@ -161,7 +192,9 @@ export class AlsField {
       const control = element !== this.control && element.contains(this.control) ? this.control : element;
       control.classList.toggle('is-invalid', invalid);
       control.setAttribute('aria-invalid', String(invalid));
-      toggleToken(control, 'aria-describedby', this.errorId, invalid);
+      if (!this.group) {
+        toggleToken(control, 'aria-describedby', this.errorId, invalid);
+      }
     }
 
     this.errors = errors;
