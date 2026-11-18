@@ -915,6 +915,41 @@ A single checkbox does not need `group`, its own label names it:
 </als-field>
 ```
 
+#### File input
+
+A native file input works in an `als-field`. Bind it with `files.bind` (a `FileList`), not `value.bind`, and declare
+the rules with `satisfies`: `required()` accepts an empty `FileList`.
+
+```html
+<als-field label="Justificatif" required="true" hint="PDF, JPG ou PNG, 2 Mo maximum.">
+  <input type="file" class="form-control" accept=".pdf,.jpg,.jpeg,.png" ref="documentInput"
+    files.bind="model.document & validate" />
+</als-field>
+```
+
+```javascript
+ValidationRules.ensure('document')
+  .satisfies(files => files?.length > 0)
+  .withMessage('Veuillez sélectionner un fichier.')
+  .then()
+  .satisfies(files => files[0].size <= 2 * 1024 * 1024)
+  .withMessage('Le fichier ne doit pas dépasser 2 Mo.')
+  .on(this.model);
+```
+
+> **Warning:** Aurelia only reads `files` from the input, it never writes the model value back to it. To prefill or
+> clear the input from code, update the input itself (here through `ref`) as well as the model:
+>
+> ```javascript
+> const files = new DataTransfer();
+> files.items.add(new File([content], 'justificatif.pdf', { type: 'application/pdf' }));
+> this.documentInput.files = files.files; // displayed file
+> this.model.document = files.files; // validated value
+>
+> this.documentInput.value = ''; // clears the input
+> this.model.document = undefined;
+> ```
+
 #### <als-password-toggle>
 
 Button masking or revealing the password input of the same `als-field`, placed after the input.

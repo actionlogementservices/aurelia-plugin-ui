@@ -26,7 +26,10 @@
             <p>NAME = ${formData.name}</p>
           </div>
           <div class="col">
-            <als-field label="Email" required="true">
+            <als-field
+              label="Email"
+              required="true"
+              hint="Saisir deja@utilise.fr pour simuler une erreur renvoyée par le serveur.">
               <input
                 type="email"
                 class="form-control"
@@ -193,7 +196,36 @@
         </div>
         <div class="row">
           <div class="col">
+            <als-field label="Justificatif" required="true" hint="PDF, JPG ou PNG, 2 Mo maximum.">
+              <input
+                type="file"
+                class="form-control"
+                name="document"
+                accept=".pdf,.jpg,.jpeg,.png"
+                ref="documentInput"
+                files.bind="formData.document & validate" />
+            </als-field>
+            <p>DOCUMENT = ${formData.document[0].name}</p>
+          </div>
+          <div class="col">
+            <als-field label="Comment nous avez-vous connus ?" required="true">
+              <select class="form-select" name="source" value.bind="formData.source & validate">
+                <option model.bind="null">Sélectionner</option>
+                <option repeat.for="item of sourceOptions" model.bind="item.value">${item.label}</option>
+              </select>
+            </als-field>
+            <als-field if.bind="formData.source === 'other'" label="Précisez" required="true" class="mt-3">
+              <input class="form-control" name="sourceOther" value.bind="formData.sourceOther & validate" />
+            </als-field>
+            <p>SOURCE = ${formData.source} ${formData.sourceOther}</p>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col">
             <button class="btn btn-primary" type="button" click.trigger="handleSubmit()">SUBMIT</button>
+            <button class="btn btn-outline-primary ms-2" type="button" click.trigger="fillForm()">
+              Remplir avec des valeurs valides
+            </button>
           </div>
         </div>
       </form>
