@@ -1,6 +1,5 @@
 import { computedFrom, inject, NewInstance } from 'aurelia-framework';
 import { faker } from '@faker-js/faker';
-import { Validator, ValidationControllerFactory, ValidationRules } from 'aurelia-validation';
 
 import { ExempleDialog } from '../dialogs/exemple-dialog';
 import { AutoCompleteController } from 'resources/elements/auto-complete/auto-complete-controller';
@@ -12,16 +11,8 @@ import { Adresse } from 'resources/elements/auto-complete/adresse';
 export const wait = delay => new Promise(resolve => setTimeout(resolve, delay));
 
 /** @typedef {{ disabled: boolean, id: number, name: string; headcount: number, headcountMinusOne: number, email: string; color: string }} Item */
-/** @typedef {{ name: string; email: string; age: number, height: number, money: number, password: string, year: number, years: Array<number>, date: string }} FormData */
 
-@inject(
-  NewInstance.of(AutoCompleteController),
-  ToastService,
-  LockService,
-  DialogService,
-  Validator,
-  ValidationControllerFactory
-)
+@inject(NewInstance.of(AutoCompleteController), ToastService, LockService, DialogService)
 export class Home {
   now = new Date();
   mindate = new Date();
@@ -39,11 +30,6 @@ export class Home {
   /** @type {string} */ dialogStatus = 'Dialog not opened';
   /** @type {boolean} */ dialogFullscreen = false;
   /** @type {boolean} */ dialogLocked = false;
-  /** @type {FormData} */ formData;
-  /** @type {boolean} */ isFormValid = false;
-  /** @type {boolean} */ errorName = false;
-  /** @type {Array<{label: string, value: number}>} */ yearOptions = [];
-  /** @type {Array<{label: string, value: string}>} */ formProfileItems;
   /** @type {Array<string>} */ footerLinks = [];
 
   /**
@@ -52,8 +38,7 @@ export class Home {
    * @param {LockService} lock
    * @param {DialogService} dialog
    */
-  constructor(controller, toast, lock, dialog, validator, validationControllerFactory) {
-    this.validationController = validationControllerFactory.createForCurrentScope();
+  constructor(controller, toast, lock, dialog) {
     this.maxDate.setMonth(this.maxDate.getMonth() + 1);
     this.mindate.setMonth(this.mindate.getMonth() - 1);
     this.maxDateString = this.maxDate.toISOString();
@@ -66,57 +51,6 @@ export class Home {
     this.dialog = dialog;
 
     this.footerLinks.push('https://example.com');
-
-    this.yearOptions = [
-      { label: 'Année 2017', value: 2017 },
-      { label: 'Année 2018', value: 2018 },
-      { label: 'Année 2019', value: 2019 },
-      { label: 'Année 2020', value: 2020 },
-      { label: 'Année 2021', value: 2021 },
-      { label: 'Année 2022', value: 2022 },
-      { label: 'Année 2023', value: 2023 },
-      { label: 'Année 2024', value: 2024 },
-      { label: 'Année 2025', value: 2025 },
-      { label: 'Année 2026', value: 2026 },
-      { label: 'Année 2027', value: 2027 }
-    ];
-
-    this.formData = {
-      name: '',
-      email: '',
-      age: 20,
-      height: 0,
-      money: 0,
-      password: '',
-      year: null,
-      years: [2026],
-      date: null
-    };
-
-    ValidationRules.ensure('name')
-      .required()
-      .ensure('email')
-      .required()
-      .email()
-      .ensure('age')
-      .required()
-      .range(18, 150)
-      .ensure('height')
-      .required()
-      .min(0)
-      .ensure('money')
-      .required()
-      .min(0)
-      .ensure('password')
-      .required()
-      .minLength(8)
-      .ensure('year')
-      .required()
-      .ensure('years')
-      .minItems(1)
-      .ensure('date')
-      .required()
-      .on(this.formData);
 
     const itemsList = [];
     for (let index = 0; index < 120; index++) {
@@ -265,21 +199,5 @@ export class Home {
   @computedFrom('selectedDialogMode')
   get isDialogModalMode() {
     return this.selectedDialogMode === 'modal';
-  }
-
-  async validateForm() {
-    const { valid } = await this.validationController.validate();
-    this.isFormValid = valid;
-    return this.isFormValid;
-  }
-
-  async handleSubmit() {
-    if (await this.validateForm()) {
-      this.toast.success('Form submitted successfully!');
-    } else {
-      this.toast.error('Form has errors. Please fix them before submitting.');
-    }
-
-    return false; // Prevent default form submission behavior
   }
 }
