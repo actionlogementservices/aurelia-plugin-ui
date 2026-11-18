@@ -19,17 +19,22 @@ describe('als-password-toggle', () => {
     const input = document.querySelector('input');
     const button = document.querySelector('button');
     expect(button.parentElement).toBe(input.parentElement);
+    const icon = button.querySelector('i');
     expect(button.getAttribute('aria-label')).toBe('Afficher le mot de passe');
+    expect(icon.classList).toContain('bi-eye');
 
     button.click();
     await flush();
     expect(input.type).toBe('text');
     expect(button.getAttribute('aria-pressed')).toBe('true');
     expect(button.getAttribute('aria-label')).toBe('Masquer le mot de passe');
+    expect(icon.classList).toContain('bi-eye-slash');
 
     button.click();
     await flush();
     expect(input.type).toBe('password');
     expect(button.getAttribute('aria-pressed')).toBe('false');
+    expect(icon.classList).toContain('bi-eye');
+    expect(icon.classList).not.toContain('bi-eye-slash');
   });
 });
