@@ -56,6 +56,12 @@ describe('als-datepicker', () => {
     expect(document.querySelector('input-datepicker').hasAttribute('id')).toBe(false);
   });
 
+  test('displays the bootstrap-icons calendar as a decorative addon', () => {
+    const addon = document.querySelector('als-datepicker .input-group-text');
+    expect(addon.getAttribute('aria-hidden')).toBe('true');
+    expect(addon.querySelector('i').classList).toContain('bi-calendar');
+  });
+
   test('renders the validation error on the inner input and updates the bound value', async () => {
     const input = document.querySelector('input-datepicker > input');
 
