@@ -12,6 +12,132 @@
 
     <div class="flex-grow-1 p-4">
       <h1>Page content</h1>
+      <form novalidate class="container-fluid">
+        <div class="row">
+          <div class="col">
+            <als-field label="Name" required="true">
+              <input
+                class="form-control"
+                name="name"
+                placeholder="Votre nom"
+                required
+                value.bind="formData.name & validate" />
+            </als-field>
+            <p>NAME = ${formData.name}</p>
+          </div>
+          <div class="col">
+            <als-field label="Email" required="true">
+              <input
+                type="email"
+                class="form-control"
+                name="email"
+                placeholder="Votre email"
+                autocomplete="email"
+                input-filter="email"
+                required
+                value.bind="formData.email & validate" />
+            </als-field>
+            <p>EMAIL = ${formData.email}</p>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col">
+            <als-field label="Age" required="true" hint="Valeur comprise entre 18 et 150.">
+              <input
+                class="form-control"
+                name="age"
+                required
+                input-mask="integer"
+                value.bind="formData.age | formInputNumberFormat:'integer' & validate" />
+            </als-field>
+            <p>AGE = ${formData.age}</p>
+          </div>
+          <div class="col">
+            <als-field label="Age" required="true" hint="Valeur comprise entre 18 et 150.">
+              <input
+                class="form-control"
+                name="age"
+                required
+                input-mask="integer"
+                value.bind="formData.age | formInputNumberFormat:'integer' & validate" />
+            </als-field>
+            <p>AGE duplicate = ${formData.age}</p>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col">
+            <als-field label="Height" required="true">
+              <input
+                class="form-control"
+                name="height"
+                required
+                input-mask="decimal"
+                value.bind="formData.height | formInputNumberFormat:'decimal' & validate" />
+            </als-field>
+            <p>HEIGHT = ${formData.height}</p>
+          </div>
+          <div class="col">
+            <als-field label="Money" required="true">
+              <input
+                class="form-control"
+                name="money"
+                required
+                input-mask="currency"
+                value.bind="formData.money | formInputNumberFormat:'currency' & validate" />
+              <span class="input-group-text" aria-hidden="true">€</span>
+            </als-field>
+            <p>MONEY = ${formData.money}</p>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col">
+            <als-field label="Password" required="true">
+              <input
+                type="password"
+                class="form-control"
+                name="password"
+                autocomplete="new-password"
+                required
+                value.bind="formData.password & validate" />
+              <als-password-toggle></als-password-toggle>
+            </als-field>
+            <p>PASSWORD = ${formData.password}</p>
+          </div>
+          <div class="col">
+            <als-field label="Year" required="true">
+              <select class="form-select" name="year" required value.bind="formData.year & validate">
+                <option model.bind="null">Sélectionner</option>
+                <option repeat.for="item of yearOptions" model.bind="item.value">${item.label}</option>
+              </select>
+            </als-field>
+            <p>YEAR = ${formData.year}</p>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col">
+            <als-field label="Years" required="true">
+              <als-multi-select
+                items.bind="yearOptions"
+                value.bind="formData.years & validate"></als-multi-select>
+            </als-field>
+            <p>YEARS = [${formData.years}]</p>
+          </div>
+          <div class="col">
+            <als-field label="Date" required="true">
+              <als-datepicker
+                value.bind="formData.date & validate"
+                min-date.bind="mindateString"
+                max-date.bind="maxDateString"></als-datepicker>
+            </als-field>
+            <p>DATE = ${formData.date}</p>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col">
+            <button class="btn btn-primary" type="button" click.trigger="handleSubmit()">SUBMIT</button>
+          </div>
+        </div>
+      </form>
     </div>
 
     <als-footer links.bind="footerLinks"></als-footer>
