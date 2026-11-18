@@ -98,6 +98,59 @@ describe('als-field', () => {
     expect(message.textContent.trim()).toBe('');
   });
 
+  test('renders an error added by the controller, e.g. returned by a server, until the property is validated again', async () => {
+    const model = { email: 'deja@utilise.fr' };
+    ValidationRules.ensure('email').required().on(model);
+    let controller;
+    ({ component, controller } = await stage(
+      '<als-field label="Email"><input id="email" value.bind="model.email & validate"></als-field>',
+      { model }
+    ));
+    const input = document.querySelector('#email');
+    const message = document.querySelector('small');
+
+    controller.addError('Cet email est déjà utilisé.', model, 'email');
+    await flush();
+    expect(input.classList).toContain('is-invalid');
+    expect(input.getAttribute('aria-describedby')).toBe('email-error');
+    expect(message.textContent.trim()).toBe('Cet email est déjà utilisé.');
+
+    model.email = 'libre@exemple.fr';
+    await controller.validate();
+    await flush();
+    expect(input.classList).not.toContain('is-invalid');
+    expect(message.textContent.trim()).toBe('');
+    expect(controller.errors).toHaveLength(0);
+  });
+
+  test('drops the errors of a field removed by if.bind', async () => {
+    const model = { other: '' };
+    const context = { model, show: true };
+    ValidationRules.ensure('other').required().on(model);
+    let controller;
+    ({ component, controller } = await stage(
+      '<als-field if.bind="show" label="Précisez"><input id="other" value.bind="model.other & validate"></als-field>',
+      context
+    ));
+
+    await controller.validate();
+    await flush();
+    expect(document.querySelector('#other').classList).toContain('is-invalid');
+    expect(controller.errors).toHaveLength(1);
+
+    context.show = false;
+    await flush();
+    expect(document.querySelector('als-field')).toBeNull();
+    expect(controller.errors).toHaveLength(0);
+    const { valid } = await controller.validate();
+    expect(valid).toBe(true);
+
+    context.show = true;
+    await flush();
+    expect(document.querySelector('#other').classList).not.toContain('is-invalid');
+    expect(document.querySelector('small').textContent.trim()).toBe('');
+  });
+
   describe('group', () => {
     const radios = `
       <als-field label="Civilité" required="true" hint="Choisir une valeur." group="true">
