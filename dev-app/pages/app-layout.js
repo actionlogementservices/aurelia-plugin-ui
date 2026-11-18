@@ -3,7 +3,7 @@ import { ValidationControllerFactory, ValidationRules } from 'aurelia-validation
 
 import { ToastService } from 'core/toast-service/toast-service';
 
-/** @typedef {{ name: string; email: string; age: number, height: number, money: number, password: string, year: number, years: Array<number>, date: string, civility: string, terms: boolean, interests: Array<string> }} FormData */
+/** @typedef {{ name: string; email: string; age: number, height: number, money: number, password: string, year: number, years: Array<number>, date: string, civility: string, terms: boolean, interests: Array<string>, comment: string }} FormData */
 
 @inject(ToastService, ValidationControllerFactory)
 export class AppLayout {
@@ -33,7 +33,8 @@ export class AppLayout {
     date: null,
     civility: null,
     terms: false,
-    interests: []
+    interests: [],
+    comment: ''
   };
 
   interestOptions = [
@@ -92,6 +93,9 @@ export class AppLayout {
       .withMessage("Vous devez accepter les conditions d'utilisation.")
       .ensure('interests')
       .minItems(1)
+      .ensure('comment')
+      .required()
+      .maxLength(200)
       .on(this.formData);
   }
 
