@@ -178,7 +178,18 @@
             </als-field>
             <p>INTERESTS = [${formData.interests}]</p>
           </div>
-          <div class="col"></div>
+          <div class="col">
+            <als-field label="Commentaire" required="true" hint="200 caractères maximum.">
+              <textarea
+                class="form-control"
+                name="comment"
+                rows="4"
+                placeholder="Votre commentaire"
+                required
+                value.bind="formData.comment & validate"></textarea>
+            </als-field>
+            <p class="text-break">COMMENT = ${formData.comment}</p>
+          </div>
         </div>
         <div class="row">
           <div class="col">
