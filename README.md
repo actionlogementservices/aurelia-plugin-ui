@@ -888,6 +888,32 @@ the field displays the errors of the controls it contains, and sets `is-invalid`
   | `label` | Label displayed above the control | Any string | `''` |
   | `required` | Displays the required marker, the rule itself is declared with `ValidationRules` | `true` or `false` | `false` |
   | `hint` | Help text displayed below the control | Any string | `''` |
+  | `group` | Lays out a group of controls answering a single question (radio buttons, checkboxes, composite inputs) | `true` or `false` | `false` |
+
+With `group="true"`, a `<label for>` would only name the first control: the label names the whole group instead
+(`role="group"` and `aria-labelledby` on the field), and the hint and the error message describe the group
+(`aria-describedby` on the field). The invalid controls still get `is-invalid` and `aria-invalid`.
+
+```html
+<als-field label="Civilité" required="true" group="true">
+  <div repeat.for="item of civilities" class="form-check form-check-inline">
+    <input type="radio" class="form-check-input" id="civility-${item.value}" name="civility"
+      model.bind="item.value" checked.bind="model.civility & validate" />
+    <label class="form-check-label" for="civility-${item.value}">${item.label}</label>
+  </div>
+</als-field>
+```
+
+A single checkbox does not need `group`, its own label names it:
+
+```html
+<als-field>
+  <div class="form-check">
+    <input type="checkbox" class="form-check-input" id="terms" checked.bind="model.terms & validate" />
+    <label class="form-check-label" for="terms">J'accepte les conditions d'utilisation</label>
+  </div>
+</als-field>
+```
 
 #### <als-password-toggle>
 

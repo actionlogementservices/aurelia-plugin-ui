@@ -97,4 +97,61 @@ describe('als-field', () => {
     expect(input.hasAttribute('aria-describedby')).toBe(false);
     expect(message.textContent.trim()).toBe('');
   });
+
+  describe('group', () => {
+    const radios = `
+      <als-field label="Civilité" required="true" hint="Choisir une valeur." group="true">
+        <input type="radio" id="mme" model.bind="'MME'" checked.bind="model.civility & validate">
+        <input type="radio" id="m" model.bind="'M'" checked.bind="model.civility & validate">
+      </als-field>`;
+
+    test('names the group with its label instead of a label pointing to the first control', async () => {
+      ({ component } = await stage(radios, { model: { civility: null } }));
+      const group = document.querySelector('[role="group"]');
+      const label = document.querySelector('.form-label');
+      expect(document.querySelector('label')).toBeNull();
+      expect(group.getAttribute('aria-labelledby')).toBe(label.id);
+      expect(label.textContent).toContain('Civilité');
+      expect(label.querySelector('span').textContent).toBe('*');
+      expect(document.querySelector('.input-group')).toBeNull();
+    });
+
+    test('describes the group with the hint and the error message', async () => {
+      const model = { civility: null };
+      ValidationRules.ensure('civility').required().on(model);
+      let controller;
+      ({ component, controller } = await stage(radios, { model }));
+      const group = document.querySelector('[role="group"]');
+      const hintId = document.querySelector('.form-text').id;
+      const message = document.querySelector('small');
+      const inputs = [...document.querySelectorAll('input')];
+      expect(group.getAttribute('aria-describedby')).toBe(hintId);
+
+      await controller.validate();
+      await flush();
+      expect(group.getAttribute('aria-describedby')).toBe(`${hintId} ${message.id}`);
+      expect(message.textContent.trim()).toBe('Ce champ est obligatoire.');
+      for (const input of inputs) {
+        expect(input.classList).toContain('is-invalid');
+        expect(input.getAttribute('aria-invalid')).toBe('true');
+        expect(input.hasAttribute('aria-describedby')).toBe(false);
+      }
+
+      model.civility = 'M';
+      await controller.validate();
+      await flush();
+      expect(group.getAttribute('aria-describedby')).toBe(hintId);
+      for (const input of inputs) {
+        expect(input.classList).not.toContain('is-invalid');
+      }
+    });
+
+    test('is not a group by default', async () => {
+      ({ component } = await stage('<als-field label="Name"><input></als-field>', {}, false));
+      const container = document.querySelector('.form-group');
+      expect(container.hasAttribute('role')).toBe(false);
+      expect(container.hasAttribute('aria-labelledby')).toBe(false);
+      expect(container.hasAttribute('aria-describedby')).toBe(false);
+    });
+  });
 });
