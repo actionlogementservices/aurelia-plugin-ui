@@ -1,11 +1,25 @@
-import { inject } from 'aurelia-framework';
+import { inject, NewInstance } from 'aurelia-framework';
 import { ValidationControllerFactory, ValidationRules } from 'aurelia-validation';
 
 import { ToastService } from 'core/toast-service/toast-service';
+import { AutoCompleteController } from 'resources/elements/auto-complete/auto-complete-controller';
 
-/** @typedef {{ name: string; email: string; age: number, height: number, money: number, password: string, year: number, years: Array<number>, date: string, civility: string, terms: boolean, interests: Array<string>, comment: string, document: FileList, source: string, sourceOther: string }} FormData */
+/** @typedef {{ name: string; email: string; age: number, height: number, money: number, password: string, year: number, years: Array<number>, date: string, civility: string, terms: boolean, interests: Array<string>, comment: string, document: FileList, source: string, sourceOther: string, city: string }} FormData */
 
-@inject(ToastService, ValidationControllerFactory)
+const CITIES = [
+  { code: '75056', name: 'Paris' },
+  { code: '13055', name: 'Marseille' },
+  { code: '69123', name: 'Lyon' },
+  { code: '31555', name: 'Toulouse' },
+  { code: '06088', name: 'Nice' },
+  { code: '44109', name: 'Nantes' },
+  { code: '67482', name: 'Strasbourg' },
+  { code: '34172', name: 'Montpellier' },
+  { code: '33063', name: 'Bordeaux' },
+  { code: '59350', name: 'Lille' }
+];
+
+@inject(ToastService, ValidationControllerFactory, NewInstance.of(AutoCompleteController))
 export class AppLayout {
   userMenuItems = [
     { label: 'Mes informations', icon: 'bi-person', href: '#' },
@@ -37,7 +51,8 @@ export class AppLayout {
     comment: '',
     document: undefined,
     source: null,
-    sourceOther: ''
+    sourceOther: '',
+    city: undefined
   };
 
   sourceOptions = [
@@ -60,10 +75,17 @@ export class AppLayout {
   /**
    * @param {ToastService} toast
    * @param {ValidationControllerFactory} validationControllerFactory
+   * @param {AutoCompleteController} cityController
    */
-  constructor(toast, validationControllerFactory) {
+  constructor(toast, validationControllerFactory, cityController) {
     this.toast = toast;
     this.validationController = validationControllerFactory.createForCurrentScope();
+    this.cityController = cityController;
+    this.cityController.configure(
+      async text => CITIES.filter(city => city.name.toUpperCase().includes(text.toUpperCase())),
+      undefined,
+      async codes => CITIES.filter(city => codes.includes(city.code))
+    );
 
     const minDate = new Date();
     const maxDate = new Date();
@@ -116,6 +138,8 @@ export class AppLayout {
       .ensure('sourceOther')
       .required()
       .when(data => data.source === 'other')
+      .ensure('city')
+      .required()
       .on(this.formData);
   }
 
@@ -142,7 +166,8 @@ export class AppLayout {
       comment: 'Commentaire de démonstration.',
       document: files.files,
       source: 'other',
-      sourceOther: 'Salon du logement'
+      sourceOther: 'Salon du logement',
+      city: '69123'
     });
     return this.validationController.validate();
   }

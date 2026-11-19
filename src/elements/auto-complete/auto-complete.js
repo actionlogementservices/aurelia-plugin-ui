@@ -195,12 +195,11 @@ export class AutoComplete {
    */
   manageKey(keyCode) {
     // pass focus to first listitem when up/down/tab keys are pressed
-    if (
-      this._dropdownList?.children?.length > 0 &&
-      (keyCode === 'ArrowUp' || keyCode === 'ArrowDown' || keyCode === 'Tab')
-    ) {
+    // (the "no result" line is always a child of the list: look for an item, not for any child)
+    const firstItem = this._dropdownList?.querySelector('button');
+    if (firstItem && (keyCode === 'ArrowUp' || keyCode === 'ArrowDown' || keyCode === 'Tab')) {
       this.ignoringReset = true;
-      this._dropdownList.querySelectorAll('button').item(0).focus();
+      firstItem.focus();
       this.ignoringReset = false;
     } else {
       this._input.focus();
@@ -252,10 +251,13 @@ export class AutoComplete {
   }
 
   /**
-   * Resets the html input.
+   * Resets the html input, and triggers the 'blur' event of the custom element so that leaving the field
+   * validates it, like a native input (aurelia-validation `blur` trigger).
    */
   onInputBlur() {
-    if (!this.ignoringReset) this.selectItem(this.selectedItem, false);
+    if (this.ignoringReset) return;
+    this.selectItem(this.selectedItem, false);
+    this.triggerBlurEvent();
   }
 
   /**
