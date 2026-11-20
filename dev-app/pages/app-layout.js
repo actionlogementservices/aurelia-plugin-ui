@@ -41,6 +41,9 @@ export class AppLayout {
 
   yearOptions = Array.from({ length: 11 }, (_, i) => ({ label: `Année ${2017 + i}`, value: 2017 + i }));
 
+  /** Whether the form is being sent to the server. @type {boolean} */
+  submitting = false;
+
   /** @type {FormData} */
   formData = {
     name: '',
@@ -206,21 +209,27 @@ export class AppLayout {
     return this.validationController.validate();
   }
 
+  /** Submits the form (`submit.trigger` on the form: the button or Enter, Aurelia preventing the native submission). */
   async handleSubmit() {
     const { valid } = await this.validationController.validate();
     if (!valid) {
-      this.toast.error('Form has errors. Please fix them before submitting.');
+      this.toast.error('Le formulaire contient des erreurs, veuillez les corriger.');
       return;
     }
 
-    // simulated server call: the error returned by the server is displayed by als-field like a local one
-    await new Promise(resolve => setTimeout(resolve, 300));
-    if (this.formData.email === 'deja@utilise.fr') {
-      this.validationController.addError('Cet email est déjà utilisé.', this.formData, 'email');
-      this.toast.error('Le serveur a refusé le formulaire.');
-      return;
+    // disables the submit button during the server call, to prevent a double submission
+    this.submitting = true;
+    try {
+      // simulated server call: the error returned by the server is displayed by als-field like a local one
+      await new Promise(resolve => setTimeout(resolve, 300));
+      if (this.formData.email === 'deja@utilise.fr') {
+        this.validationController.addError('Cet email est déjà utilisé.', this.formData, 'email');
+        this.toast.error('Le serveur a refusé le formulaire.');
+        return;
+      }
+      this.toast.success('Formulaire envoyé.');
+    } finally {
+      this.submitting = false;
     }
-
-    this.toast.success('Form submitted successfully!');
   }
 }
