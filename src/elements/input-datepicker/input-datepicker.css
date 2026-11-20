@@ -25,6 +25,10 @@ input-datepicker.form-select:focus-within {
   outline: solid 2px var(--bs-focus-ring-color);
   outline-offset: 2px;
 }
+/* the visible box is the host: the borderless inner input gets no ring of its own */
+input-datepicker.form-select > input.form-select:focus {
+  outline: 0;
+}
 
 .datepicker-cell.disabled {
   color: #212529 !important;
@@ -32,9 +36,10 @@ input-datepicker.form-select:focus-within {
 .datepicker-cell.day {
   position: relative;
 }
-.datepicker-cell.day.prev,
-.datepicker-cell.day.next {
-  color: var(--bs-secondary) !important;
+/* days of the previous / next month: muted neutral grey (5.2:1), the brand red looked like errors */
+.datepicker-cell.day.prev:not(.selected),
+.datepicker-cell.day.next:not(.selected) {
+  color: var(--bs-neutral-800, var(--bs-secondary-color)) !important;
 }
 .datepicker-cell.day.disabled::before {
   position: absolute;
@@ -46,7 +51,7 @@ input-datepicker.form-select:focus-within {
 .datepicker-cell.day:not(.prev):not(.next) {
   font-weight: 400;
 }
-/* today: outline in the color of the selected day (filled), red being kept for errors and focus */
+/* today: outline in the color of the selected day (filled), red being kept for errors */
 .datepicker-cell.day.today {
   color: var(--bs-dark-text-emphasis) !important;
   background-color: transparent !important;
@@ -111,33 +116,32 @@ input-datepicker.form-select:focus-within {
 .datepicker-header .datepicker-controls {
   padding: 2px 2px 0;
 }
+/* month / year navigation: neutral like the tertiary buttons of the theme (instead of the vanillajs teal palette) */
 .datepicker-controls .btn {
-  border-color: #bddcdc;
-  background-color: #fff;
+  border-color: transparent;
+  background-color: var(--bs-white);
+  color: var(--bs-body-color);
 }
-.datepicker-controls .btn:hover {
-  border-color: #a2cece;
-  background-color: #a9d1d1;
-  color: #000;
+.datepicker-controls .btn:not(:disabled):hover,
+.datepicker-controls .btn:not(:disabled):active {
+  border-color: transparent;
+  background-color: var(--bs-neutral-100, var(--bs-tertiary-bg));
+  color: var(--bs-body-color);
 }
 .datepicker-controls .btn:focus {
-  border-color: #a2cece;
-  box-shadow: 0 0 0 2px var(--bs-focus-ring-color);
-  background-color: #a9d1d1;
-  color: #000;
+  border-color: transparent;
+  box-shadow: none;
+  outline: solid 2px var(--bs-focus-ring-color);
+  outline-offset: 2px;
+}
+/* no ring after a mouse click: the keyboard focus stays in the input */
+.datepicker-controls .btn:focus:not(:focus-visible) {
+  outline: 0;
 }
 .datepicker-controls .btn:disabled {
-  border-color: #bddcdc;
-  background-color: #bddcdc;
-  color: #000;
-}
-.datepicker-controls .btn:not(:disabled):active {
-  border-color: #9ccaca;
-  background-color: #a2cece;
-  color: #000;
-}
-.datepicker-controls .btn:not(:disabled):active:focus {
-  box-shadow: 0 0 0 2px rgba(161, 187, 187, 0.5);
+  border-color: transparent;
+  background-color: var(--bs-white);
+  color: var(--bs-body-color);
 }
 .datepicker-header .datepicker-controls .btn {
   border-color: transparent;

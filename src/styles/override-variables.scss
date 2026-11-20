@@ -62,7 +62,8 @@ $enable-validation-icons: false !default;
 $enable-deprecation-messages: false !default;
 
 $focus-ring-width: 2px !default;
-$focus-ring-color: $red !default;
+// focus: the primary color, red being kept for errors (as in Carbon, DSFR); dark surfaces redefine --bs-focus-ring-color in white
+$focus-ring-color: $als-blue !default;
 
 // Buttons
 $btn-font-weight: 600 !default;
