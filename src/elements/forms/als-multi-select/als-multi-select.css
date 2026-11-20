@@ -17,14 +17,19 @@ als-multi-select {
     color: var(--bs-body-color);
   }
 
-  &:focus,
-  &.show {
+  &:focus {
     background-color: var(--bs-white);
     color: var(--bs-body-color);
-    outline: 2px solid var(--bs-focus-ring-color) !important;
-    outline-offset: 2px;
     box-shadow: 0 0 0 1px transparent;
   }
+}
+
+/* like a native select, the field keeps the ring while focused or open, also after a mouse click (bootstrap hides it on
+   buttons focused by the mouse), except when the keyboard focus is on an option of the menu, which then has the only ring */
+.multi-select-toggle.form-select:focus,
+als-multi-select:not(:has(.multi-select-menu :focus-visible)) .multi-select-toggle.show {
+  outline: 2px solid var(--bs-focus-ring-color);
+  outline-offset: 2px;
 }
 
 /* at least as wide as the toggle, wider when a label needs it */

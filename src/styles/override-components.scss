@@ -1,7 +1,7 @@
 // BUTTONS
 .btn:focus {
   box-shadow: none;
-  outline: solid 2px $red;
+  outline: solid 2px var(--bs-focus-ring-color);
   outline-offset: 2px;
 }
 
@@ -36,14 +36,31 @@
   background-color: $neutral-100;
 }
 
-// FORM CONTROL
-.form-control:focus {
+// FORM CONTROL / SELECT: the outline replaces the bootstrap glow, also in the error state
+.form-control:focus,
+.form-select:focus,
+.form-control.is-invalid:focus,
+.form-select.is-invalid:focus {
   box-shadow: none;
-  outline: solid 2px $red;
+}
+.form-control:focus,
+.form-select:focus {
+  outline: solid 2px var(--bs-focus-ring-color);
   outline-offset: 2px;
 }
 
-.form-control.is-invalid + .input-group-text {
+// CHECKBOX / RADIO: the outline of the other fields instead of the bootstrap glow, shown on keyboard focus only
+.form-check-input:focus,
+.form-check-input.is-invalid:focus {
+  box-shadow: none;
+}
+.form-check-input:focus-visible {
+  outline: solid 2px var(--bs-focus-ring-color);
+  outline-offset: 2px;
+}
+
+.form-control.is-invalid + .input-group-text,
+.form-select:has(> .is-invalid) + .input-group-text {
   border-color: $form-invalid-border-color;
 }
 
@@ -74,7 +91,7 @@
 }
 
 .dropdown-toggle:focus {
-  outline: solid 2px $red;
+  outline: solid 2px var(--bs-focus-ring-color);
   outline-offset: 2px;
   box-shadow: 0 0 0 1px transparent;
 }
@@ -92,9 +109,12 @@
     cursor: pointer;
   }
 
+  // drawn above the input, like bootstrap does for .input-group .btn:focus
   button.input-group-text:focus-visible {
-    outline: 2px solid $als-blue;
-    outline-offset: -2px;
+    position: relative;
+    z-index: 5;
+    outline: 2px solid var(--bs-focus-ring-color);
+    outline-offset: 2px;
   }
 
   &:hover {
@@ -104,8 +124,19 @@
   &:has(.is-invalid):hover {
     box-shadow: 0 0 0 1px $form-invalid-border-color;
   }
-  &:focus {
-    outline: solid 2px $red;
+  // the focus state prevails over the hover state: a single ring around the focused field
+  &:focus-within:hover {
+    box-shadow: none;
+  }
+  // a field with an addon (€, calendar...) is one box: the focus ring wraps the field and its addon
+  // (a focused button addon, e.g. the password toggle, keeps its own ring)
+  &:has(> .input-group-text):has(> .form-control:focus, > .form-select:focus-within) {
+    outline: solid 2px var(--bs-focus-ring-color);
     outline-offset: 2px;
+
+    > .form-control:focus,
+    > .form-select:focus-within {
+      outline: 0;
+    }
   }
 }
