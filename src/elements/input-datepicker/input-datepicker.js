@@ -82,6 +82,11 @@ export class InputDatepicker {
       autohide: this.autohide,
       language: 'fr',
       todayHighlight: true,
+      // the `today` class is visual only: also expose today to screen readers (WAI-ARIA date picker pattern)
+      beforeShowDay: date =>
+        date.toDateString() === new Date().toDateString()
+          ? { content: `<span aria-current="date">${date.getDate()}</span>` }
+          : undefined,
       daysOfWeekDisabled: this.disabledDays,
       // @ts-ignore
       datesDisabled: this.disabledDates?.map(d => new Date(d)),

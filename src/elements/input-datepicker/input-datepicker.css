@@ -46,10 +46,11 @@ input-datepicker.form-select:focus-within {
 .datepicker-cell.day:not(.prev):not(.next) {
   font-weight: 400;
 }
+/* today: outline in the color of the selected day (filled), red being kept for errors and focus */
 .datepicker-cell.day.today {
   color: var(--bs-dark-text-emphasis) !important;
   background-color: transparent !important;
-  border: 2px var(--bs-secondary) solid;
+  border: 2px var(--bs-primary) solid;
 }
 .datepicker-cell.day.today.selected {
   color: var(--bs-white) !important;
