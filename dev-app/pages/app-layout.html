@@ -13,13 +13,14 @@
 
     <div class="flex-grow-1 p-4">
       <h1>Page content</h1>
-      <form novalidate class="container-fluid">
+      <form novalidate class="container-fluid" submit.trigger="handleSubmit()">
         <div class="row">
           <div class="col">
-            <als-field label="Name" required="true">
+            <als-field label="Nom" required="true">
               <input
                 class="form-control"
                 name="name"
+                autocomplete="name"
                 placeholder="Votre nom"
                 required
                 value.bind="formData.name & validate" />
@@ -28,7 +29,7 @@
           </div>
           <div class="col">
             <als-field
-              label="Email"
+              label="E-mail"
               required="true"
               hint="Saisir deja@utilise.fr pour simuler une erreur renvoyée par le serveur.">
               <input
@@ -46,22 +47,24 @@
         </div>
         <div class="row">
           <div class="col">
-            <als-field label="Age" required="true" hint="Valeur comprise entre 18 et 150.">
+            <als-field label="Âge" required="true" hint="Valeur comprise entre 18 et 150.">
               <input
                 class="form-control"
                 name="age"
                 required
+                inputmode="numeric"
                 input-mask="integer"
                 value.bind="formData.age | formInputNumberFormat:'integer' & validate" />
             </als-field>
             <p>AGE = ${formData.age}</p>
           </div>
           <div class="col">
-            <als-field label="Age" required="true" hint="Valeur comprise entre 18 et 150.">
+            <als-field label="Âge" required="true" hint="Valeur comprise entre 18 et 150.">
               <input
                 class="form-control"
                 name="age"
                 required
+                inputmode="numeric"
                 input-mask="integer"
                 value.bind="formData.age | formInputNumberFormat:'integer' & validate" />
             </als-field>
@@ -70,22 +73,24 @@
         </div>
         <div class="row">
           <div class="col">
-            <als-field label="Height" required="true">
+            <als-field label="Taille (m)" required="true">
               <input
                 class="form-control"
                 name="height"
                 required
+                inputmode="decimal"
                 input-mask="decimal"
                 value.bind="formData.height | formInputNumberFormat:'decimal' & validate" />
             </als-field>
             <p>HEIGHT = ${formData.height}</p>
           </div>
           <div class="col">
-            <als-field label="Money" required="true">
+            <als-field label="Montant" required="true">
               <input
                 class="form-control"
                 name="money"
                 required
+                inputmode="decimal"
                 input-mask="currency"
                 value.bind="formData.money | formInputNumberFormat:'currency' & validate" />
               <span class="input-group-text" aria-hidden="true">€</span>
@@ -95,7 +100,7 @@
         </div>
         <div class="row">
           <div class="col">
-            <als-field label="Password" required="true">
+            <als-field label="Mot de passe" required="true">
               <input
                 type="password"
                 class="form-control"
@@ -108,7 +113,7 @@
             <p>PASSWORD = ${formData.password}</p>
           </div>
           <div class="col">
-            <als-field label="Year" required="true">
+            <als-field label="Année" required="true">
               <select class="form-select" name="year" required value.bind="formData.year & validate">
                 <option model.bind="null">Sélectionner</option>
                 <option repeat.for="item of yearOptions" model.bind="item.value">${item.label}</option>
@@ -119,7 +124,7 @@
         </div>
         <div class="row">
           <div class="col">
-            <als-field label="Years" required="true">
+            <als-field label="Années" required="true">
               <als-multi-select
                 items.bind="yearOptions"
                 value.bind="formData.years & validate"></als-multi-select>
@@ -145,6 +150,7 @@
                   class="form-check-input"
                   id="civility-${item.value}"
                   name="civility"
+                  required
                   model.bind="item.value"
                   checked.bind="formData.civility & validate" />
                 <label class="form-check-label" for="civility-${item.value}">${item.label}</label>
@@ -175,6 +181,7 @@
                   type="checkbox"
                   class="form-check-input"
                   id="interest-${item.value}"
+                  name="interests"
                   model.bind="item.value"
                   checked.bind="formData.interests & validate" />
                 <label class="form-check-label" for="interest-${item.value}">${item.label}</label>
@@ -203,6 +210,7 @@
                 class="form-control"
                 name="document"
                 accept=".pdf,.jpg,.jpeg,.png"
+                required
                 ref="documentInput"
                 files.bind="formData.document & validate" />
             </als-field>
@@ -210,13 +218,17 @@
           </div>
           <div class="col">
             <als-field label="Comment nous avez-vous connus ?" required="true">
-              <select class="form-select" name="source" value.bind="formData.source & validate">
+              <select class="form-select" name="source" required value.bind="formData.source & validate">
                 <option model.bind="null">Sélectionner</option>
                 <option repeat.for="item of sourceOptions" model.bind="item.value">${item.label}</option>
               </select>
             </als-field>
             <als-field if.bind="formData.source === 'other'" label="Précisez" required="true" class="mt-3">
-              <input class="form-control" name="sourceOther" value.bind="formData.sourceOther & validate" />
+              <input
+                class="form-control"
+                name="sourceOther"
+                required
+                value.bind="formData.sourceOther & validate" />
             </als-field>
             <p>SOURCE = ${formData.source} ${formData.sourceOther}</p>
           </div>
@@ -259,7 +271,7 @@
         </div>
         <div class="row">
           <div class="col">
-            <button class="btn btn-primary" type="button" click.trigger="handleSubmit()">SUBMIT</button>
+            <button class="btn btn-primary" type="submit" disabled.bind="submitting">Envoyer</button>
             <button class="btn btn-outline-primary ms-2" type="button" click.trigger="fillForm()">
               Remplir avec des valeurs valides
             </button>
