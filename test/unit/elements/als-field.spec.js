@@ -87,6 +87,8 @@ describe('als-field', () => {
     expect(input.getAttribute('aria-invalid')).toBe('true');
     expect(input.getAttribute('aria-describedby')).toBe('name-error');
     expect(message.id).toBe('name-error');
+    // bootstrap feedback class: colored with the theme `$form-invalid-color` token
+    expect(message.classList).toContain('invalid-feedback');
     expect(message.textContent.trim()).toBe('Ce champ est obligatoire.');
 
     model.name = 'John';

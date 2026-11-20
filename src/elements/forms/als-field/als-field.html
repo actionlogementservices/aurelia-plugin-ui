@@ -18,6 +18,8 @@
       <slot></slot>
     </div>
     <div if.bind="hint" id.bind="hintId" class="form-text">${hint}</div>
-    <small show.bind="errorMessage" id.bind="errorId" role="alert" class="text-danger">${errorMessage}</small>
+    <small show.bind="errorMessage" id.bind="errorId" role="alert" class="invalid-feedback">
+      ${errorMessage}
+    </small>
   </div>
 </template>

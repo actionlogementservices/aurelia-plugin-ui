@@ -1,3 +1,8 @@
 als-field {
   display: block;
+
+  /* bootstrap shows .invalid-feedback after an .is-invalid sibling only: als-field shows it with show.bind */
+  .invalid-feedback {
+    display: block;
+  }
 }
