@@ -1,3 +1,8 @@
+/* keeps a focused field and its label below the sticky header of the app-layout page when the page scrolls to it */
+html {
+  scroll-padding-top: 8rem;
+}
+
 main {
   min-height: 100vh;
 }

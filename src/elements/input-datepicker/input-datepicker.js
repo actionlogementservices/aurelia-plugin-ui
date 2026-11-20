@@ -75,6 +75,12 @@ export class InputDatepicker {
     // attach an event handler to detect when date is changed in the underlying vanillajs component
     this._input.addEventListener('changeDate', this.internalComponentDateChanged.bind(this));
     this._input.addEventListener('change', preventEventPropagation);
+    // Enter selects the date of the open calendar, it must not also submit the form: registered before the vanillajs
+    // component, whose listener closes the calendar and ignores `defaultPrevented`
+    this._preventSubmitOnPick = event => {
+      if (event.key === 'Enter' && this._datepicker?.active) event.preventDefault();
+    };
+    this._input.addEventListener('keydown', this._preventSubmitOnPick);
     // create the underlying vanillajs component
     this._datepicker = new Datepicker(this._input, {
       buttonClass: 'btn btn-secondary',
@@ -109,6 +115,7 @@ export class InputDatepicker {
   detached() {
     this._input?.removeEventListener('changeDate', this.internalComponentDateChanged);
     this._input.removeEventListener('change', preventEventPropagation);
+    this._input.removeEventListener('keydown', this._preventSubmitOnPick);
     this._datepicker?.destroy();
   }
 
@@ -181,8 +188,8 @@ export class InputDatepicker {
     this._propagation = 'up';
     /** @type {{date: Date}} */ const { date } = event.detail;
     this.setCustomElementDate(date);
-    this._input.blur();
     // if the date change is caused by user interaction, trigger change/blur event to run validation
+    // (the focus stays on the input, as in the WAI-ARIA date picker pattern: keyboard users keep their position)
     const { detail } = event;
     if (detail?.datepicker?.picker?.active) {
       this.triggerChangeEvent(date);

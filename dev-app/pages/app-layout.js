@@ -209,11 +209,20 @@ export class AppLayout {
     return this.validationController.validate();
   }
 
+  /**
+   * Moves the focus to the first invalid field, marked by als-field with `aria-invalid`: screen readers read its label
+   * and its error message.
+   */
+  focusFirstError() {
+    /** @type {HTMLElement} */ (this.form.querySelector('[aria-invalid="true"]'))?.focus();
+  }
+
   /** Submits the form (`submit.trigger` on the form: the button or Enter, Aurelia preventing the native submission). */
   async handleSubmit() {
     const { valid } = await this.validationController.validate();
     if (!valid) {
       this.toast.error('Le formulaire contient des erreurs, veuillez les corriger.');
+      this.focusFirstError();
       return;
     }
 
@@ -225,6 +234,7 @@ export class AppLayout {
       if (this.formData.email === 'deja@utilise.fr') {
         this.validationController.addError('Cet email est déjà utilisé.', this.formData, 'email');
         this.toast.error('Le serveur a refusé le formulaire.');
+        this.focusFirstError();
         return;
       }
       this.toast.success('Formulaire envoyé.');
