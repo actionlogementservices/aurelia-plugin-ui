@@ -503,6 +503,20 @@ The selection custom elements expose the user selection in two complementary for
   | `no-result-text` | Text displayed when user input filters out all items | Any string | `Aucun résultat` |
   | `delay` | Throttling delay in ms before requesting data | Any number > 0 | `700`
 
+- In a form, place it in an [`als-field`](#als-field) and bind the selection with `& validate`. The label is linked to
+  the search input, and the selection is validated when the user leaves the field, like a native input.
+
+  ```html
+  <als-field label="Ville" required="true">
+    <auto-complete
+      class="form-control"
+      controller.bind="citiesController"
+      label-key="name"
+      value-key="code"
+      selected-value.bind="model.city & validate"></auto-complete>
+  </als-field>
+  ```
+
 ### `badges-auto-complete` custom element
 
 **Multiple selections** dropdown element with query **controller**, **filtered by user input**, with **badges** representing current selection, and **customizable dropdown item template**, well adapted for **large number of items**.
@@ -826,7 +840,8 @@ Injects the Google Tag Manager script and its noscript iframe fallback into the 
 ### Forms
 
 Form fields are **native controls** (`input`, `select`, `textarea`) or form custom elements (`als-multi-select`,
-`als-datepicker`) placed in an `<als-field>`, which adds the label, the hint and the validation error.
+`als-datepicker`, [`auto-complete`](#auto-complete-custom-element)) placed in an `<als-field>`, which adds the label,
+the hint and the validation error.
 Validation relies on [aurelia-validation](https://aurelia.io/docs/plugins/validation): register the plugin in your
 `main.js` and bind the values with `& validate`.
 
@@ -915,6 +930,21 @@ A single checkbox does not need `group`, its own label names it:
 </als-field>
 ```
 
+An error returned by the server is displayed like a local one: add it to the controller for the property bound in the
+field. It is removed the next time the property is validated, e.g. when the user changes the value and leaves the
+field.
+
+```javascript
+async submit() {
+  const { valid } = await this.controller.validate();
+  if (!valid) return;
+  const response = await this.api.save(this.model);
+  if (response.emailAlreadyUsed) {
+    this.controller.addError('Cet email est déjà utilisé.', this.model, 'email');
+  }
+}
+```
+
 #### File input
 
 A native file input works in an `als-field`. Bind it with `files.bind` (a `FileList`), not `value.bind`, and declare
@@ -999,6 +1029,55 @@ An [`input-datepicker`](#input-datepicker-custom-element) with the calendar icon
   | `disabled-days` | Days of week that cannot be selected (0 is Sunday) | Array of numbers | `[]` |
   | `disabled-dates` | Dates that cannot be selected | Array of ISO strings | `[]` |
   | `autohide` | Closes the calendar after a selection | `true` or `false` | `true` |
+
+#### Cross-field rules
+
+A rule may depend on another property, e.g. an end date that cannot be before the start date. `als-field` does not
+know this dependency: the end date is validated when the user leaves its own field, not when the start date changes.
+Revalidate the dependent property yourself, and limit the calendar to avoid the error in the first place.
+
+```html
+<als-field label="Date de début" required="true">
+  <als-datepicker value.bind="model.startDate & validate"></als-datepicker>
+</als-field>
+<als-field label="Date de fin" required="true">
+  <als-datepicker value.bind="model.endDate & validate" min-date.bind="model.startDate"></als-datepicker>
+</als-field>
+```
+
+```javascript
+import { BindingEngine, inject, NewInstance } from 'aurelia-framework';
+import { ValidationController, ValidationRules } from 'aurelia-validation';
+
+// the dates are UTC ISO strings (the 25/11 in France is 2026-11-24T23:00:00.000Z): compare days, not strings
+const day = isoDate => new Date(isoDate).setHours(0, 0, 0, 0);
+
+@inject(NewInstance.of(ValidationController), BindingEngine)
+export class MyForm {
+  model = { startDate: null, endDate: null };
+
+  constructor(controller, bindingEngine) {
+    this.controller = controller;
+    this.bindingEngine = bindingEngine;
+    ValidationRules.ensure('startDate').required()
+      .ensure('endDate').required()
+      .satisfies((endDate, model) => !model.startDate || day(endDate) >= day(model.startDate))
+      .withMessage('La date de fin ne peut pas être antérieure à la date de début.')
+      .on(this.model);
+  }
+
+  activate() {
+    // revalidates the end date, once entered, when the start date changes
+    this.subscription = this.bindingEngine
+      .propertyObserver(this.model, 'startDate')
+      .subscribe(() => this.model.endDate && this.controller.validate({ object: this.model, propertyName: 'endDate' }));
+  }
+
+  deactivate() {
+    this.subscription.dispose();
+  }
+}
+```
 
 #### <als-input-number> (deprecated)
 

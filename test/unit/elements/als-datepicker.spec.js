@@ -62,6 +62,15 @@ describe('als-datepicker', () => {
     expect(addon.querySelector('i').classList).toContain('bi-calendar');
   });
 
+  test('exposes today to screen readers with aria-current in the calendar', async () => {
+    document.querySelector('input-datepicker').au['input-datepicker'].viewModel._datepicker.show();
+    await flush();
+    const current = document.querySelectorAll('.datepicker-cell [aria-current="date"]');
+    expect(current).toHaveLength(1);
+    expect(current[0].parentElement.classList).toContain('today');
+    expect(current[0].textContent).toBe(String(new Date().getDate()));
+  });
+
   test('renders the validation error on the inner input and updates the bound value', async () => {
     const input = document.querySelector('input-datepicker > input');
 

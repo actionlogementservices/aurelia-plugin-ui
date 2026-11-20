@@ -239,6 +239,26 @@
         </div>
         <div class="row">
           <div class="col">
+            <als-field label="Date de début" required="true">
+              <als-datepicker
+                value.bind="formData.startDate & validate"
+                min-date.bind="mindateString"
+                max-date.bind="maxDateString"></als-datepicker>
+            </als-field>
+            <p>START = ${formData.startDate}</p>
+          </div>
+          <div class="col">
+            <als-field label="Date de fin" required="true" hint="Égale ou postérieure à la date de début.">
+              <als-datepicker
+                value.bind="formData.endDate & validate"
+                min-date.bind="formData.startDate || mindateString"
+                max-date.bind="maxDateString"></als-datepicker>
+            </als-field>
+            <p>END = ${formData.endDate}</p>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col">
             <button class="btn btn-primary" type="button" click.trigger="handleSubmit()">SUBMIT</button>
             <button class="btn btn-outline-primary ms-2" type="button" click.trigger="fillForm()">
               Remplir avec des valeurs valides

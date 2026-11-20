@@ -1,10 +1,17 @@
-import { inject, NewInstance } from 'aurelia-framework';
+import { BindingEngine, inject, NewInstance } from 'aurelia-framework';
 import { ValidationControllerFactory, ValidationRules } from 'aurelia-validation';
 
 import { ToastService } from 'core/toast-service/toast-service';
 import { AutoCompleteController } from 'resources/elements/auto-complete/auto-complete-controller';
 
-/** @typedef {{ name: string; email: string; age: number, height: number, money: number, password: string, year: number, years: Array<number>, date: string, civility: string, terms: boolean, interests: Array<string>, comment: string, document: FileList, source: string, sourceOther: string, city: string }} FormData */
+/** @typedef {{ name: string; email: string; age: number, height: number, money: number, password: string, year: number, years: Array<number>, date: string, civility: string, terms: boolean, interests: Array<string>, comment: string, document: FileList, source: string, sourceOther: string, city: string, startDate: string, endDate: string }} FormData */
+
+/**
+ * Day of an ISO date, ignoring the time.
+ * @param {string} isoDate ISO date
+ * @returns {number} timestamp of the day at midnight, local time
+ */
+const day = isoDate => new Date(isoDate).setHours(0, 0, 0, 0);
 
 const CITIES = [
   { code: '75056', name: 'Paris' },
@@ -19,7 +26,7 @@ const CITIES = [
   { code: '59350', name: 'Lille' }
 ];
 
-@inject(ToastService, ValidationControllerFactory, NewInstance.of(AutoCompleteController))
+@inject(ToastService, ValidationControllerFactory, NewInstance.of(AutoCompleteController), BindingEngine)
 export class AppLayout {
   userMenuItems = [
     { label: 'Mes informations', icon: 'bi-person', href: '#' },
@@ -52,7 +59,9 @@ export class AppLayout {
     document: undefined,
     source: null,
     sourceOther: '',
-    city: undefined
+    city: undefined,
+    startDate: null,
+    endDate: null
   };
 
   sourceOptions = [
@@ -76,8 +85,10 @@ export class AppLayout {
    * @param {ToastService} toast
    * @param {ValidationControllerFactory} validationControllerFactory
    * @param {AutoCompleteController} cityController
+   * @param {BindingEngine} bindingEngine
    */
-  constructor(toast, validationControllerFactory, cityController) {
+  constructor(toast, validationControllerFactory, cityController, bindingEngine) {
+    this.bindingEngine = bindingEngine;
     this.toast = toast;
     this.validationController = validationControllerFactory.createForCurrentScope();
     this.cityController = cityController;
@@ -140,7 +151,28 @@ export class AppLayout {
       .when(data => data.source === 'other')
       .ensure('city')
       .required()
+      .ensure('startDate')
+      .required()
+      .ensure('endDate')
+      .required()
+      .satisfies((endDate, data) => !data.startDate || day(endDate) >= day(data.startDate))
+      .withMessage('La date de fin ne peut pas être antérieure à la date de début.')
       .on(this.formData);
+  }
+
+  activate() {
+    // cross-field rule: the end date depends on the start date, revalidate it when the start date changes
+    this.startDateSubscription = this.bindingEngine
+      .propertyObserver(this.formData, 'startDate')
+      .subscribe(
+        () =>
+          this.formData.endDate &&
+          this.validationController.validate({ object: this.formData, propertyName: 'endDate' })
+      );
+  }
+
+  deactivate() {
+    this.startDateSubscription.dispose();
   }
 
   /** Fills the form with valid values, then validates it to clear the displayed errors. */
@@ -167,7 +199,9 @@ export class AppLayout {
       document: files.files,
       source: 'other',
       sourceOther: 'Salon du logement',
-      city: '69123'
+      city: '69123',
+      startDate: new Date().toISOString(),
+      endDate: new Date(Date.now() + 7 * 24 * 3600 * 1000).toISOString()
     });
     return this.validationController.validate();
   }
