@@ -1,39 +1,36 @@
-// BUTTONS
-.btn:focus {
-  box-shadow: none;
-  outline: solid 2px var(--bs-focus-ring-color);
+// the focus indicator shared by every control: an outline in the focus ring color, outside the visible box
+@mixin als-focus-ring {
+  outline: $focus-ring-width solid var(--bs-focus-ring-color);
   outline-offset: 2px;
 }
 
-.btn-primary {
-  background-color: $als-blue;
-  color: $white;
-  border: 1px solid $als-blue;
-}
-.btn-primary:hover {
-  background-color: shade-color($als-blue, 30%);
+// BUTTONS (.btn-primary and .btn-secondary come from $primary and $secondary)
+.btn:focus {
+  box-shadow: none;
+  @include als-focus-ring;
 }
 
-.btn-secondary {
-  background-color: $als-red;
-  color: $white;
-  border: 1px solid $als-red;
+// a darker hover than bootstrap (30% instead of 15%) on the two brand buttons
+.btn-primary {
+  --bs-btn-hover-bg: #{shade-color($primary, 30%)};
 }
-.btn-secondary:hover {
-  background-color: shade-color($als-red, 30%);
+.btn-secondary {
+  --bs-btn-hover-bg: #{shade-color($secondary, 30%)};
 }
 
 .btn-tertiary {
-  background-color: $white;
-  color: $als-blue;
-  border: 1px solid $als-blue;
-}
-.btn-tertiary:focus {
-  border: 1px solid $als-blue;
-}
-.btn-tertiary:hover {
-  border: 1px solid $als-blue;
-  background-color: $neutral-100;
+  @include button-variant(
+    $white,
+    $als-blue,
+    $color: $als-blue,
+    $hover-background: $neutral-100,
+    $hover-border: $als-blue,
+    $hover-color: $als-blue,
+    $active-background: $neutral-200,
+    $active-border: $als-blue,
+    $active-color: $als-blue,
+    $disabled-color: $als-blue
+  );
 }
 
 // FORM CONTROL / SELECT: the outline replaces the bootstrap glow, also in the error state
@@ -45,8 +42,7 @@
 }
 .form-control:focus,
 .form-select:focus {
-  outline: solid 2px var(--bs-focus-ring-color);
-  outline-offset: 2px;
+  @include als-focus-ring;
 }
 
 // CHECKBOX / RADIO: the outline of the other fields instead of the bootstrap glow, shown on keyboard focus only
@@ -55,8 +51,7 @@
   box-shadow: none;
 }
 .form-check-input:focus-visible {
-  outline: solid 2px var(--bs-focus-ring-color);
-  outline-offset: 2px;
+  @include als-focus-ring;
 }
 
 .form-control.is-invalid + .input-group-text,
@@ -79,20 +74,15 @@
   }
 }
 
-// DROPDOWN
+// DROPDOWN (no caret: $enable-caret is false)
 .dropdown-toggle {
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
 
-.dropdown-toggle::after {
-  content: unset;
-}
-
 .dropdown-toggle:focus {
-  outline: solid 2px var(--bs-focus-ring-color);
-  outline-offset: 2px;
+  @include als-focus-ring;
   box-shadow: 0 0 0 1px transparent;
 }
 
@@ -113,8 +103,7 @@
   button.input-group-text:focus-visible {
     position: relative;
     z-index: 5;
-    outline: 2px solid var(--bs-focus-ring-color);
-    outline-offset: 2px;
+    @include als-focus-ring;
   }
 
   &:hover {
@@ -131,8 +120,7 @@
   // a field with an addon (€, calendar...) is one box: the focus ring wraps the field and its addon
   // (a focused button addon, e.g. the password toggle, keeps its own ring)
   &:has(> .input-group-text):has(> .form-control:focus, > .form-select:focus-within) {
-    outline: solid 2px var(--bs-focus-ring-color);
-    outline-offset: 2px;
+    @include als-focus-ring;
 
     > .form-control:focus,
     > .form-select:focus-within {

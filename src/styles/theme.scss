@@ -1,0 +1,6 @@
+// Action Logement theme: bootstrap compiled with the plugin variables and component overrides.
+// Consumers import this single file; their own variables go before it (the theme variables are !default).
+@import 'bootstrap/scss/functions';
+@import './override-variables';
+@import 'bootstrap/scss/bootstrap';
+@import './override-components';

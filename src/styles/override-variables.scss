@@ -60,6 +60,8 @@ $small-font-size: 0.75rem !default;
 $enable-negative-margins: true !default;
 $enable-validation-icons: false !default;
 $enable-deprecation-messages: false !default;
+// the dropdown toggles draw their own chevron
+$enable-caret: false !default;
 
 $focus-ring-width: 2px !default;
 // focus: the primary color, red being kept for errors (as in Carbon, DSFR); dark surfaces redefine --bs-focus-ring-color in white

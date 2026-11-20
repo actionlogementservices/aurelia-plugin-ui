@@ -23,7 +23,8 @@ export default function processSCSS() {
     .pipe(gulp.dest('./src/styles/css'));
 }
 
-// publishes the raw Sass variable overrides so consumers can @import them before compiling their own Bootstrap
+// publishes the Sass sources of the theme: theme.scss (bootstrap + theme in one import) and the override files it chains,
+// for the consumers that build their own bootstrap pipeline
 export function pluginSCSS(dest) {
   return function processPluginScss() {
     return gulp.src(project.plugin.source.scss).pipe(gulp.dest(`${dest}/styles/scss`));

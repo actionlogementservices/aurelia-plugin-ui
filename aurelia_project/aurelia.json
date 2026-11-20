@@ -29,10 +29,10 @@
   "plugin": {
     "source": {
       "js": "src/**/*.js",
-      "css": "src/**/*.css",
+      "css": ["src/**/*.css", "!src/styles/css/**"],
       "html": "src/**/*.html",
       "json": "src/**/*.json",
-      "scss": "src/styles/override*.scss"
+      "scss": "src/styles/*.scss"
     }
   },
   "markupProcessor": {
@@ -45,8 +45,8 @@
     "source": ["dev-app/**/*.css", "src/**/*.css"]
   },
   "scssProcessor": {
-    "source": ["src/styles/custom.scss"],
-    "watchSource": ["src/styles/custom.scss", "src/styles/override*.scss"]
+    "source": ["src/styles/theme.scss"],
+    "watchSource": ["src/styles/*.scss"]
   },
   "jsonProcessor": {
     "source": ["dev-app/**/*.json", "src/**/*.json"]

@@ -41,15 +41,14 @@ And several custom elements :
        .plugin(PLATFORM.moduleName('@actionlogementservices/aurelia-plugin-ui'))
    ```
 
-1. **Import** the theme when compiling Bootstrap, so that the components get its colors (brand colors, error `$danger`, field borders, focus ring):
+1. **Import** the theme, which compiles Bootstrap with the Action Logement colors (brand colors, error `$danger`, field borders, focus ring):
 
    ```scss
-   @import 'bootstrap/scss/functions'; // required first: the theme derives colors with shade-color()
-   // your own overrides go here: the theme variables are !default, so the ones you set first win
-   @import '@actionlogementservices/aurelia-plugin-ui/dist/styles/scss/override-variables.scss';
-   @import 'bootstrap/scss/bootstrap';
-   @import '@actionlogementservices/aurelia-plugin-ui/dist/styles/scss/override-components.scss';
+   // your own overrides go first: the theme variables are !default, so the ones you set first win
+   @import '@actionlogementservices/aurelia-plugin-ui/dist/styles/scss/theme.scss';
    ```
+
+   `theme.scss` chains `bootstrap/scss/functions`, `override-variables.scss`, `bootstrap/scss/bootstrap` and `override-components.scss`. If your app builds its own Bootstrap pipeline (e.g. to merge `$theme-colors` or to use Bootstrap functions in its variables), import these files in the same order instead, `bootstrap/scss/functions` first since the theme derives colors with `shade-color()`, and `bootstrap/scss/mixins` before `override-components.scss`.
 
    Without the theme, the components fall back on the Bootstrap defaults.
 
