@@ -41,6 +41,18 @@ And several custom elements :
        .plugin(PLATFORM.moduleName('@actionlogementservices/aurelia-plugin-ui'))
    ```
 
+1. **Import** the theme when compiling Bootstrap, so that the components get its colors (brand colors, error `$danger`, field borders, focus ring):
+
+   ```scss
+   @import 'bootstrap/scss/functions'; // required first: the theme derives colors with shade-color()
+   // your own overrides go here: the theme variables are !default, so the ones you set first win
+   @import '@actionlogementservices/aurelia-plugin-ui/dist/styles/scss/override-variables.scss';
+   @import 'bootstrap/scss/bootstrap';
+   @import '@actionlogementservices/aurelia-plugin-ui/dist/styles/scss/override-components.scss';
+   ```
+
+   Without the theme, the components fall back on the Bootstrap defaults.
+
 ## Usage
 
 ### `DialogService`

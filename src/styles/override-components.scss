@@ -44,7 +44,7 @@
 }
 
 .form-control.is-invalid + .input-group-text {
-  border-color: $red;
+  border-color: $form-invalid-border-color;
 }
 
 // ACCORDION
@@ -99,6 +99,10 @@
 
   &:hover {
     box-shadow: 0 0 0 1px $als-blue;
+  }
+  // the error state prevails over the hover state: the border thickens in red instead of mixing red and blue
+  &:has(.is-invalid):hover {
+    box-shadow: 0 0 0 1px $form-invalid-border-color;
   }
   &:focus {
     outline: solid 2px $red;

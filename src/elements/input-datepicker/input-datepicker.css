@@ -21,8 +21,8 @@ input-datepicker.form-select:has(> input.is-invalid) {
   border-color: var(--bs-form-invalid-border-color);
 }
 input-datepicker.form-select:focus-within {
-  border-color: var(--bs-border-color);
-  outline: solid 2px var(--bs-danger);
+  border-color: var(--als-input-border-color, var(--bs-border-color));
+  outline: solid 2px var(--bs-focus-ring-color);
   outline-offset: 2px;
 }
 
@@ -122,7 +122,7 @@ input-datepicker.form-select:focus-within {
 }
 .datepicker-controls .btn:focus {
   border-color: #a2cece;
-  box-shadow: 0 0 0 2px var(--bs-danger);
+  box-shadow: 0 0 0 2px var(--bs-focus-ring-color);
   background-color: #a9d1d1;
   color: #000;
 }

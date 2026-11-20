@@ -41,10 +41,15 @@ $black: #000000 !default;
   --bs-neutral-700: #{$neutral-700};
   --bs-neutral-800: #{$neutral-800};
   --bs-neutral-900: #{$neutral-900};
+  // border of the form fields, for the components that draw it themselves
+  --als-input-border-color: #{$neutral-700};
 }
 
 $primary: $als-blue !default;
 $secondary: $als-red !default;
+// errors: a darker shade of the brand red, to tell them apart from $als-red and reach 4.5:1 against white
+// for the error messages and the white text of the error toast (WCAG 1.4.3)
+$danger: shade-color($als-red, 10%) !default;
 
 $border-radius: 0.25rem !default;
 
@@ -62,8 +67,10 @@ $focus-ring-color: $red !default;
 // Buttons
 $btn-font-weight: 600 !default;
 
-// Input
-$input-focus-border-color: $neutral-300 !default;
+// Input: the borders of the fields, checkboxes and radios reach 3:1 against the background (WCAG 1.4.11)
+$input-border-color: $neutral-700 !default;
+$input-focus-border-color: $neutral-700 !default;
+$form-check-input-border: var(--bs-border-width) solid $neutral-700 !default;
 $input-focus-width: 1px !default;
 $input-group-addon-bg: $white !default;
 
