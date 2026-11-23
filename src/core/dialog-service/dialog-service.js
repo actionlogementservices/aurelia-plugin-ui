@@ -10,46 +10,35 @@ import { DialogController } from './dialog-controller';
  * Implements the dialog service.
  * @category dialog
  */
-@inject(CompositionEngine, Container, Factory.of(DialogRenderer), DialogResult)
+@inject(CompositionEngine, Container, Factory.of(DialogRenderer))
 export class DialogService {
   /**
    * Creates an instance of the DialogService class.
    * @param {CompositionEngine} compositionEngine aurelia composition engine
    * @param {Container} container aurelia container
    * @param {() => DialogRenderer} rendererFactory dialog renderer factory
-   * @param {DialogResult} result dialog result
    */
-  constructor(compositionEngine, container, rendererFactory, result) {
+  constructor(compositionEngine, container, rendererFactory) {
     this._container = container;
     this._compositionEngine = compositionEngine;
     this._rendererFactory = rendererFactory;
-    this._result = result;
-    this._currentModalRenderer = undefined; // track active modal only
   }
 
   /**
-   * Opens the dialog.
+   * Opens the dialog. A dialog opened while another one is open is stacked above it.
    * @param {DialogServiceParameters} parameters input parameters
-   * @returns {Promise<DialogResult>} modal dialog result
+   * @returns {Promise<DialogResult>} result of this dialog
    */
   async open(parameters) {
     const { viewModel, view, model, mode = 'modal', locked, fullscreen, position } = parameters;
-    // Switch only if mode is 'modal'
-    if (mode === 'modal' && this._currentModalRenderer) {
-      this._currentModalRenderer.hide();
-      this._currentModalRenderer = undefined;
-    }
-    // creates the dialog instance
-    const renderer = this._rendererFactory(); // new instance per dialog
+    // creates the dialog instance, with its own result
+    const renderer = this._rendererFactory();
+    const result = new DialogResult();
     const host = renderer.createHost({ mode, locked, fullscreen, position });
-    // Track modal renderer if mode is 'modal'
-    if (mode === 'modal') {
-      this._currentModalRenderer = renderer;
-    }
     // creates a child container for this dialog
     const childContainer = this._container.createChild();
     childContainer.registerInstance(DialogRenderer, renderer);
-    childContainer.registerInstance(DialogResult, this._result);
+    childContainer.registerInstance(DialogResult, result);
     childContainer.registerTransient(DialogController);
     /** @type {CompositionContext} */
     const compositionContext = {
@@ -69,6 +58,6 @@ export class DialogService {
     viewModelController.view.unbind();
     // @ts-ignore
     viewModelController.view.removeNodes();
-    return this._result;
+    return result;
   }
 }
