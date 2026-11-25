@@ -13,11 +13,6 @@ describe('als-datepicker', () => {
   let model;
   beforeAll(() => {
     Object.assign(validationMessages, frenchValidationMessages);
-    // vanillajs-datepicker uses the global event classes: they must be jsdom's (window), not node's (global)
-    /* eslint-disable unicorn/prefer-global-this */
-    global.EventTarget = window.EventTarget;
-    global.CustomEvent = window.CustomEvent;
-    /* eslint-enable unicorn/prefer-global-this */
   });
 
   beforeEach(async () => {

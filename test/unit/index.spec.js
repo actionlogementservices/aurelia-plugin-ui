@@ -32,3 +32,32 @@ describe('index', () => {
     component.dispose();
   });
 });
+
+describe('every registered element', () => {
+  configure(mockAurelia);
+  /** @type {string[]} */
+  const resources = mockAurelia.globalResources.mock.calls[0][0].map(resource => resource.slice(2));
+  // the tag of an element is the name of its module
+  const tags = resources
+    .filter(resource => /^(elements|layouts)\//.test(resource))
+    .map(resource => resource.split('/').pop());
+  /** views of the elements having a required bindable @type {Record<string, string>} */
+  const views = {
+    'environment-ribbon': `<environment-ribbon environment.bind="{ type: 'DEV', name: 'Développement' }"></environment-ribbon>`
+  };
+
+  beforeAll(() => {
+    // als-gtag inserts its script before the first one of the page, like the bundle of an app
+    document.head.append(document.createElement('script'));
+  });
+
+  // catches a view that does not compile or bind (unknown value converter, binding error...) on an element without spec
+  test.each(tags)('<%s> renders', async tag => {
+    const component = StageComponent.withResources(resources).inView(views[tag] ?? `<${tag}></${tag}>`);
+    component.bootstrap(aurelia => {
+      aurelia.use.standardConfiguration();
+    });
+    await component.create(bootstrap);
+    component.dispose();
+  });
+});
