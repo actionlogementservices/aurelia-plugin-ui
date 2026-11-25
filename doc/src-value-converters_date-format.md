@@ -12,7 +12,7 @@ Implements a **&#x60;dateFormat&#x60;value converter** to transform a date to DD
 
 ## Methods
 
-### `fromView(value, format) ► string`
+### `fromView(value, formatToUse) ► string`
 
 ![modifier: public](images/badges/modifier-public.png)
 
@@ -21,7 +21,7 @@ Converts the value of the html view to the javascript model.
 Parameters | Type | Description
 --- | --- | ---
 __value__ | `string` | *value from html view in the specified format*
-__format__ | `SupportedFormat` | *display format, by default french: &#x60;DD/MM/YYYY&#x60;*
+__formatToUse__ | `SupportedFormat` | *display format, by default french: &#x60;DD/MM/YYYY&#x60;*
 __*return*__ | `string` | *the date in ISO 8601 format*
 
 ---

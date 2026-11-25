@@ -20,6 +20,19 @@ __event__ | `Event` | *event*
 
 ---
 
+### `cleanInputMask(value) ► number`
+
+![modifier: public](images/badges/modifier-public.png) ![modifier: static](images/badges/modifier-static.png)
+
+Removes the input mask from a value of the html view.
+
+Parameters | Type | Description
+--- | --- | ---
+__value__ | `string` | *value from html view including the mask*
+__*return*__ | `number` | *number or undefined in case of failure*
+
+---
+
 ## Constants
 
 ### `wait`

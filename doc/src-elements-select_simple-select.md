@@ -51,7 +51,7 @@ Hides the dropdown.
 
 ---
 
-### `selectItem(item, notify)`
+### `selectItem(item, notify, keepValue)`
 
 ![modifier: public](images/badges/modifier-public.png)
 
@@ -61,10 +61,11 @@ Parameters | Type | Description
 --- | --- | ---
 __item__ | `T` | *item clicked or selected*
 __notify__ | `boolean` | *should we dispatch custom element events?*
+__keepValue__ | `boolean` | *should we keep the current selected value?*
 
 ---
 
-### `synchronizeSelection(item)`
+### `synchronizeSelection(item, keepValue)`
 
 ![modifier: public](images/badges/modifier-public.png)
 
@@ -73,6 +74,7 @@ Synchronizes custom element selection.
 Parameters | Type | Description
 --- | --- | ---
 __item__ | `T` | *item to select*
+__keepValue__ | `boolean` | *should we keep the current selected value?*
 
 ---
 

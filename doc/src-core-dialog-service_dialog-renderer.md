@@ -29,7 +29,7 @@ __*return*__ | `HTMLDivElement` | *html div element*
 
 ![modifier: public](images/badges/modifier-public.png)
 
-Opens the dialog instance.
+Opens the dialog instance, above the dialogs already open.
 
 Parameters | Type | Description
 --- | --- | ---
@@ -66,9 +66,20 @@ __*return*__ | `HTMLDivElement` | *html div element*
 
 ---
 
+### `_restoreFocusTrap()`
+
+![modifier: private](images/badges/modifier-private.png)
+
+Re-arms the focus trap of the dialog: bootstrap&#x27;s focus traps share one document listener,
+so closing a stacked dialog also disarms the trap of the dialog below.
+
+---
+
 ## Members
 
 Name | Type | Description
 --- | --- | ---
 ___hostDiv__ | `HTMLDivElement` | *html div element used as host of the dialog @type {HTMLDivElement}*
 ___modal__ | `Offcanvas \| Modal` | *javascript bs object @type {Offcanvas | Modal}*
+___opener__ | `Element` | *element focused before the dialog opened, focused again when it closes @type {Element}*
+___focusTrap__ | `undefined` | *Focus trap of the dialog (private bootstrap member, shared by Modal and Offcanvas).*

@@ -84,7 +84,7 @@ __itemToRemove__ | `T` | *item to remove*
 
 ---
 
-### `synchronizeSelection(items)`
+### `synchronizeSelection(items, keepValues)`
 
 ![modifier: public](images/badges/modifier-public.png)
 
@@ -93,6 +93,7 @@ Synchronizes custom element selection.
 Parameters | Type | Description
 --- | --- | ---
 __items__ | `Array.<T>` | *items to select*
+__keepValues__ | `boolean` | *should we keep the current selected values?*
 
 ---
 
@@ -201,6 +202,19 @@ Parameters | Type | Description
 --- | --- | ---
 __item__ | `T` | *item to check*
 __*return*__ | `boolean` | *true if already selected, false otherwise*
+
+---
+
+### `isSelectionMatching(values) ► boolean`
+
+![modifier: public](images/badges/modifier-public.png)
+
+Checks if the selected items match the specified values.
+
+Parameters | Type | Description
+--- | --- | ---
+__values__ | `Array.<K>` | *values to check*
+__*return*__ | `boolean` | *true if they match, false otherwise*
 
 ---
 

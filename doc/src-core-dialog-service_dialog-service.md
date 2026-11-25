@@ -13,7 +13,7 @@ Implements the dialog service.
 ## Constructors
 
 
-### `DialogService(compositionEngine, container, rendererFactory, result)`
+### `DialogService(compositionEngine, container, rendererFactory)`
 
 Creates an instance of the DialogService class.
 
@@ -22,7 +22,6 @@ Parameters | Type | Description
 __compositionEngine__ | `CompositionEngine` | *aurelia composition engine*
 __container__ | `Container` | *aurelia container*
 __rendererFactory__ | `undefined` | **
-__result__ | [DialogResult](src-core-dialog-service_dialog-result.md) | *dialog result*
 
 ---
 
@@ -32,11 +31,11 @@ __result__ | [DialogResult](src-core-dialog-service_dialog-result.md) | *dialog 
 
 ![modifier: public](images/badges/modifier-public.png)
 
-Opens the dialog.
+Opens the dialog. A dialog opened while another one is open is stacked above it.
 
 Parameters | Type | Description
 --- | --- | ---
 __parameters__ | `DialogServiceParameters` | *input parameters*
-__*return*__ | `Promise.<DialogResult>` | *modal dialog result*
+__*return*__ | `Promise.<DialogResult>` | *result of this dialog*
 
 ---

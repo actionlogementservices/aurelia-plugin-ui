@@ -54,6 +54,14 @@ __*return*__ | `Promise.<Array.<Adresse>>` | *the list of corresponding address*
 
 ---
 
+### `syncAddressCity()`
+
+![modifier: public](images/badges/modifier-public.png)
+
+Synchronizes the city auto-complete with the value when the address is not listed.
+
+---
+
 ## Members
 
 Name | Type | Description

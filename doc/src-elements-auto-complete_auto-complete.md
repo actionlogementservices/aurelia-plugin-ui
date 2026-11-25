@@ -59,7 +59,7 @@ Hides the dropdown.
 
 ---
 
-### `selectItem(item, notify)`
+### `selectItem(item, notify, keepValue)`
 
 ![modifier: public](images/badges/modifier-public.png)
 
@@ -69,10 +69,11 @@ Parameters | Type | Description
 --- | --- | ---
 __item__ | `U` | *item clicked or selected*
 __notify__ | `boolean` | *should we dispatch custom element events?*
+__keepValue__ | `boolean` | *should we keep the current selected value?*
 
 ---
 
-### `synchronizeSelection(item)`
+### `synchronizeSelection(item, keepValue)`
 
 ![modifier: public](images/badges/modifier-public.png)
 
@@ -81,6 +82,7 @@ Synchronizes custom element selection.
 Parameters | Type | Description
 --- | --- | ---
 __item__ | `U` | *item to select*
+__keepValue__ | `boolean` | *should we keep the current selected value?*
 
 ---
 
@@ -167,7 +169,8 @@ __*return*__ | `boolean` | *true if invalid, false otherwise*
 
 ![modifier: public](images/badges/modifier-public.png)
 
-Resets the html input.
+Resets the html input, and triggers the &#x27;blur&#x27; event of the custom element so that leaving the field
+validates it, like a native input (aurelia-validation &#x60;blur&#x60; trigger).
 
 ---
 
@@ -207,6 +210,14 @@ __value__ | `T` | *databound value*
 
 ---
 
+### `controllerChanged()`
+
+![modifier: public](images/badges/modifier-public.png)
+
+Defines the logic triggered when &#x60;controller&#x60; attribute is databound.
+
+---
+
 ### `labelKeyChanged(labelKey)`
 
 ![modifier: public](images/badges/modifier-public.png)
@@ -237,6 +248,7 @@ __uniqueId__ | `string` | *Unique id to identify the custom element instance. @t
 __items__ | `(U \| T)[]` | *List of retrieved items. @type {(U | T)[]}*
 __ignoringReset__ | `Boolean` | *Prevents the input field to be reset when click outside dropdown? @type {Boolean}*
 __itemsCount__ | `number` | *Count of items.*
+__selectedItem__ | `T` | **
 ___container__ | `HTMLTemplateElement` | *Html container of the custom element. @type {HTMLTemplateElement}*
 ___input__ | `HTMLInputElement` | *Html input element. @type {HTMLInputElement}*
 ___dropdownList__ | `HTMLDivElement` | *Html dropdown host element. @type {HTMLDivElement}*

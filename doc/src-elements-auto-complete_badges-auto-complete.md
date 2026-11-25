@@ -84,7 +84,7 @@ __itemToRemove__ | `T` | *item to remove*
 
 ---
 
-### `synchronizeSelection(items)`
+### `synchronizeSelection(items, keepValues)`
 
 ![modifier: public](images/badges/modifier-public.png)
 
@@ -93,6 +93,7 @@ Synchronizes custom element selection.
 Parameters | Type | Description
 --- | --- | ---
 __items__ | `(T\|U)[]` | *items to select*
+__keepValues__ | `boolean` | *should we keep the current selected values?*
 
 ---
 
@@ -192,6 +193,19 @@ __*return*__ | `boolean` | *true if already selected, false otherwise*
 
 ---
 
+### `isSelectionMatching(values) ► boolean`
+
+![modifier: public](images/badges/modifier-public.png)
+
+Checks if the selected items match the specified values.
+
+Parameters | Type | Description
+--- | --- | ---
+__values__ | `Array.<K>` | *values to check*
+__*return*__ | `boolean` | *true if they match, false otherwise*
+
+---
+
 ### `onInputChange(inputValue)`
 
 ![modifier: public](images/badges/modifier-public.png)
@@ -204,11 +218,15 @@ __inputValue__ | `string` | *user input*
 
 ---
 
-### `selectedItemsChanged()`
+### `selectedItemsChanged(newItems)`
 
 ![modifier: public](images/badges/modifier-public.png)
 
 Defines the logic triggered when &#x60;selected-items&#x60; attribute is databound.
+
+Parameters | Type | Description
+--- | --- | ---
+__newItems__ | `undefined \| (T\|U)[]` | *new &#x60;selected-items&#x60; value*
 
 ---
 
@@ -221,6 +239,14 @@ Defines the logic triggered when &#x60;selected-values&#x60; attribute is databo
 Parameters | Type | Description
 --- | --- | ---
 __newValues__ | `undefined` | *new &#x60;selected-values&#x60; value*
+
+---
+
+### `controllerChanged()`
+
+![modifier: public](images/badges/modifier-public.png)
+
+Defines the logic triggered when &#x60;controller&#x60; attribute is databound.
 
 ---
 

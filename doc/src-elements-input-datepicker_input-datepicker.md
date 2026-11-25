@@ -54,6 +54,20 @@ __date__ | `Date` | *date to apply*
 
 ---
 
+### `getComponentDateLimit(dateISOstring) ► Date`
+
+![modifier: public](images/badges/modifier-public.png)
+
+Converts a date bindable (ISO string) into a limit usable by the underlying vanillajs component.
+The underlying component enforces the limit for both calendar selection and manual keyboard input.
+
+Parameters | Type | Description
+--- | --- | ---
+__dateISOstring__ | `string` | *date specified as ISO string, empty when no limit is set*
+__*return*__ | `Date` | *the corresponding Date instance, or null when no limit applies*
+
+---
+
 ### `setInternalComponentDate(dateISOstring)`
 
 ![modifier: public](images/badges/modifier-public.png)
@@ -128,6 +142,30 @@ __disabledDates__ | `Array.<string>` | *dates to disable in ISO string format*
 
 ---
 
+### `minDateChanged(minDate)`
+
+![modifier: public](images/badges/modifier-public.png)
+
+Defines the logic triggered when &#x60;minDate&#x60; attribute is databound.
+
+Parameters | Type | Description
+--- | --- | ---
+__minDate__ | `string` | *minimum selectable date in ISO string format, empty for no limit*
+
+---
+
+### `maxDateChanged(maxDate)`
+
+![modifier: public](images/badges/modifier-public.png)
+
+Defines the logic triggered when &#x60;maxDate&#x60; attribute is databound.
+
+Parameters | Type | Description
+--- | --- | ---
+__maxDate__ | `string` | *maximum selectable date in ISO string format, empty for no limit*
+
+---
+
 ## Members
 
 Name | Type | Description
@@ -139,6 +177,8 @@ __readonly__ | `boolean` | *Marks the custom element as read-only. @type {boolea
 __autohide__ | `boolean` | *Auto-hide dropdown after selection. @type {boolean}*
 __disabledDays__ | `number[]` | *Days of week to disable. @type {number[]}*
 __disabledDates__ | `string[]` | *Dates to disable. @type {string[]}*
+__minDate__ | `string` | *Minimum selectable date in ISO string format, empty for no limit. @type {string}*
+__maxDate__ | `string` | *Maximum selectable date in ISO string format, empty for no limit. @type {string}*
 __uniqueId__ | `string` | *Unique id to identify the custom element instance. @type {string}*
 __value__ | `string` | *Value in the input field. @type {string}*
 ___container__ | `HTMLTemplateElement` | *Html container of the custom element. @type {HTMLTemplateElement}*

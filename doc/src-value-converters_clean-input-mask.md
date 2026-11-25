@@ -23,7 +23,7 @@ This converter works together with the &#x60;input-mask&#x60; attribute and the 
 
 ## Methods
 
-### `fromView(value, minimumFractionDigits) ► number`
+### `fromView(value) ► number`
 
 ![modifier: public](images/badges/modifier-public.png)
 
@@ -32,7 +32,6 @@ Converts the value of the html view to the javascript model.
 Parameters | Type | Description
 --- | --- | ---
 __value__ | `string` | *value from html view including the mask*
-__minimumFractionDigits__ | `number` | *number of fraction digits*
 __*return*__ | `number` | *number or undefined in case of failure*
 
 ---

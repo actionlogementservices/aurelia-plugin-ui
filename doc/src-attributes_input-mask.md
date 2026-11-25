@@ -49,4 +49,4 @@ Defines the logic triggered when the custom element is added to the DOM.
 Name | Type | Description
 --- | --- | ---
 __element__ | `HTMLInputElement` | *Html input element using this custom attribute. @type {HTMLInputElement}*
-__value__ | `'currency' \| 'percentage'` | *Value of the custom attribute. @type {&#x27;currency&#x27; | &#x27;percentage&#x27;}*
+__value__ | `'integer' \| 'decimal' \| 'currency' \| 'percentage'` | *Value of the custom attribute. @type {&#x27;integer&#x27; | &#x27;decimal&#x27; | &#x27;currency&#x27; | &#x27;percentage&#x27;}*
