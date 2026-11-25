@@ -7,6 +7,8 @@ describe('numberFormat', () => {
     [1234.5, undefined, '1 234,50'],
     ['1234.5', undefined, '1 234,50'],
     [-3, undefined, '-3,00'],
+    [0, undefined, '0,00'],
+    ['0', undefined, '0,00'],
     [1234.56, { digits: 0, suffix: ' €' }, '1 234,56 €'],
     [1234.5, { locale: 'en-US' }, '1,234.50']
   ])('formats %p with %p as %p', (value, options, text) => {
@@ -14,7 +16,7 @@ describe('numberFormat', () => {
   });
 
   // eslint-disable-next-line unicorn/no-null -- a model value may be null
-  test.each([null, undefined, ''])('formats %p as undefined', value => {
+  test.each([null, undefined, '', 'abc', Number.NaN])('formats %p as undefined', value => {
     expect(converter.toView(value)).toBeUndefined();
   });
 });

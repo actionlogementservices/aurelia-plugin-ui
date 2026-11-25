@@ -33,6 +33,6 @@ Parameters | Type | Description
 --- | --- | ---
 __value__ | `string` | *value from javascript model*
 __options__ | `{ locale?: string, digits?: number, suffix?: string }` | *formating options*
-__*return*__ | `undefined` | *the string representation of the number or undefined in case of failure*
+__*return*__ | `undefined` | *the formatted number (0 included), undefined for an empty or non numeric value*
 
 ---

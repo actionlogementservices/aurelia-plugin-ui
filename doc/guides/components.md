@@ -89,7 +89,9 @@ separately, one way each:
 ```
 
 `numberFormat` accepts the options `{ locale, digits, suffix }`, by default `{ locale: 'fr-FR', digits: 2, suffix: '' }`:
-`${amount | numberFormat:{ digits: 0, suffix: ' €' }}`.
+`${amount | numberFormat:{ digits: 0, suffix: ' €' }}`. `0` is displayed (`0,00`), an empty or non numeric value is
+not. A field that must stay empty until the user fills it is bound to an `undefined` value: convert the default `0` of
+the api in the application when loading the data, not in the view.
 
 In a form validated with aurelia-validation, use [`formInputNumberFormat`](./forms.md#numbers-forminputnumberformat-value-converter)
 instead: it formats and parses in a single two-way binding.
