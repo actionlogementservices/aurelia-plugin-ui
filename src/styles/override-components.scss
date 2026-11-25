@@ -17,6 +17,10 @@ a:focus-visible,
 .page-link:focus-visible {
   @include als-focus-ring;
 }
+// rounded ring on the plain links; zero specificity: a link with its own radius (.btn, .rounded-circle, app tiles) keeps it
+:where(a:focus-visible) {
+  border-radius: $border-radius;
+}
 
 // a darker hover than bootstrap (30% instead of 15%) on the two brand buttons
 .btn-primary {
