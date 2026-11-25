@@ -33,7 +33,7 @@ Displays the toast.
 Parameters | Type | Description
 --- | --- | ---
 __toastHost__ | `HTMLDivElement` | *the div container that hosts toasts*
-__delay__ | `number` | *delay before hiding toast*
+__delay__ | `number` | *delay in ms before hiding toast, &#x60;0&#x60; or none to keep it until closed*
 __*return*__ | `Promise.<void>` | *await closing*
 
 ---

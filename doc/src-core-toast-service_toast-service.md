@@ -36,7 +36,7 @@ Displays a toast info message.
 Parameters | Type | Description
 --- | --- | ---
 __message__ | `string` | *toast message*
-__delay__ | `number` | *delay before hiding toast, default value is &#x60;defaultHideDelay&#x60;*
+__delay__ | `number` | *delay in ms before hiding toast, &#x60;defaultHideDelay&#x60; by default, &#x60;0&#x60; to keep it until closed*
 
 ---
 
@@ -49,7 +49,7 @@ Displays a toast error message.
 Parameters | Type | Description
 --- | --- | ---
 __message__ | `string` | *toast message*
-__delay__ | `number` | *delay before hiding toast, default value is &#x60;defaultHideDelay&#x60;*
+__delay__ | `number` | *delay in ms before hiding toast, &#x60;defaultHideDelay&#x60; by default, &#x60;0&#x60; to keep it until closed*
 
 ---
 
@@ -62,7 +62,7 @@ Displays a toast warning message.
 Parameters | Type | Description
 --- | --- | ---
 __message__ | `string` | *toast message*
-__delay__ | `number` | *delay before hiding toast, default value is &#x60;defaultHideDelay&#x60;*
+__delay__ | `number` | *delay in ms before hiding toast, &#x60;defaultHideDelay&#x60; by default, &#x60;0&#x60; to keep it until closed*
 
 ---
 
@@ -75,7 +75,7 @@ Displays a toast success message.
 Parameters | Type | Description
 --- | --- | ---
 __message__ | `string` | *toast message*
-__delay__ | `number` | *delay before hiding toast, default value is &#x60;defaultHideDelay&#x60;*
+__delay__ | `number` | *delay in ms before hiding toast, &#x60;defaultHideDelay&#x60; by default, &#x60;0&#x60; to keep it until closed*
 
 ---
 
@@ -89,6 +89,6 @@ Parameters | Type | Description
 --- | --- | ---
 __message__ | `string` | *toast message*
 __color__ | `ThemeColor` | *color of toast*
-__delay__ | `number` | *delay before hiding toast*
+__delay__ | `number` | *delay in ms before hiding toast, &#x60;0&#x60; to keep it until closed*
 
 ---

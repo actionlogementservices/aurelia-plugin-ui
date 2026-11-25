@@ -176,6 +176,10 @@ export class Home {
     this.toast.success('Success!');
   }
 
+  showPersistentError() {
+    this.toast.error('Error displayed until closed!', 0);
+  }
+
   async showDialog() {
     const { wasCancelled, output } = await this.dialog.open({
       viewModel: ExempleDialog,

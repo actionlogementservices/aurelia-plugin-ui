@@ -114,7 +114,11 @@ focus goes back to the element that opened it. A dialog opened from another one 
 ## `ToastService`
 
 Inject the `ToastService` and call `info`, `success`, `warning` or `error` with the message, and optionally the delay
-in ms before the toast hides (`4000` by default).
+in ms before the toast hides (`4000` by default, `0` to keep it until the user closes it, e.g. for an error that must
+be read). The method returns a promise resolved once the toast is closed.
+
+The screen readers announce `error` and `warning` at once (`role="alert"`), and `info` and `success` when the user is
+idle (`role="status"`).
 
 ```javascript
 import { inject } from 'aurelia-framework';
@@ -129,7 +133,7 @@ export class Example {
 
   save() {
     this._toast.success('Enregistrement effectué.');
-    this._toast.error('Le service est indisponible.', 10000);
+    this._toast.error('Le service est indisponible.', 0);
   }
 }
 ```

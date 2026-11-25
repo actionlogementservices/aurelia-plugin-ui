@@ -47,24 +47,37 @@ describe('ToastService', () => {
   };
 
   test.each([
-    ['info', 'bg-info', false],
-    ['success', 'bg-success', true],
-    ['warning', 'bg-warning', false],
-    ['error', 'bg-danger', true]
-  ])('%s: displays the message with the %s background', async (type, background, white) => {
-    const { closed, toast } = await show(type, 'Message', 50);
-    expect(toast.textContent.trim()).toBe('Message');
-    expect(toast.classList).toContain(background);
-    expect(toast.classList).toContain('show');
-    expect(toast.classList.contains('text-white')).toBe(white);
-    expect(toast.querySelector('.btn-close').classList.contains('btn-close-white')).toBe(white);
-    expect(toast.getAttribute('role')).toBe('alert');
-    await closed;
-  });
+    ['info', 'bg-info', false, 'status', 'polite'],
+    ['success', 'bg-success', true, 'status', 'polite'],
+    ['warning', 'bg-warning', false, 'alert', 'assertive'],
+    ['error', 'bg-danger', true, 'alert', 'assertive']
+  ])(
+    '%s: displays the message with the %s background, white text %s, role %s',
+    async (type, background, white, role, live) => {
+      const { closed, toast } = await show(type, 'Message', 50);
+      expect(toast.textContent.trim()).toBe('Message');
+      expect(toast.classList).toContain(background);
+      expect(toast.classList).toContain('show');
+      expect(toast.classList.contains('text-white')).toBe(white);
+      expect(toast.querySelector('.btn-close').classList.contains('btn-close-white')).toBe(white);
+      expect(toast.getAttribute('role')).toBe(role);
+      expect(toast.getAttribute('aria-live')).toBe(live);
+      expect(toast.querySelector('.btn-close').getAttribute('aria-label')).toBe('Fermer');
+      await closed;
+    }
+  );
 
   test('hides after 4 seconds by default', async () => {
     const { closed, toast } = await show('info', 'Message');
     expect(Toast.getInstance(toast)._config.delay).toBe(4000);
+    toast.querySelector('button').click();
+    await closed;
+  });
+
+  test('stays until closed with a delay of 0', async () => {
+    const { closed, toast } = await show('warning', 'Message', 0);
+    expect(Toast.getInstance(toast)._config.autohide).toBe(false);
+    expect(toast.classList).toContain('show');
     toast.querySelector('button').click();
     await closed;
   });

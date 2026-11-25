@@ -9,6 +9,8 @@ import { toastType } from './toast-service';
 export class Toast {
   /** Toast message @type {string} */ message;
   /** Type of toast @type {ThemeColor} */ color;
+  /** White text, on the dark backgrounds @type {boolean} */ white;
+  /** Urgent message (error, warning), announced at once by the screen readers @type {boolean} */ urgent;
 
   /**
    * Sets the message and type of the toast.
@@ -20,6 +22,7 @@ export class Toast {
     this.message = message;
     this.color = color;
     this.white = [toastType.error, toastType.success].includes(this.color);
+    this.urgent = [toastType.error, toastType.warning].includes(this.color);
     return this;
   }
 }

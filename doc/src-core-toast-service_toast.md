@@ -32,3 +32,5 @@ Name | Type | Description
 --- | --- | ---
 __message__ | `string` | *Toast message @type {string}*
 __color__ | `ThemeColor` | *Type of toast @type {ThemeColor}*
+__white__ | `boolean` | *White text, on the dark backgrounds @type {boolean}*
+__urgent__ | `boolean` | *Urgent message (error, warning), announced at once by the screen readers @type {boolean}*

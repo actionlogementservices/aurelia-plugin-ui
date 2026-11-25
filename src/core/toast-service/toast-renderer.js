@@ -26,11 +26,11 @@ export class ToastRenderer {
   /**
    * Displays the toast.
    * @param {HTMLDivElement} toastHost the div container that hosts toasts
-   * @param {number} [delay] delay before hiding toast
+   * @param {number} [delay] delay in ms before hiding toast, `0` or none to keep it until closed
    * @returns {Promise<void>} await closing
    */
   async show(toastHost, delay) {
-    const bsToast = new Toast(toastHost, { delay });
+    const bsToast = new Toast(toastHost, delay ? { delay } : { autohide: false });
     bsToast.show();
     return new Promise((resolve, _reject) => {
       toastHost.addEventListener('hidden.bs.toast', () => {

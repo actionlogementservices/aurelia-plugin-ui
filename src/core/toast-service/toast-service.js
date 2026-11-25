@@ -48,7 +48,7 @@ export class ToastService {
    * @private
    * @param {string} message toast message
    * @param {ThemeColor} color color of toast
-   * @param {number} delay delay before hiding toast
+   * @param {number} delay delay in ms before hiding toast, `0` to keep it until closed
    */
   async _show(message, color, delay) {
     const host = this._renderer.createOrGetRootHost();
@@ -65,7 +65,7 @@ export class ToastService {
     const viewModelController = await this._compositionEngine.compose(compositionContext);
     // @ts-ignore
     const toastDiv = viewModelController.view.firstChild.nextSibling;
-    delay === 0 ? await this._renderer.show(toastDiv) : await this._renderer.show(toastDiv, delay);
+    await this._renderer.show(toastDiv, delay);
     viewModelController.view.unbind();
     viewModelController.view.removeNodes();
   }
@@ -73,7 +73,7 @@ export class ToastService {
   /**
    * Displays a toast info message.
    * @param {string} message toast message
-   * @param {number} [delay] delay before hiding toast, default value is `defaultHideDelay`
+   * @param {number} [delay] delay in ms before hiding toast, `defaultHideDelay` by default, `0` to keep it until closed
    */
   async info(message, delay = defaultHideDelay) {
     await this._show(message, toastType.info, delay);
@@ -82,7 +82,7 @@ export class ToastService {
   /**
    * Displays a toast error message.
    * @param {string} message toast message
-   * @param {number} [delay] delay before hiding toast, default value is `defaultHideDelay`
+   * @param {number} [delay] delay in ms before hiding toast, `defaultHideDelay` by default, `0` to keep it until closed
    */
   async error(message, delay = defaultHideDelay) {
     await this._show(message, toastType.error, delay);
@@ -91,7 +91,7 @@ export class ToastService {
   /**
    * Displays a toast warning message.
    * @param {string} message toast message
-   * @param {number} [delay] delay before hiding toast, default value is `defaultHideDelay`
+   * @param {number} [delay] delay in ms before hiding toast, `defaultHideDelay` by default, `0` to keep it until closed
    */
   async warning(message, delay = defaultHideDelay) {
     await this._show(message, toastType.warning, delay);
@@ -100,7 +100,7 @@ export class ToastService {
   /**
    * Displays a toast success message.
    * @param {string} message toast message
-   * @param {number} [delay] delay before hiding toast, default value is `defaultHideDelay`
+   * @param {number} [delay] delay in ms before hiding toast, `defaultHideDelay` by default, `0` to keep it until closed
    */
   async success(message, delay = defaultHideDelay) {
     await this._show(message, toastType.success, delay);

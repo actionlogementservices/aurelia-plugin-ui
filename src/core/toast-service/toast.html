@@ -1,8 +1,8 @@
 <template>
   <div
     class="toast align-items-center ${white ? 'text-white' : ''} bg-${color} border-0"
-    role="alert"
-    aria-live="assertive"
+    role="${urgent ? 'alert' : 'status'}"
+    aria-live="${urgent ? 'assertive' : 'polite'}"
     aria-atomic="true">
     <div class="d-flex">
       <div class="toast-body p-4" innerhtml="${message}"></div>
@@ -10,7 +10,7 @@
         type="button"
         class="btn-close ${white ? 'btn-close-white' : ''} me-2 m-auto"
         data-bs-dismiss="toast"
-        aria-label="Close"></button>
+        aria-label="Fermer"></button>
     </div>
   </div>
 </template>
