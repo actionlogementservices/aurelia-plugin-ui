@@ -22,7 +22,7 @@ export class Toast {
   set(message, color) {
     this.message = sanitizeHtml(message);
     this.color = color;
-    this.white = [toastType.error, toastType.success].includes(this.color);
+    this.white = [toastType.error, toastType.success, toastType.info].includes(this.color);
     this.urgent = [toastType.error, toastType.warning].includes(this.color);
     return this;
   }

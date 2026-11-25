@@ -22,7 +22,6 @@ $orange: #fd7e14 !default;
 $yellow: #ffb200 !default;
 $green: #198754 !default;
 $teal: #20c997 !default;
-$cyan: #0080ff !default;
 
 $white: #ffffff !default;
 $black: #000000 !default;
@@ -50,6 +49,8 @@ $secondary: $als-red !default;
 // errors: a darker shade of the brand red, to tell them apart from $als-red and reach 4.5:1 against white
 // for the error messages and the white text of the error toast (WCAG 1.4.3)
 $danger: shade-color($als-red, 10%) !default;
+// information: the info blue of the DSFR, with a white text at 5.8:1 (WCAG 1.4.3)
+$info: #0063cb !default;
 
 $border-radius: 0.25rem !default;
 

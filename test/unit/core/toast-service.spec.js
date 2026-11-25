@@ -47,7 +47,7 @@ describe('ToastService', () => {
   };
 
   test.each([
-    ['info', 'bg-info', false, 'status', 'polite'],
+    ['info', 'bg-info', true, 'status', 'polite'],
     ['success', 'bg-success', true, 'status', 'polite'],
     ['warning', 'bg-warning', false, 'alert', 'assertive'],
     ['error', 'bg-danger', true, 'alert', 'assertive']

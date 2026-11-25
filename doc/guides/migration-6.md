@@ -71,6 +71,9 @@ Against XSS, the message of the `ToastService` keeps only the formatting tags `b
 
 - **Focus ring**: every link, the tabs (`.nav-link`), the pagination (`.page-link`) and the close buttons (`.btn-close`)
   get the focus ring of the theme on keyboard focus, instead of the browser default or the Bootstrap glow.
+- **Info color**: `$info` is the info blue of the DSFR, `#0063cb`, instead of `#0080ff`, whose text did not reach the
+  contrast required by the WCAG: the info toast has a white text. It also colors `btn-info`, `alert-info`, `table-info`
+  (the row count of `simple-table`), the badges and the `loading-indicator` bar. `$cyan` is back to the Bootstrap cyan.
 - **Toasts**: a delay of `0` keeps the toast until the user closes it (it used to fail); the close button is labelled
   "Fermer"; the screen readers announce `info` and `success` politely (`role="status"`), `error` and `warning` at once.
 - **`environment-ribbon`**: without `environment`, the ribbon displays nothing instead of failing.
