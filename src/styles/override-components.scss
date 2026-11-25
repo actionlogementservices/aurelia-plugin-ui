@@ -10,6 +10,11 @@
   @include als-focus-ring;
 }
 
+// BREADCRUMB: the ring of the other controls instead of the browser default
+.breadcrumb-item a:focus-visible {
+  @include als-focus-ring;
+}
+
 // a darker hover than bootstrap (30% instead of 15%) on the two brand buttons
 .btn-primary {
   --bs-btn-hover-bg: #{shade-color($primary, 30%)};

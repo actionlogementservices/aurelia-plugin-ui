@@ -269,15 +269,13 @@ userMenuItems = [
 
 ### `breadcrumbs`
 
-Breadcrumbs of the current route of the root Aurelia router, starting with `Accueil`, each step displaying the `title`
-of its route. It has no attribute.
+Breadcrumbs of the current route of the root Aurelia router: an `Accueil` link to the root, then a step per route
+having a `title`, except the default route (`''`). The last step is the current page (`aria-current="page"`), the
+other ones are links to their route, which must have a `name`. It has no attribute.
 
 ```html
 <breadcrumbs></breadcrumbs>
 ```
-
-> **Warning:** the element filters the navigation instructions with an `instructionFilter` value converter that the
-> plugin does not provide: the application must register one.
 
 ### `environment-ribbon`
 

@@ -22,6 +22,18 @@ export class Breadcrumbs {
   }
 
   /**
+   * Steps displayed after the home link: the instructions of the current route that have a title, except the default
+   * route (`''`), already represented by the home link.
+   * @param {NavigationInstruction} currentInstruction current navigation instruction of the root router
+   * @returns {NavigationInstruction[]} displayed steps
+   */
+  steps(currentInstruction) {
+    return (currentInstruction?.getAllInstructions() ?? []).filter(
+      instruction => instruction.config.navModel?.title && ![instruction.config.route].flat().includes('')
+    );
+  }
+
+  /**
    * Navigates to the specified route.
    * @param {NavigationInstruction} navigationInstruction navigration instruction to apply on click
    */

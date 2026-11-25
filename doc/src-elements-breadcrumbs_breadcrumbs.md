@@ -25,6 +25,20 @@ __router__ | `Router` | *aurelia router*
 
 ## Methods
 
+### `steps(currentInstruction) ► Array.<NavigationInstruction>`
+
+![modifier: public](images/badges/modifier-public.png)
+
+Steps displayed after the home link: the instructions of the current route that have a title, except the default
+route (&#x60;&#x27;&#x27;&#x60;), already represented by the home link.
+
+Parameters | Type | Description
+--- | --- | ---
+__currentInstruction__ | `NavigationInstruction` | *current navigation instruction of the root router*
+__*return*__ | `Array.<NavigationInstruction>` | *displayed steps*
+
+---
+
 ### `navigate(navigationInstruction)`
 
 ![modifier: public](images/badges/modifier-public.png)
