@@ -9,7 +9,7 @@ import { bindable, bindingMode, computedFrom } from 'aurelia-framework';
  */
 export class EnvironmentRibbonCustomElement {
   /**
-   * Environment descriptor.
+   * Environment descriptor. Without it, nothing is displayed.
    * @type {EnvironmentDescriptor}
    */
   @bindable({ defaultBindingMode: bindingMode.oneTime })

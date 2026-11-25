@@ -1,5 +1,5 @@
 <template>
   <require from="./environment-ribbon.css"></require>
 
-  <div class="er ${cssPosition} ${cssColor} shadow-lg"><strong>${environment.name}</strong></div>
+  <div if.bind="environment" class="er ${cssPosition} ${cssColor} shadow-lg"><strong>${environment.name}</strong></div>
 </template>

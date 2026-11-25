@@ -14,7 +14,7 @@ Implements the **&#x60;environment-ribbon&#x60; custom element** that displays t
 
 Name | Type | Description
 --- | --- | ---
-__environment__ | `EnvironmentDescriptor` | *Environment descriptor.*
+__environment__ | `EnvironmentDescriptor` | *Environment descriptor. Without it, nothing is displayed.*
 __position__ | `RibbonPosition` | *Ribbon position.*
 __cssPosition__ | `string` | *Css classes defining the position.*
 __cssColor__ | `string` | *Css classes defining the color.*

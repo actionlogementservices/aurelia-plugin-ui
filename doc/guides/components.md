@@ -295,7 +295,7 @@ environment = { name: 'RECETTE', type: 'recette' };
 
 | Attribute | Role | Possible values | Default value |
 |---|---|---|---|
-| `environment` | Environment to display | `{ name, type }`, `type` being `dev`, `recette`, `preprod` or `prod` | |
+| `environment` | Environment to display; without it, nothing is displayed | `{ name, type }`, `type` being `dev`, `recette`, `preprod` or `prod` | |
 | `position` | Corner of the ribbon | `top-left`, `top-right`, `bottom-left` or `bottom-right` | `top-left` |
 
 ### `loading-indicator`

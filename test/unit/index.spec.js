@@ -41,11 +41,6 @@ describe('every registered element', () => {
   const tags = resources
     .filter(resource => /^(elements|layouts)\//.test(resource))
     .map(resource => resource.split('/').pop());
-  /** views of the elements having a required bindable @type {Record<string, string>} */
-  const views = {
-    'environment-ribbon': `<environment-ribbon environment.bind="{ type: 'DEV', name: 'Développement' }"></environment-ribbon>`
-  };
-
   beforeAll(() => {
     // als-gtag inserts its script before the first one of the page, like the bundle of an app
     document.head.append(document.createElement('script'));
@@ -53,7 +48,7 @@ describe('every registered element', () => {
 
   // catches a view that does not compile or bind (unknown value converter, binding error...) on an element without spec
   test.each(tags)('<%s> renders', async tag => {
-    const component = StageComponent.withResources(resources).inView(views[tag] ?? `<${tag}></${tag}>`);
+    const component = StageComponent.withResources(resources).inView(`<${tag}></${tag}>`);
     component.bootstrap(aurelia => {
       aurelia.use.standardConfiguration();
     });

@@ -2,7 +2,7 @@
   <lock locked.bind="lock.isLocked"></lock>
 
   <environment-ribbon
-    if.bind="environment && environment.type != 'prod'"
+    if.bind="environment.type !== 'prod'"
     environment.one-time="environment"
     class="d-md-block"
     position="top-left"></environment-ribbon>
