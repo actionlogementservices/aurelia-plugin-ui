@@ -62,6 +62,17 @@ They no longer accept `label`, `required`, `id`, `name`, `field-only`, `is-error
 `numberFormat` displays `0` (`0,00`) instead of nothing. A field that must stay empty until the user fills it is bound
 to an `undefined` value: convert the default `0` of the api in the application when loading the data.
 
+### `formInputNumberFormat` rounds to the nearest
+
+A value with more decimals than its type displays is rounded to the nearest, like the `input-mask` does, instead of
+down: `1500.99` in a `currency` field is displayed `1 501 €` instead of `1 500 €`. The rounding down depended on the
+browser and only changed the display: the model kept `1500.99` until the user edited the field. A field rounded to the
+lower euro rounds its model in the application, when loading the data:
+
+```javascript
+this.model.amount = Math.floor(dto.amount);
+```
+
 ### The toast message keeps only the formatting tags
 
 Against XSS, the message of the `ToastService` keeps only the formatting tags `b`, `strong`, `i`, `em`, `br`, `p`, `ul`,

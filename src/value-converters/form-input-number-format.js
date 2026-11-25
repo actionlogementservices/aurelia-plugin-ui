@@ -2,27 +2,25 @@ import { valueConverter } from 'aurelia-framework';
 
 import { cleanInputMask } from '../core/functions';
 
-// Define the options for different number formats, to be synchronized with input-mask.js mask configurations.
+// Define the options for different number formats, to be synchronized with input-mask.js mask configurations: both
+// round to the nearest (a business rounding, e.g. to the lower euro, is applied to the model by the application).
 /** @type {Intl.NumberFormatOptions} */
 const integerOptions = {
   style: 'decimal',
-  maximumFractionDigits: 0,
-  roundingMode: 'floor'
+  maximumFractionDigits: 0
 };
 
 /** @type {Intl.NumberFormatOptions} */
 const decimalOptions = {
   style: 'decimal',
-  maximumFractionDigits: 2,
-  roundingMode: 'floor'
+  maximumFractionDigits: 2
 };
 
 /** @type {Intl.NumberFormatOptions} */
 const currencyOptions = {
   style: 'currency',
   currency: 'EUR',
-  maximumFractionDigits: 0,
-  roundingMode: 'floor'
+  maximumFractionDigits: 0
 };
 
 /**

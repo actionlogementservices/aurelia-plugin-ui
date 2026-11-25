@@ -126,6 +126,10 @@ async submit() {
 Formats a number for an [`input-mask`](./components.md#input-mask-custom-attribute) input and parses the masked text
 back to a number. Use the same type for both: `integer` (default), `decimal` or `currency` (euros).
 
+A value with more decimals than the type displays (2 for `decimal`, none for `integer` and `currency`) is rounded to
+the nearest, by the mask as by the converter, without changing the model. A business rounding, e.g. to the lower euro,
+is applied to the model by the application, when loading the data (`amount = Math.floor(dto.amount)`).
+
 ```html
 <input class="form-control" input-mask="currency" value.bind="model.amount | formInputNumberFormat:'currency' & validate" />
 ```
