@@ -69,8 +69,8 @@ Against XSS, the message of the `ToastService` keeps only the formatting tags `b
 
 ## Visible changes
 
-- **Focus ring**: every link, the tabs (`.nav-link`) and the pagination (`.page-link`) get the focus ring of the theme
-  on keyboard focus, instead of the browser default or the Bootstrap glow.
+- **Focus ring**: every link, the tabs (`.nav-link`), the pagination (`.page-link`) and the close buttons (`.btn-close`)
+  get the focus ring of the theme on keyboard focus, instead of the browser default or the Bootstrap glow.
 - **Toasts**: a delay of `0` keeps the toast until the user closes it (it used to fail); the close button is labelled
   "Fermer"; the screen readers announce `info` and `success` politely (`role="status"`), `error` and `warning` at once.
 - **`environment-ribbon`**: without `environment`, the ribbon displays nothing instead of failing.

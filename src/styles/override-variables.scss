@@ -66,9 +66,11 @@ $enable-caret: false !default;
 $focus-ring-width: 2px !default;
 // focus: the primary color, red being kept for errors (as in Carbon, DSFR); dark surfaces redefine --bs-focus-ring-color in white
 $focus-ring-color: $als-blue !default;
-// no bootstrap glow on the tabs and the pagination: they get the outline of the other links (override-components.scss)
+// no bootstrap glow on the tabs, the pagination and the close buttons: they get the outline of the other controls
+// (override-components.scss)
 $nav-link-focus-box-shadow: none !default;
 $pagination-focus-box-shadow: none !default;
+$btn-close-focus-shadow: none !default;
 
 // Buttons
 $btn-font-weight: 600 !default;

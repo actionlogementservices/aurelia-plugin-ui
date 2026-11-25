@@ -22,6 +22,12 @@ a:focus-visible,
   border-radius: $border-radius;
 }
 
+// CLOSE BUTTON (toasts, dialogs): the ring of the other controls instead of the bootstrap glow, on keyboard focus only;
+// the filter of .btn-close-white turns it white on a dark surface
+.btn-close:focus-visible {
+  @include als-focus-ring;
+}
+
 // a darker hover than bootstrap (30% instead of 15%) on the two brand buttons
 .btn-primary {
   --bs-btn-hover-bg: #{shade-color($primary, 30%)};
