@@ -43,4 +43,3 @@ __*return*__ | `Promise.<void>` | *await closing*
 Name | Type | Description
 --- | --- | ---
 ___rootContainer__ | `HTMLElement` | **
-___bsToast__ | [Toast](src-core-toast-service_toast.md) | **

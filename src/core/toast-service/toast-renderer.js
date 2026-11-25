@@ -7,7 +7,6 @@ import { Toast } from 'bootstrap';
  */
 export class ToastRenderer {
   /** @type {HTMLElement} */ static _rootContainer;
-  /** @type {Toast} */ _bsToast;
 
   /**
    * Creates or gets the div container that hosts toasts.
@@ -31,10 +30,12 @@ export class ToastRenderer {
    * @returns {Promise<void>} await closing
    */
   async show(toastHost, delay) {
-    this._bsToast = new Toast(toastHost, { delay });
-    this._bsToast.show();
+    const bsToast = new Toast(toastHost, { delay });
+    bsToast.show();
     return new Promise((resolve, _reject) => {
       toastHost.addEventListener('hidden.bs.toast', () => {
+        // releases the bootstrap instance, kept in a global map, and its hide timer when closed before the delay
+        bsToast.dispose();
         toastHost.remove();
         resolve();
       });
