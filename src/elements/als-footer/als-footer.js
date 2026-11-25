@@ -42,6 +42,9 @@ export class AlsFooter {
   @bindable({ defaultBindingMode: bindingMode.oneTime })
   linkedinUrl = 'https://www.linkedin.com/company/action-logement/mycompany/verification';
 
+  /** Current year, for the copyright. @type {number} */
+  year = new Date().getFullYear();
+
   /**
    * Builds an accessible label for links that open in a new tab.
    * @param {string} label The visible text for the link.

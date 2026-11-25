@@ -13,8 +13,8 @@
           href.bind="logoUrl"
           target="_blank"
           rel="noopener noreferrer"
-          aria-label.bind="getExternalLinkLabel('Action Logement')"
-          title.bind="getExternalLinkLabel('Action Logement')">
+          aria-label.bind="getExternalLinkLabel('Action Logement, faciliter le logement pour favoriser l\'emploi')"
+          title.bind="getExternalLinkLabel('Action Logement, faciliter le logement pour favoriser l\'emploi')">
           <als-logo></als-logo>
           <span class="fw-semibold ms-1 d-none d-sm-inline">
             Faciliter le logement pour favoriser l'emploi
@@ -39,7 +39,7 @@
       <div
         if.bind="!hideSocialMediaLinks && type === 'default'"
         class="col d-flex social-media-links d-flex justify-content-end align-items-center">
-        <span class="d-none d-sm-inline">Retrouvez nous sur :</span>
+        <span class="d-none d-sm-inline">Retrouvez-nous sur :</span>
         <div class="ms-2 d-flex">
           <a class="social-media-icon" href.bind="linkedinUrl" target="_blank" rel="noopener noreferrer"
             aria-label.bind="getExternalLinkLabel('LinkedIn')" title.bind="getExternalLinkLabel('LinkedIn')">
@@ -84,11 +84,11 @@
       </div>
       <hr aria-hidden="true" />
       <div class="d-flex align-items-center">
-        <span>©2026 Action Logement</span>
+        <span>©${year} Action Logement</span>
         <div class="vr ms-3 me-3" aria-hidden="true"></div>
         <span>
           Sauf mention explicite de propriété intellectuelle détenue par des tiers, les contenus de ce site
-          sont proposées sous licence
+          sont proposés sous licence
         </span>
       </div>
     </nav>

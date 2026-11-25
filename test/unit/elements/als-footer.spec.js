@@ -18,6 +18,10 @@ const describeLinks = (selector = 'als-footer a') =>
     href: link.getAttribute('href')
   }));
 
+// contains the visible text of the logo link (WCAG 2.5.3 label in name)
+const logoName =
+  "Action Logement, faciliter le logement pour favoriser l'emploi (ouvre dans un nouvel onglet)";
+
 describe('als-footer', () => {
   let component;
 
@@ -38,7 +42,7 @@ describe('als-footer', () => {
     await render();
     expect(describeLinks('als-footer a:not(nav a)')).toEqual([
       {
-        name: 'Action Logement (ouvre dans un nouvel onglet)',
+        name: logoName,
         href: 'https://www.actionlogement.fr/entreprise'
       },
       {
@@ -67,7 +71,7 @@ describe('als-footer', () => {
     expect(document.querySelector('als-footer nav')).toBeNull();
     expect(document.querySelector('als-footer .social-media-icon')).toBeNull();
     expect(describeLinks().map(link => link.name)).toEqual([
-      'Action Logement (ouvre dans un nouvel onglet)',
+      logoName,
       'Accessibilité : non conforme (ouvre dans un nouvel onglet)',
       'Contact (ouvre dans un nouvel onglet)',
       'Qui sommes-nous ? (ouvre dans un nouvel onglet)'
@@ -85,6 +89,35 @@ describe('als-footer', () => {
       }
     }
   );
+
+  test('displays the copyright of the current year', async () => {
+    // only the date is faked: aurelia keeps its real timers
+    jest.useFakeTimers({
+      now: new Date(2031, 4, 1),
+      doNotFake: [
+        'setTimeout',
+        'clearTimeout',
+        'setInterval',
+        'clearInterval',
+        'setImmediate',
+        'clearImmediate',
+        'queueMicrotask',
+        'nextTick',
+        'requestAnimationFrame',
+        'cancelAnimationFrame',
+        'requestIdleCallback',
+        'cancelIdleCallback',
+        'hrtime',
+        'performance'
+      ]
+    });
+    try {
+      await render();
+    } finally {
+      jest.useRealTimers();
+    }
+    expect(document.querySelector('als-footer nav').textContent).toContain('©2031 Action Logement');
+  });
 
   test('hides the social media links', async () => {
     await render('hide-social-media-links.bind="true"');

@@ -38,3 +38,4 @@ __hideSocialMediaLinks__ | `boolean` | *Whether the social media links block sho
 __youtubeUrl__ | `string` | *URL of the YouTube page. @type {string}*
 __twitterUrl__ | `string` | *URL of the Twitter/X page. @type {string}*
 __linkedinUrl__ | `string` | *URL of the LinkedIn page. @type {string}*
+__year__ | `number` | *Current year, for the copyright. @type {number}*
