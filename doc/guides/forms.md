@@ -278,8 +278,8 @@ export class MyForm {
 
 ## Deprecated components
 
-`<als-input-number>`, `<als-input-text>`, `<als-input-password>` and `<als-select>` will be removed in the next major
-version. Replace them with a native control in an `als-field`, validated with `& validate`:
+`<als-input-number>`, `<als-input-text>`, `<als-input-password>` and `<als-select>` will be removed in a later major
+version, once the applications have migrated. Replace them with a native control in an `als-field`, validated with `& validate`:
 
 | Deprecated | Replacement |
 |---|---|

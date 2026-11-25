@@ -51,6 +51,7 @@ Action Logement Bootstrap theme.
 | [Auto-complete elements](./doc/guides/auto-complete.md) | `auto-complete`, `badges-auto-complete`, `address-auto-complete` and the `AutoCompleteController` |
 | [Forms](./doc/guides/forms.md) | Validation setup, `als-field`, native inputs (`formInputNumberFormat`, `input-filter`, `als-password-toggle`, files), `als-datepicker`, `als-multi-select`, cross-field rules, deprecated components |
 | [Other components](./doc/guides/components.md) | `input-datepicker`, `dateFormat`, `input-mask`, `numberFormat`, `cleanInputMask`, `simple-table`, `als-pre-login`, `als-footer`, `als-user-menu`, `breadcrumbs`, `environment-ribbon`, `loading-indicator`, `als-dropdown`, `no-submit`, `als-gtag` |
+| [Migrating to 6.0.0](./doc/guides/migration-6.md) | Breaking and visible changes of the 6.0.0 version, and how to migrate |
 | [API reference](./doc/toc.md) | Classes, methods and functions, generated from the JSDoc with `npm run doc` |
 
 ## Compatibility
