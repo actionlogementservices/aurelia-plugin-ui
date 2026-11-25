@@ -10,8 +10,11 @@
   @include als-focus-ring;
 }
 
-// BREADCRUMB: the ring of the other controls instead of the browser default
-.breadcrumb-item a:focus-visible {
+// LINKS: the ring of the other controls instead of the browser default, shown on keyboard focus only
+// (.nav-link and .page-link: bootstrap removes their outline with a more specific selector)
+a:focus-visible,
+.nav-link:focus-visible,
+.page-link:focus-visible {
   @include als-focus-ring;
 }
 

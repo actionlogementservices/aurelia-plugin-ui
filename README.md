@@ -31,7 +31,7 @@ Action Logement Bootstrap theme.
        .plugin(PLATFORM.moduleName('@actionlogementservices/aurelia-plugin-ui'))
    ```
 
-1. **Import** the theme, which compiles Bootstrap with the Action Logement colors (brand colors, error `$danger`, field borders, focus ring):
+1. **Import** the theme, which compiles Bootstrap with the Action Logement colors (brand colors, error `$danger`, field borders, focus ring of the controls and links):
 
    ```scss
    // your own overrides go first: the theme variables are !default, so the ones you set first win
