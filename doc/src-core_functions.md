@@ -8,6 +8,34 @@ Defines common functions.
 
 ## Functions
 
+### `toCalendarDate(date) ► string`
+
+![modifier: public](images/badges/modifier-public.png) ![modifier: static](images/badges/modifier-static.png)
+
+Converts a date into a calendar date &#x60;YYYY-MM-DD&#x60;: the day of the date in the local time, without time nor time
+zone. The dates of the datepickers and of the &#x60;dateFormat&#x60; value converter use this format.
+
+Parameters | Type | Description
+--- | --- | ---
+__date__ | `Date` | *date*
+__*return*__ | `string` | *calendar date, e.g. &#x60;2026-11-25&#x60;*
+
+---
+
+### `parseCalendarDate(value) ► Date`
+
+![modifier: public](images/badges/modifier-public.png) ![modifier: static](images/badges/modifier-static.png)
+
+Parses a calendar date &#x60;YYYY-MM-DD&#x60; into the local midnight of this day, whatever the time zone. A date time (ISO
+string with a time, or &#x60;Date&#x60;) is also accepted, its day being the one of the local time.
+
+Parameters | Type | Description
+--- | --- | ---
+__value__ | `string` | *calendar date, date time or date*
+__*return*__ | `Date` | *local midnight of the day, undefined for an empty or invalid value*
+
+---
+
 ### `preventEventPropagation(event)`
 
 ![modifier: public](images/badges/modifier-public.png) ![modifier: static](images/badges/modifier-static.png)
@@ -45,6 +73,19 @@ Parameters | Type | Description
 --- | --- | ---
 __html__ | `string` | *html fragment, e.g. a message mixing text and formatting*
 __*return*__ | `string` | *sanitized html*
+
+---
+
+### `padDatePart(value) ► string`
+
+![modifier: private](images/badges/modifier-private.png)
+
+Pads a day or a month on two digits.
+
+Parameters | Type | Description
+--- | --- | ---
+__value__ | `number` | *day or month*
+__*return*__ | `string` | *padded value*
 
 ---
 
@@ -179,33 +220,6 @@ __*return*__ | `boolean` | *true if the specified value is a date, false otherwi
 
 ```javascript
 value => value instanceof Date
-```
-
----
-
-### `isValidDateTimeISOString`
-
-![modifier: public](images/badges/modifier-public.png) ![modifier: static](images/badges/modifier-static.png)
-
-Checks if the provided value is a date time ISO string?
-
-Parameters | Type | Description
---- | --- | ---
-__value__ | `string` | *value to check*
-__*return*__ | `boolean` | *true if the specified value is a date ISO string, false otherwise*
-
-#### Value
-
-```javascript
-value => {
-  if (!isString(value)) return false;
-  const dateParsed = new Date(Date.parse(value));
-  return (
-    // @ts-ignore
-    !isNaN(dateParsed) &&
-    dateParsed.toISOString().slice(0, maxCommonLength) === value.slice(0, maxCommonLength)
-  );
-}
 ```
 
 ---

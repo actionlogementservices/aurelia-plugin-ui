@@ -12,7 +12,7 @@ import { DOM, inject, bindable, bindingMode, useView } from 'aurelia-framework';
 @useView('./als-datepicker.html')
 @inject(DOM.Element)
 export class AlsDatepicker {
-  /** Selected date in ISO string format. @type {string} */
+  /** Selected date, calendar date `YYYY-MM-DD` (an ISO date time is also accepted). @type {string} */
   @bindable({ defaultBindingMode: bindingMode.twoWay })
   value;
 
@@ -36,15 +36,15 @@ export class AlsDatepicker {
   @bindable({ defaultBindingMode: bindingMode.toView })
   disabledDays = [];
 
-  /** Dates to disable @type {string[]} */
+  /** Dates to disable, calendar dates `YYYY-MM-DD` @type {string[]} */
   @bindable({ defaultBindingMode: bindingMode.toView })
   disabledDates = [];
 
-  /** Minimum selectable date in ISO string format, empty for no limit @type {string} */
+  /** Minimum selectable date, calendar date `YYYY-MM-DD`, empty for no limit @type {string} */
   @bindable({ defaultBindingMode: bindingMode.toView })
   minDate = '';
 
-  /** Maximum selectable date in ISO string format, empty for no limit @type {string} */
+  /** Maximum selectable date, calendar date `YYYY-MM-DD`, empty for no limit @type {string} */
   @bindable({ defaultBindingMode: bindingMode.toView })
   maxDate = '';
 

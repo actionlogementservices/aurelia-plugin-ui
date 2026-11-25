@@ -1,4 +1,34 @@
-import { sanitizeHtml } from 'core/functions';
+import { parseCalendarDate, sanitizeHtml, toCalendarDate } from 'core/functions';
+
+// the specs run in the time zone of the machine: run them with TZ=America/Guadeloupe or TZ=Pacific/Noumea to check
+// that a calendar date keeps its day on both sides of UTC
+describe('calendar dates', () => {
+  test.each([
+    [new Date(2024, 2, 5), '2024-03-05'],
+    [new Date(2024, 11, 31, 23, 59), '2024-12-31']
+  ])('converts %p into %p', (date, calendarDate) => {
+    expect(toCalendarDate(date)).toBe(calendarDate);
+  });
+
+  test.each([
+    ['2024-03-15', new Date(2024, 2, 15)],
+    [new Date(2024, 2, 15, 23, 30).toISOString(), new Date(2024, 2, 15)],
+    [new Date(2024, 2, 15, 10), new Date(2024, 2, 15)]
+  ])('parses %p into the local midnight of its day', (value, date) => {
+    expect(parseCalendarDate(value)).toEqual(date);
+  });
+
+  test.each(['2024-02-30', '15/03/2024 abc', 'abc', '', undefined])(
+    'parses the invalid date %p as undefined',
+    value => {
+      expect(parseCalendarDate(value)).toBeUndefined();
+    }
+  );
+
+  test('keeps the day through a round trip', () => {
+    expect(toCalendarDate(parseCalendarDate('2024-03-31'))).toBe('2024-03-31');
+  });
+});
 
 describe('sanitizeHtml', () => {
   test.each([

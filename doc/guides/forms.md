@@ -199,12 +199,12 @@ An [`input-datepicker`](./components.md#input-datepicker) with the calendar icon
 
 | Attribute | Role | Possible values | Default value |
 |---|---|---|---|
-| `value` | Two-way bound selected date | ISO string | None |
+| `value` | Two-way bound selected date | Calendar date `YYYY-MM-DD` (an ISO date time is also read) | None |
 | `placeholder` | Text displayed when no date is selected | Any string | `''` |
 | `disabled`, `readonly` | Disables the control or makes it read-only | `true` or `false` | `false` |
-| `min-date`, `max-date` | Limits of the selectable dates, enforced by the calendar | ISO string | None |
+| `min-date`, `max-date` | Limits of the selectable dates, enforced by the calendar | Calendar date `YYYY-MM-DD` | None |
 | `disabled-days` | Days of week that cannot be selected (0 is Sunday) | Array of numbers | `[]` |
-| `disabled-dates` | Dates that cannot be selected | Array of ISO strings | `[]` |
+| `disabled-dates` | Dates that cannot be selected | Array of calendar dates `YYYY-MM-DD` | `[]` |
 | `autohide` | Closes the calendar after a selection | `true` or `false` | `true` |
 
 ## `als-multi-select`
@@ -248,9 +248,6 @@ Revalidate the dependent property yourself, and limit the calendar to avoid the 
 import { BindingEngine, inject, NewInstance } from 'aurelia-framework';
 import { ValidationController, ValidationRules } from 'aurelia-validation';
 
-// the dates are UTC ISO strings (the 25/11 in France is 2026-11-24T23:00:00.000Z): compare days, not strings
-const day = isoDate => new Date(isoDate).setHours(0, 0, 0, 0);
-
 @inject(NewInstance.of(ValidationController), BindingEngine)
 export class MyForm {
   model = { startDate: null, endDate: null };
@@ -260,7 +257,8 @@ export class MyForm {
     this.bindingEngine = bindingEngine;
     ValidationRules.ensure('startDate').required()
       .ensure('endDate').required()
-      .satisfies((endDate, model) => !model.startDate || day(endDate) >= day(model.startDate))
+      // calendar dates YYYY-MM-DD: compared as strings
+      .satisfies((endDate, model) => !model.startDate || endDate >= model.startDate)
       .withMessage('La date de fin ne peut pas être antérieure à la date de début.')
       .on(this.model);
   }

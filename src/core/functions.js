@@ -9,8 +9,6 @@ import { DOM } from 'aurelia-pal';
  * @category internal
  */
 
-const maxCommonLength = 19;
-
 /**
  * Waits for the specify delay.
  * @param {number} delay delay in milliseconds
@@ -61,21 +59,6 @@ export const isString = value => typeof value === 'string' || value instanceof S
 export const isDate = value => value instanceof Date;
 
 /**
- * Checks if the provided value is a date time ISO string?
- * @param {string} value value to check
- * @returns {boolean}  true if the specified value is a date ISO string, false otherwise
- */
-export const isValidDateTimeISOString = value => {
-  if (!isString(value)) return false;
-  const dateParsed = new Date(Date.parse(value));
-  return (
-    // @ts-ignore
-    !isNaN(dateParsed) &&
-    dateParsed.toISOString().slice(0, maxCommonLength) === value.slice(0, maxCommonLength)
-  );
-};
-
-/**
  * Supported date formats.
  * @type {Record<SupportedFormat,DateFormatValidator>}
  */
@@ -114,6 +97,41 @@ export const isValidDate = (value, format = 'YYYY-MM-DD') => {
   const date = new Date(year, month, day);
   return { valid: date.getFullYear() === year && date.getMonth() === month && date.getDate() === day, date };
 };
+
+/**
+ * Pads a day or a month on two digits.
+ * @param {number} value day or month
+ * @returns {string} padded value
+ */
+const padDatePart = value => String(value).padStart(2, '0');
+
+/**
+ * Converts a date into a calendar date `YYYY-MM-DD`: the day of the date in the local time, without time nor time
+ * zone. The dates of the datepickers and of the `dateFormat` value converter use this format.
+ * @param {Date} date date
+ * @returns {string} calendar date, e.g. `2026-11-25`
+ */
+export function toCalendarDate(date) {
+  return `${date.getFullYear()}-${padDatePart(date.getMonth() + 1)}-${padDatePart(date.getDate())}`;
+}
+
+/**
+ * Parses a calendar date `YYYY-MM-DD` into the local midnight of this day, whatever the time zone. A date time (ISO
+ * string with a time, or `Date`) is also accepted, its day being the one of the local time.
+ * @param {string | Date} value calendar date, date time or date
+ * @returns {Date | undefined} local midnight of the day, undefined for an empty or invalid value
+ */
+export function parseCalendarDate(value) {
+  if (!value) return;
+  if (typeof value === 'string' && dateFormat['YYYY-MM-DD'].regexp.test(value)) {
+    const { valid, date } = isValidDate(value);
+    return valid ? date : undefined;
+  }
+  const date = new Date(value);
+  return Number.isNaN(date.getTime())
+    ? undefined
+    : new Date(date.getFullYear(), date.getMonth(), date.getDate());
+}
 
 /**
  * Prevents a DOM event to be propagated.

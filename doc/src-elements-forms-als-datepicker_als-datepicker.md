@@ -47,12 +47,12 @@ __*return*__ | `boolean` | *true to continue processing*
 
 Name | Type | Description
 --- | --- | ---
-__value__ | `string` | *Selected date in ISO string format. @type {string}*
+__value__ | `string` | *Selected date, calendar date &#x60;YYYY-MM-DD&#x60; (an ISO date time is also accepted). @type {string}*
 __placeholder__ | `string` | *Placeholder text @type {string}*
 __disabled__ | `boolean` | *Disabled @type {boolean}*
 __readonly__ | `boolean` | *Readonly @type {boolean}*
 __autohide__ | `boolean` | *Auto-hide dropdown after selection @type {boolean}*
 __disabledDays__ | `number[]` | *Days of week to disable @type {number[]}*
-__disabledDates__ | `string[]` | *Dates to disable @type {string[]}*
-__minDate__ | `string` | *Minimum selectable date in ISO string format, empty for no limit @type {string}*
-__maxDate__ | `string` | *Maximum selectable date in ISO string format, empty for no limit @type {string}*
+__disabledDates__ | `string[]` | *Dates to disable, calendar dates &#x60;YYYY-MM-DD&#x60; @type {string[]}*
+__minDate__ | `string` | *Minimum selectable date, calendar date &#x60;YYYY-MM-DD&#x60;, empty for no limit @type {string}*
+__maxDate__ | `string` | *Maximum selectable date, calendar date &#x60;YYYY-MM-DD&#x60;, empty for no limit @type {string}*

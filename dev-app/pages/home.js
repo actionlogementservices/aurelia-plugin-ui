@@ -6,6 +6,7 @@ import { AutoCompleteController } from 'resources/elements/auto-complete/auto-co
 import { LockService } from 'core/lock-service/lock-service';
 import { ToastService } from 'core/toast-service/toast-service';
 import { DialogService } from 'core/dialog-service/dialog-service';
+import { toCalendarDate } from 'core/functions';
 import { Adresse } from 'resources/elements/auto-complete/adresse';
 
 export const wait = delay => new Promise(resolve => setTimeout(resolve, delay));
@@ -23,7 +24,7 @@ export class Home {
   /** @type {Item[]} */ smallItemsList;
   /** @type {Item[]} */ selectedItems;
   /** @type {Item} */ selectedItem;
-  /** @type {string} */ selectedDate = new Date().toISOString();
+  /** @type {string} */ selectedDate = toCalendarDate(new Date());
   /** @type {any} */ selectedAdresse;
   /** @type {'modal' | 'offcanvas'} */ selectedDialogMode = 'modal';
   /** @type {'start' | 'end' | 'top' | 'bottom'} */ selectedOffcanvasPosition = 'end';
@@ -41,8 +42,8 @@ export class Home {
   constructor(controller, toast, lock, dialog) {
     this.maxDate.setMonth(this.maxDate.getMonth() + 1);
     this.mindate.setMonth(this.mindate.getMonth() - 1);
-    this.maxDateString = this.maxDate.toISOString();
-    this.mindateString = this.mindate.toISOString();
+    this.maxDateString = toCalendarDate(this.maxDate);
+    this.mindateString = toCalendarDate(this.mindate);
 
     this.environment = { name: 'LOCAL', type: 'dev' };
     this.itemsController = controller;

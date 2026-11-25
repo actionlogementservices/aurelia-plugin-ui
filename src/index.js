@@ -15,6 +15,7 @@ export { DialogService } from './core/dialog-service/dialog-service';
 export { DialogController } from './core/dialog-service/dialog-controller';
 export { AutoCompleteController } from './elements/auto-complete/auto-complete-controller';
 export { Adresse } from './elements/auto-complete/adresse';
+export { parseCalendarDate, toCalendarDate } from './core/functions';
 
 /** @typedef {import('aurelia-framework').FrameworkConfiguration} FrameworkConfiguration */
 

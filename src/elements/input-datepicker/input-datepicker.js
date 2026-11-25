@@ -5,7 +5,12 @@ import { Datepicker } from 'vanillajs-datepicker';
 
 import localeFr from './locale-fr.js';
 
-import { generateUniqueId, isValidDateTimeISOString, preventEventPropagation } from '../../core/functions';
+import {
+  generateUniqueId,
+  parseCalendarDate,
+  preventEventPropagation,
+  toCalendarDate
+} from '../../core/functions';
 
 /**
  * Implements the **`input-datepicker` custom element** that provides a dropdown calendar to select a single date.
@@ -13,7 +18,7 @@ import { generateUniqueId, isValidDateTimeISOString, preventEventPropagation } f
  */
 @inject(DOM.Element, TaskQueue)
 export class InputDatepicker {
-  /** Selected date in ISO string format. @type {string} */
+  /** Selected date, calendar date `YYYY-MM-DD` (an ISO date time is also accepted). @type {string} */
   @bindable({ defaultBindingMode: bindingMode.twoWay })
   date;
 
@@ -37,15 +42,15 @@ export class InputDatepicker {
   @bindable({ defaultBindingMode: bindingMode.toView })
   disabledDays = [];
 
-  /** Dates to disable. @type {string[]} */
+  /** Dates to disable, calendar dates `YYYY-MM-DD`. @type {string[]} */
   @bindable({ defaultBindingMode: bindingMode.toView })
   disabledDates = [];
 
-  /** Minimum selectable date in ISO string format, empty for no limit. @type {string} */
+  /** Minimum selectable date, calendar date `YYYY-MM-DD`, empty for no limit. @type {string} */
   @bindable({ defaultBindingMode: bindingMode.toView })
   minDate = '';
 
-  /** Maximum selectable date in ISO string format, empty for no limit. @type {string} */
+  /** Maximum selectable date, calendar date `YYYY-MM-DD`, empty for no limit. @type {string} */
   @bindable({ defaultBindingMode: bindingMode.toView })
   maxDate = '';
 
@@ -95,7 +100,7 @@ export class InputDatepicker {
           : undefined,
       daysOfWeekDisabled: this.disabledDays,
       // @ts-ignore
-      datesDisabled: this.disabledDates?.map(d => new Date(d)),
+      datesDisabled: this.getComponentDates(this.disabledDates),
       // @ts-ignore null is accepted at runtime to mean "no limit"
       minDate: this.getComponentDateLimit(this.minDate),
       // @ts-ignore null is accepted at runtime to mean "no limit"
@@ -124,31 +129,40 @@ export class InputDatepicker {
    * @param {Date} date date to apply
    */
   setCustomElementDate(date) {
-    this.date = date?.toISOString();
+    this.date = date ? toCalendarDate(date) : undefined;
     this._taskqueue.queueMicroTask(() => {
       this._propagation = undefined;
     });
   }
 
   /**
-   * Converts a date bindable (ISO string) into a limit usable by the underlying vanillajs component.
+   * Converts a date bindable (calendar date) into a limit usable by the underlying vanillajs component.
    * The underlying component enforces the limit for both calendar selection and manual keyboard input.
-   * @param {string} dateISOstring date specified as ISO string, empty when no limit is set
+   * @param {string} calendarDate calendar date `YYYY-MM-DD`, empty when no limit is set
    * @returns {Date | null} the corresponding Date instance, or null when no limit applies
    */
-  getComponentDateLimit(dateISOstring) {
-    const date = new Date(dateISOstring);
+  getComponentDateLimit(calendarDate) {
     // eslint-disable-next-line unicorn/no-null
-    return !dateISOstring || Number.isNaN(date.getTime()) ? null : date;
+    return parseCalendarDate(calendarDate) ?? null;
+  }
+
+  /**
+   * Converts the dates to disable (calendar dates) into dates usable by the underlying vanillajs component.
+   * @param {string[]} calendarDates calendar dates `YYYY-MM-DD`
+   * @returns {Date[]} the valid dates
+   */
+  getComponentDates(calendarDates) {
+    return (calendarDates ?? []).map(date => parseCalendarDate(date)).filter(Boolean);
   }
 
   /**
    * Set the date of the internal vanillajs component.
-   * @param {string} dateISOstring date specified as ISO string
+   * @param {string} calendarDate calendar date `YYYY-MM-DD`
    */
-  setInternalComponentDate(dateISOstring) {
-    if (isValidDateTimeISOString(dateISOstring)) {
-      this._datepicker?.setDate(new Date(dateISOstring));
+  setInternalComponentDate(calendarDate) {
+    const date = parseCalendarDate(calendarDate);
+    if (date) {
+      this._datepicker?.setDate(date);
     } else {
       // eslint-disable-next-line unicorn/no-null
       this.value = null; // clear the input field
@@ -199,7 +213,7 @@ export class InputDatepicker {
 
   /**
    * Defines the logic triggered when `date` attribute is databound.
-   * @param {string} date date in ISO string format
+   * @param {string} date calendar date `YYYY-MM-DD`
    */
   dateChanged(date) {
     if (this._propagation === 'up') return;
@@ -209,17 +223,16 @@ export class InputDatepicker {
 
   /**
    * Defines the logic triggered when `disabledDates` attribute is databound.
-   * @param {string[]} disabledDates dates to disable in ISO string format
+   * @param {string[]} disabledDates dates to disable, calendar dates `YYYY-MM-DD`
    */
   disabledDatesChanged(disabledDates) {
     if (!this._datepicker) return;
-    const datesDisabled = disabledDates?.map(d => new Date(d));
-    this._datepicker.setOptions({ datesDisabled });
+    this._datepicker.setOptions({ datesDisabled: this.getComponentDates(disabledDates) });
   }
 
   /**
    * Defines the logic triggered when `minDate` attribute is databound.
-   * @param {string} minDate minimum selectable date in ISO string format, empty for no limit
+   * @param {string} minDate minimum selectable date, calendar date `YYYY-MM-DD`, empty for no limit
    */
   minDateChanged(minDate) {
     if (!this._datepicker) return;
@@ -229,7 +242,7 @@ export class InputDatepicker {
 
   /**
    * Defines the logic triggered when `maxDate` attribute is databound.
-   * @param {string} maxDate maximum selectable date in ISO string format, empty for no limit
+   * @param {string} maxDate maximum selectable date, calendar date `YYYY-MM-DD`, empty for no limit
    */
   maxDateChanged(maxDate) {
     if (!this._datepicker) return;

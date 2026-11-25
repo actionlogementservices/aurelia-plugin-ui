@@ -91,7 +91,7 @@ describe('als-datepicker', () => {
     expect(input.getAttribute('aria-describedby')).toBe(`${input.id}-error`);
     expect(document.querySelector('small').textContent.trim()).toBe('Ce champ est obligatoire.');
 
-    model.date = new Date(2026, 10, 14).toISOString();
+    model.date = '2026-11-14';
     await flush();
     expect(input.value).toBe('14/11/2026');
     await controller.validate();
@@ -112,8 +112,14 @@ describe('als-datepicker', () => {
     datepicker.setDate(new Date(2026, 10, 14));
     await flush();
     expect(document.activeElement).toBe(input);
-    expect(model.date).toBe(new Date(2026, 10, 14).toISOString());
+    expect(model.date).toBe('2026-11-14');
     expect(input.classList).not.toContain('is-invalid');
+  });
+
+  test('displays the local day of a date time value, as saved before the calendar dates', async () => {
+    model.date = new Date(2026, 10, 14).toISOString();
+    await flush();
+    expect(document.querySelector('input-datepicker > input').value).toBe('14/11/2026');
   });
 
   test('validates when the focus leaves the element', async () => {

@@ -1,17 +1,11 @@
 import { BindingEngine, inject, NewInstance } from 'aurelia-framework';
 import { ValidationControllerFactory, ValidationRules } from 'aurelia-validation';
 
+import { toCalendarDate } from 'core/functions';
 import { ToastService } from 'core/toast-service/toast-service';
 import { AutoCompleteController } from 'resources/elements/auto-complete/auto-complete-controller';
 
 /** @typedef {{ name: string; email: string; age: number, height: number, money: number, password: string, year: number, years: Array<number>, date: string, civility: string, terms: boolean, interests: Array<string>, comment: string, document: FileList, source: string, sourceOther: string, city: string, startDate: string, endDate: string }} FormData */
-
-/**
- * Day of an ISO date, ignoring the time.
- * @param {string} isoDate ISO date
- * @returns {number} timestamp of the day at midnight, local time
- */
-const day = isoDate => new Date(isoDate).setHours(0, 0, 0, 0);
 
 const CITIES = [
   { code: '75056', name: 'Paris' },
@@ -105,8 +99,8 @@ export class AppLayout {
     const maxDate = new Date();
     minDate.setMonth(minDate.getMonth() - 1);
     maxDate.setMonth(maxDate.getMonth() + 1);
-    this.mindateString = minDate.toISOString();
-    this.maxDateString = maxDate.toISOString();
+    this.mindateString = toCalendarDate(minDate);
+    this.maxDateString = toCalendarDate(maxDate);
 
     ValidationRules.ensure('name')
       .required()
@@ -158,7 +152,8 @@ export class AppLayout {
       .required()
       .ensure('endDate')
       .required()
-      .satisfies((endDate, data) => !data.startDate || day(endDate) >= day(data.startDate))
+      // calendar dates YYYY-MM-DD: compared as strings
+      .satisfies((endDate, data) => !data.startDate || endDate >= data.startDate)
       .withMessage('La date de fin ne peut pas être antérieure à la date de début.')
       .on(this.formData);
   }
@@ -194,7 +189,7 @@ export class AppLayout {
       password: 'motdepasse',
       year: 2024,
       years: [2025, 2026],
-      date: new Date().toISOString(),
+      date: toCalendarDate(new Date()),
       civility: 'M',
       terms: true,
       interests: ['sport', 'culture'],
@@ -203,8 +198,8 @@ export class AppLayout {
       source: 'other',
       sourceOther: 'Salon du logement',
       city: '69123',
-      startDate: new Date().toISOString(),
-      endDate: new Date(Date.now() + 7 * 24 * 3600 * 1000).toISOString()
+      startDate: toCalendarDate(new Date()),
+      endDate: toCalendarDate(new Date(Date.now() + 7 * 24 * 3600 * 1000))
     });
     return this.validationController.validate();
   }

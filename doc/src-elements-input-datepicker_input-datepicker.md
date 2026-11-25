@@ -54,21 +54,34 @@ __date__ | `Date` | *date to apply*
 
 ---
 
-### `getComponentDateLimit(dateISOstring) ► Date`
+### `getComponentDateLimit(calendarDate) ► Date`
 
 ![modifier: public](images/badges/modifier-public.png)
 
-Converts a date bindable (ISO string) into a limit usable by the underlying vanillajs component.
+Converts a date bindable (calendar date) into a limit usable by the underlying vanillajs component.
 The underlying component enforces the limit for both calendar selection and manual keyboard input.
 
 Parameters | Type | Description
 --- | --- | ---
-__dateISOstring__ | `string` | *date specified as ISO string, empty when no limit is set*
+__calendarDate__ | `string` | *calendar date &#x60;YYYY-MM-DD&#x60;, empty when no limit is set*
 __*return*__ | `Date` | *the corresponding Date instance, or null when no limit applies*
 
 ---
 
-### `setInternalComponentDate(dateISOstring)`
+### `getComponentDates(calendarDates) ► Array.<Date>`
+
+![modifier: public](images/badges/modifier-public.png)
+
+Converts the dates to disable (calendar dates) into dates usable by the underlying vanillajs component.
+
+Parameters | Type | Description
+--- | --- | ---
+__calendarDates__ | `Array.<string>` | *calendar dates &#x60;YYYY-MM-DD&#x60;*
+__*return*__ | `Array.<Date>` | *the valid dates*
+
+---
+
+### `setInternalComponentDate(calendarDate)`
 
 ![modifier: public](images/badges/modifier-public.png)
 
@@ -76,7 +89,7 @@ Set the date of the internal vanillajs component.
 
 Parameters | Type | Description
 --- | --- | ---
-__dateISOstring__ | `string` | *date specified as ISO string*
+__calendarDate__ | `string` | *calendar date &#x60;YYYY-MM-DD&#x60;*
 
 ---
 
@@ -126,7 +139,7 @@ Defines the logic triggered when &#x60;date&#x60; attribute is databound.
 
 Parameters | Type | Description
 --- | --- | ---
-__date__ | `string` | *date in ISO string format*
+__date__ | `string` | *calendar date &#x60;YYYY-MM-DD&#x60;*
 
 ---
 
@@ -138,7 +151,7 @@ Defines the logic triggered when &#x60;disabledDates&#x60; attribute is databoun
 
 Parameters | Type | Description
 --- | --- | ---
-__disabledDates__ | `Array.<string>` | *dates to disable in ISO string format*
+__disabledDates__ | `Array.<string>` | *dates to disable, calendar dates &#x60;YYYY-MM-DD&#x60;*
 
 ---
 
@@ -150,7 +163,7 @@ Defines the logic triggered when &#x60;minDate&#x60; attribute is databound.
 
 Parameters | Type | Description
 --- | --- | ---
-__minDate__ | `string` | *minimum selectable date in ISO string format, empty for no limit*
+__minDate__ | `string` | *minimum selectable date, calendar date &#x60;YYYY-MM-DD&#x60;, empty for no limit*
 
 ---
 
@@ -162,7 +175,7 @@ Defines the logic triggered when &#x60;maxDate&#x60; attribute is databound.
 
 Parameters | Type | Description
 --- | --- | ---
-__maxDate__ | `string` | *maximum selectable date in ISO string format, empty for no limit*
+__maxDate__ | `string` | *maximum selectable date, calendar date &#x60;YYYY-MM-DD&#x60;, empty for no limit*
 
 ---
 
@@ -170,15 +183,15 @@ __maxDate__ | `string` | *maximum selectable date in ISO string format, empty fo
 
 Name | Type | Description
 --- | --- | ---
-__date__ | `string` | *Selected date in ISO string format. @type {string}*
+__date__ | `string` | *Selected date, calendar date &#x60;YYYY-MM-DD&#x60; (an ISO date time is also accepted). @type {string}*
 __placeholder__ | `string` | *The place holder text. @type {string}*
 __disabled__ | `boolean` | *Enable/Disable the custom element to prevent user modification. @type {boolean}*
 __readonly__ | `boolean` | *Marks the custom element as read-only. @type {boolean}*
 __autohide__ | `boolean` | *Auto-hide dropdown after selection. @type {boolean}*
 __disabledDays__ | `number[]` | *Days of week to disable. @type {number[]}*
-__disabledDates__ | `string[]` | *Dates to disable. @type {string[]}*
-__minDate__ | `string` | *Minimum selectable date in ISO string format, empty for no limit. @type {string}*
-__maxDate__ | `string` | *Maximum selectable date in ISO string format, empty for no limit. @type {string}*
+__disabledDates__ | `string[]` | *Dates to disable, calendar dates &#x60;YYYY-MM-DD&#x60;. @type {string[]}*
+__minDate__ | `string` | *Minimum selectable date, calendar date &#x60;YYYY-MM-DD&#x60;, empty for no limit. @type {string}*
+__maxDate__ | `string` | *Maximum selectable date, calendar date &#x60;YYYY-MM-DD&#x60;, empty for no limit. @type {string}*
 __uniqueId__ | `string` | *Unique id to identify the custom element instance. @type {string}*
 __value__ | `string` | *Value in the input field. @type {string}*
 ___container__ | `HTMLTemplateElement` | *Html container of the custom element. @type {HTMLTemplateElement}*

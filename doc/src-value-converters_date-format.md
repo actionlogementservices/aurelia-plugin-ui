@@ -22,7 +22,7 @@ Parameters | Type | Description
 --- | --- | ---
 __value__ | `string` | *value from html view in the specified format*
 __formatToUse__ | `SupportedFormat` | *display format, by default french: &#x60;DD/MM/YYYY&#x60;*
-__*return*__ | `string` | *the date in ISO 8601 format*
+__*return*__ | `string` | *the calendar date &#x60;YYYY-MM-DD&#x60;, or the value itself when it is not a valid date*
 
 ---
 
@@ -34,7 +34,7 @@ Converts the value of the javascript model to the html view.
 
 Parameters | Type | Description
 --- | --- | ---
-__value__ | `string` | *value from javascript model, expected to be in ISO 8601 format*
+__value__ | `string` | *value from javascript model: calendar date &#x60;YYYY-MM-DD&#x60;, ISO date time or &#x60;Date&#x60;*
 __displayFormat__ | `SupportedFormat` | *display format, by default french: &#x60;DD/MM/YYYY&#x60;*
 __*return*__ | `string` | *the date in the specified display format*
 

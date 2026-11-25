@@ -41,20 +41,31 @@ date bound to `date`.
 
 | Attribute | Role | Possible values | Default value |
 |---|---|---|---|
-| `date` | Selected date | ISO string | |
+| `date` | Selected date | Calendar date `YYYY-MM-DD` (an ISO date time is also read) | |
 | `placeholder` | Placeholder displayed when no date is selected | Any string | |
 | `disabled` | Disable the user interaction | `true` or `false` | `false` |
 | `readonly` | Readonly field | `true` or `false` | `false` |
 | `autohide` | Hides the calendar after a selection | `true` or `false` | `true` |
 | `disabled-days` | Days of week to disable | Array of numbers, 0 for Sunday, 1 for Monday, and so on | `[]` |
-| `disabled-dates` | Specific dates to disable | Array of ISO strings | `[]` |
-| `min-date` | All the dates before this date are disabled | ISO string | |
-| `max-date` | All the dates after this date are disabled | ISO string | |
+| `disabled-dates` | Specific dates to disable | Array of calendar dates `YYYY-MM-DD` | `[]` |
+| `min-date` | All the dates before this date are disabled | Calendar date `YYYY-MM-DD` | |
+| `max-date` | All the dates after this date are disabled | Calendar date `YYYY-MM-DD` | |
 
 ### `dateFormat` value converter
 
-Displays a date (ISO string or `Date`) in the French format `DD/MM/YYYY`, or in `YYYY-MM-DD` or `MM/DD/YYYY`. From
-the view, it parses a date typed in this format into an ISO string.
+Displays a date (calendar date `YYYY-MM-DD`, ISO date time or `Date`) in the French format `DD/MM/YYYY`, or in
+`YYYY-MM-DD` or `MM/DD/YYYY`. From the view, it parses a date typed in this format into a calendar date `YYYY-MM-DD`.
+
+The dates of the plugin are calendar dates `YYYY-MM-DD`, without time nor time zone: the 15th of March is
+`2024-03-15` for every user, whatever their time zone. The French format is only used to display them. Build them
+with `toCalendarDate(date)` and read them with `parseCalendarDate(value)`, exported by the plugin:
+
+```javascript
+import { parseCalendarDate, toCalendarDate } from '@actionlogementservices/aurelia-plugin-ui';
+
+minDate = toCalendarDate(new Date()); // today, e.g. '2026-11-25'
+const date = parseCalendarDate('2026-11-25'); // local midnight of this day
+```
 
 ```html
 <span>${contract.startDate | dateFormat}</span>
