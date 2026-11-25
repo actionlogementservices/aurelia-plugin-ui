@@ -12,6 +12,8 @@ ExtensionHandlers['.html'] = async filePath => {
   }
   return `<template containerless>\n${await TextHandler(svgPath)}\n</template>\n`;
 };
+// the stylesheets required by the views are not loaded: jsdom has no layout, and its css parser does not know nesting
+ExtensionHandlers['.css'] = async () => '';
 globalize();
 // vanillajs-datepicker uses the global event classes: they must be jsdom's (window), not node's (global)
 /* eslint-disable unicorn/prefer-global-this */
