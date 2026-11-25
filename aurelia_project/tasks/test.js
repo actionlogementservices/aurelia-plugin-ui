@@ -12,7 +12,8 @@ export default (cb) => {
   }
 
   runCLI(options, [path.resolve(__dirname, '../../')]).then(({ results }) => {
-    if (results.numFailedTests || results.numFailedTestSuites) {
+    // `success` is also false when the coverage does not reach the `coverageThreshold` of the jest configuration
+    if (!results.success) {
       cb('Tests Failed');
     } else {
       cb();
