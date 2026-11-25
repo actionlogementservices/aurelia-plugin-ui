@@ -30,7 +30,7 @@ Converts the value of the javascript model to the html view.
 
 Parameters | Type | Description
 --- | --- | ---
-__value__ | `string` | *value from javascript model*
+__value__ | `number` | *value from javascript model*
 __type__ | `'integer'` | *type of the input field*
 __locale__ | `string` | *locale format*
 __*return*__ | `string` | *the string representation*

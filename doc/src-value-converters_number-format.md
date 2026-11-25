@@ -31,7 +31,7 @@ Converts the value of the javascript model to the html view.
 
 Parameters | Type | Description
 --- | --- | ---
-__value__ | `string` | *value from javascript model*
+__value__ | `number` | *value from javascript model*
 __options__ | `{ locale?: string, digits?: number, suffix?: string }` | *formating options*
 __*return*__ | `undefined` | *the formatted number (0 included), undefined for an empty or non numeric value*
 

@@ -103,25 +103,6 @@ __node__ | `Node` | *node to clean*
 
 ## Constants
 
-### `wait`
-
-![modifier: public](images/badges/modifier-public.png) ![modifier: static](images/badges/modifier-static.png)
-
-Waits for the specify delay.
-
-Parameters | Type | Description
---- | --- | ---
-__delay__ | `number` | *delay in milliseconds*
-__*return*__ | `Promise.<void>` | *promise resolved after the delay*
-
-#### Value
-
-```javascript
-delay => new Promise(resolve => setTimeout(resolve, delay))
-```
-
----
-
 ### `isNil`
 
 ![modifier: public](images/badges/modifier-public.png) ![modifier: static](images/badges/modifier-static.png)
@@ -186,44 +167,6 @@ __*return*__ | `string` | *unique identifier*
 
 ---
 
-### `isString`
-
-![modifier: public](images/badges/modifier-public.png) ![modifier: static](images/badges/modifier-static.png)
-
-Checks if the provided value is a string?
-
-Parameters | Type | Description
---- | --- | ---
-__value__ | `any` | *value to check*
-__*return*__ | `boolean` | *true if the specified value is a string, false otherwise*
-
-#### Value
-
-```javascript
-value => typeof value === 'string' || value instanceof String
-```
-
----
-
-### `isDate`
-
-![modifier: public](images/badges/modifier-public.png) ![modifier: static](images/badges/modifier-static.png)
-
-Checks if the provided value is a date?
-
-Parameters | Type | Description
---- | --- | ---
-__value__ | `any` | *value to check*
-__*return*__ | `boolean` | *true if the specified value is a date, false otherwise*
-
-#### Value
-
-```javascript
-value => value instanceof Date
-```
-
----
-
 ### `dateFormat`
 
 ![modifier: public](images/badges/modifier-public.png) ![modifier: static](images/badges/modifier-static.png)
@@ -272,11 +215,11 @@ __*return*__ | `{valid: boolean, date?: Date}` | *indicates if the date is valid
 (value, format = 'YYYY-MM-DD') => {
   const options = dateFormat[format];
   if (isNilOrEmpty(value)) return { valid: false };
-  const match = value.slice(0, 10).match(options.regexp);
+  const match = options.regexp.exec(value.slice(0, 10));
   if (!match) return { valid: false };
-  const day = parseInt(match[options.matches.day], 10);
-  const month = parseInt(match[options.matches.month], 10) - 1; // Months are zero-based in JavaScript Date
-  const year = parseInt(match[options.matches.year], 10);
+  const day = Number.parseInt(match[options.matches.day], 10);
+  const month = Number.parseInt(match[options.matches.month], 10) - 1; // Months are zero-based in JavaScript Date
+  const year = Number.parseInt(match[options.matches.year], 10);
   const date = new Date(year, month, day);
   return { valid: date.getFullYear() === year && date.getMonth() === month && date.getDate() === day, date };
 }

@@ -37,13 +37,14 @@ const currencyOptions = {
 export class FormInputNumberFormatValueConverter {
   /**
    * Converts the value of the javascript model to the html view.
-   * @param {string} value value from javascript model
+   * @param {number | string | null | undefined} value value from javascript model
    * @param {'integer' | 'decimal' | 'currency'} [type] type of the input field
    * @param {string} [locale] locale format
    * @returns {string} the string representation
    */
   toView(value, type = 'integer', locale = 'fr-FR') {
-    if (value === null || value === undefined || value === '' || !isFinite(parseFloat(value))) return '';
+    if (value === null || value === undefined || value === '' || !isFinite(parseFloat(String(value))))
+      return '';
     const numberValue = Number(value);
 
     /** @type {Intl.NumberFormatOptions} */

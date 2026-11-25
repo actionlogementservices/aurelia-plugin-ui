@@ -12,7 +12,7 @@
 export class NumberFormatValueConverter {
   /**
    * Converts the value of the javascript model to the html view.
-   * @param {string} value value from javascript model
+   * @param {number | string | null | undefined} value value from javascript model
    * @param {{ locale?: string, digits?: number, suffix?: string }} options formating options
    * @returns {undefined | string} the formatted number (0 included), undefined for an empty or non numeric value
    */

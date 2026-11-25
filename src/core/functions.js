@@ -10,13 +10,6 @@ import { DOM } from 'aurelia-pal';
  */
 
 /**
- * Waits for the specify delay.
- * @param {number} delay delay in milliseconds
- * @returns {Promise<void>} promise resolved after the delay
- */
-export const wait = delay => new Promise(resolve => setTimeout(resolve, delay));
-
-/**
  * Checks if the provided value is a null or undefined?
  * @param {any} value value to check
  * @returns {boolean} true if the specified value is null or empty?
@@ -43,20 +36,6 @@ export const generateUniqueId = () => {
   const randomPart = Math.random().toString(36).slice(2);
   return timestamp + randomPart;
 };
-
-/**
- * Checks if the provided value is a string?
- * @param {any} value value to check
- * @returns {boolean} true if the specified value is a string, false otherwise
- */
-export const isString = value => typeof value === 'string' || value instanceof String;
-
-/**
- * Checks if the provided value is a date?
- * @param {any} value value to check
- * @returns {boolean} true if the specified value is a date, false otherwise
- */
-export const isDate = value => value instanceof Date;
 
 /**
  * Supported date formats.
@@ -89,11 +68,11 @@ export const dateFormat = {
 export const isValidDate = (value, format = 'YYYY-MM-DD') => {
   const options = dateFormat[format];
   if (isNilOrEmpty(value)) return { valid: false };
-  const match = value.slice(0, 10).match(options.regexp);
+  const match = options.regexp.exec(value.slice(0, 10));
   if (!match) return { valid: false };
-  const day = parseInt(match[options.matches.day], 10);
-  const month = parseInt(match[options.matches.month], 10) - 1; // Months are zero-based in JavaScript Date
-  const year = parseInt(match[options.matches.year], 10);
+  const day = Number.parseInt(match[options.matches.day], 10);
+  const month = Number.parseInt(match[options.matches.month], 10) - 1; // Months are zero-based in JavaScript Date
+  const year = Number.parseInt(match[options.matches.year], 10);
   const date = new Date(year, month, day);
   return { valid: date.getFullYear() === year && date.getMonth() === month && date.getDate() === day, date };
 };
