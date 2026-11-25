@@ -1,3 +1,5 @@
+import { DOM } from 'aurelia-pal';
+
 /** @typedef {import('types').SupportedFormat} SupportedFormat */
 /** @typedef {import('types').DateFormatValidator} DateFormatValidator */
 
@@ -138,4 +140,45 @@ export function cleanInputMask(value) {
   }
 
   return parsedValue;
+}
+
+/**
+ * Formatting tags kept by sanitizeHtml, without their attributes.
+ * @type {Set<string>}
+ */
+const allowedHtmlTags = new Set(['B', 'STRONG', 'I', 'EM', 'BR', 'P', 'UL', 'OL', 'LI']);
+
+/**
+ * Removes the attributes, the comments and the elements other than the formatting tags from a node, keeping the text.
+ * @param {Node} node node to clean
+ */
+function sanitizeNode(node) {
+  // a copy of the live list: the loop replaces and removes children
+  for (const child of Array.from(node.childNodes)) {
+    if (child.nodeType === child.ELEMENT_NODE) {
+      const element = /** @type {Element} */ (child);
+      sanitizeNode(element);
+      if (allowedHtmlTags.has(element.tagName)) {
+        for (const name of element.getAttributeNames()) element.removeAttribute(name);
+      } else {
+        element.replaceWith(...element.childNodes);
+      }
+    } else if (child.nodeType !== child.TEXT_NODE) {
+      child.remove();
+    }
+  }
+}
+
+/**
+ * Sanitizes an html fragment against XSS: only the formatting tags (b, strong, i, em, br, p, ul, ol, li) are kept,
+ * without any attribute; the other elements are replaced by their content and the comments are removed. The fragment
+ * is parsed in an inert template, where no script runs and no resource loads.
+ * @param {string} html html fragment, e.g. a message mixing text and formatting
+ * @returns {string} sanitized html
+ */
+export function sanitizeHtml(html) {
+  const template = /** @type {HTMLTemplateElement} */ (DOM.createElement('template'));
+  template.innerHTML = String(html ?? '');
+  sanitizeNode(template.content);
+  return template.innerHTML;
 }

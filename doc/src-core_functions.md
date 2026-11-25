@@ -33,6 +33,33 @@ __*return*__ | `number` | *number or undefined in case of failure*
 
 ---
 
+### `sanitizeHtml(html) ► string`
+
+![modifier: public](images/badges/modifier-public.png) ![modifier: static](images/badges/modifier-static.png)
+
+Sanitizes an html fragment against XSS: only the formatting tags (b, strong, i, em, br, p, ul, ol, li) are kept,
+without any attribute; the other elements are replaced by their content and the comments are removed. The fragment
+is parsed in an inert template, where no script runs and no resource loads.
+
+Parameters | Type | Description
+--- | --- | ---
+__html__ | `string` | *html fragment, e.g. a message mixing text and formatting*
+__*return*__ | `string` | *sanitized html*
+
+---
+
+### `sanitizeNode(node)`
+
+![modifier: private](images/badges/modifier-private.png)
+
+Removes the attributes, the comments and the elements other than the formatting tags from a node, keeping the text.
+
+Parameters | Type | Description
+--- | --- | ---
+__node__ | `Node` | *node to clean*
+
+---
+
 ## Constants
 
 ### `wait`
@@ -239,6 +266,20 @@ __*return*__ | `{valid: boolean, date?: Date}` | *indicates if the date is valid
   const date = new Date(year, month, day);
   return { valid: date.getFullYear() === year && date.getMonth() === month && date.getDate() === day, date };
 }
+```
+
+---
+
+### `allowedHtmlTags`
+
+![modifier: private](images/badges/modifier-private.png)
+
+Formatting tags kept by sanitizeHtml, without their attributes.
+
+#### Value
+
+```javascript
+new Set(['B', 'STRONG', 'I', 'EM', 'BR', 'P', 'UL', 'OL', 'LI'])
 ```
 
 ---

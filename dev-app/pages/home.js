@@ -177,7 +177,7 @@ export class Home {
   }
 
   showPersistentError() {
-    this.toast.error('Error displayed until closed!', 0);
+    this.toast.error('Error <b>displayed until closed</b>, <img src="x" onerror="alert(1)">without its image!', 0);
   }
 
   async showDialog() {

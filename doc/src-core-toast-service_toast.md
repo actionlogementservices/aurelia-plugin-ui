@@ -20,7 +20,7 @@ Sets the message and type of the toast.
 
 Parameters | Type | Description
 --- | --- | ---
-__message__ | `string` | *toast message*
+__message__ | `string` | *toast message, text or html with formatting tags (b, strong, i, em, br, p, ul, ol, li)*
 __color__ | `ThemeColor` | *color of toast*
 __*return*__ | [Toast](src-core-toast-service_toast.md) | *the current instance*
 
@@ -30,7 +30,7 @@ __*return*__ | [Toast](src-core-toast-service_toast.md) | *the current instance*
 
 Name | Type | Description
 --- | --- | ---
-__message__ | `string` | *Toast message @type {string}*
+__message__ | `string` | *Toast message, sanitized html @type {string}*
 __color__ | `ThemeColor` | *Type of toast @type {ThemeColor}*
 __white__ | `boolean` | *White text, on the dark backgrounds @type {boolean}*
 __urgent__ | `boolean` | *Urgent message (error, warning), announced at once by the screen readers @type {boolean}*

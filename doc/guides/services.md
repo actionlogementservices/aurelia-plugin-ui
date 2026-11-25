@@ -117,6 +117,10 @@ Inject the `ToastService` and call `info`, `success`, `warning` or `error` with 
 in ms before the toast hides (`4000` by default, `0` to keep it until the user closes it, e.g. for an error that must
 be read). The method returns a promise resolved once the toast is closed.
 
+The message is text, or html limited to the formatting tags `b`, `strong`, `i`, `em`, `br`, `p`, `ul`, `ol` and `li`.
+Against XSS, their attributes and the other elements (links, images, scripts...) are removed, keeping their text: a
+message can safely hold a value coming from the user or the server.
+
 The screen readers announce `error` and `warning` at once (`role="alert"`), and `info` and `success` when the user is
 idle (`role="status"`).
 

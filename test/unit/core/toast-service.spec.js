@@ -67,6 +67,16 @@ describe('ToastService', () => {
     }
   );
 
+  test('keeps the formatting of the message and removes its active content', async () => {
+    const { closed, toast } = await show(
+      'error',
+      'Le <b>dossier</b> <img src="x" onerror="steal()">est refusé',
+      50
+    );
+    expect(toast.querySelector('.toast-body').innerHTML).toBe('Le <b>dossier</b> est refusé');
+    await closed;
+  });
+
   test('hides after 4 seconds by default', async () => {
     const { closed, toast } = await show('info', 'Message');
     expect(Toast.getInstance(toast)._config.delay).toBe(4000);
