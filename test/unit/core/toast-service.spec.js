@@ -2,8 +2,6 @@ import { StageComponent } from 'aurelia-testing';
 import { bootstrap } from 'aurelia-bootstrapper';
 import { Toast } from 'bootstrap';
 
-const flush = (delay = 30) => new Promise(resolve => setTimeout(resolve, delay));
-
 describe('ToastService', () => {
   let component;
   /** @type {import('core/toast-service/toast-service').ToastService} */
@@ -33,17 +31,19 @@ describe('ToastService', () => {
   afterEach(() => component.dispose());
 
   /**
-   * Shows a toast and waits until it is displayed.
+   * Shows a toast and waits until bootstrap has displayed it.
    * @param {'info' | 'success' | 'warning' | 'error'} type toast type
    * @param {string} message toast message
    * @param {number} [delay] delay before hiding the toast
    * @returns {Promise<{ closed: Promise<void>, toast: HTMLElement }>} closing promise and toast element
    */
   const show = async (type, message, delay) => {
+    // the first toast loads its view: wait for bootstrap to show it rather than for a fixed delay
+    const shown = new Promise(resolve =>
+      document.addEventListener('shown.bs.toast', event => resolve(event.target), { once: true })
+    );
     const closed = service[type](message, delay);
-    await flush();
-    const toast = [...document.querySelectorAll('#toastContainer .toast')].at(-1);
-    return { closed, toast: /** @type {HTMLElement} */ (toast) };
+    return { closed, toast: /** @type {HTMLElement} */ (await shown) };
   };
 
   test.each([
