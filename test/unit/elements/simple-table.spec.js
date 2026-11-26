@@ -306,12 +306,19 @@ describe('simple-table accessibility', () => {
       [...document.querySelectorAll('simple-table button.btn-link')].find(b => b.textContent.trim() === text);
     expect(button('Sélectionner les 25 résultats')).toBeUndefined();
 
+    const announce = document.querySelectorAll('simple-table [role="status"]')[1];
+    expect(announce.textContent.trim()).toBe('');
     checkboxes()[0].click();
     await flush();
+    // announced: the button appears before the table, above the focused checkbox
+    expect(announce.textContent.trim()).toBe(
+      'Toutes les lignes de la page sont sélectionnées. Bouton « Sélectionner les 25 résultats » disponible au-dessus du tableau.'
+    );
     button('Sélectionner les 25 résultats').click();
     await flush();
     expect(context.selected).toHaveLength(25);
     expect(button('Sélectionner les 25 résultats')).toBeUndefined();
+    expect(announce.textContent.trim()).toBe('');
     // the focus goes to the button replacing the clicked one
     expect(document.activeElement).toBe(button('Effacer la sélection'));
 

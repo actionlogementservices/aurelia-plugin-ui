@@ -6,12 +6,16 @@
   <div if.bind="!noRowCountHeader" class="d-flex flex-wrap align-items-baseline column-gap-3 px-2 mb-2">
     <!-- announced by the screen readers when the count changes (filter, page) -->
     <span role="status"><span if.bind="items.length > 0" class="fw-semibold">${countText}</span></span>
+    <!-- tells the screen readers that the button selecting every page appeared before the table, above the focus -->
+    <span role="status" class="visually-hidden">
+      ${canSelectAllResults ? 'Toutes les lignes de la page sont sélectionnées. Bouton « ' + selectAllButtonText + ' » disponible au-dessus du tableau.' : ''}
+    </span>
     <span if.bind="selectedItems.length > 0" class="text-body-secondary">
       ${selectedItems.length} ${selectedText}
     </span>
     <!-- the rows of the other pages of an array datasource, once the rows of the page are all selected -->
     <button
-      if.bind="selectionMode == 'multiple' && totalSelectableCount > selectableItemCount && selectableItemCount > 0 && pageSelectedCount === selectableItemCount && selectedItems.length < totalSelectableCount"
+      if.bind="canSelectAllResults"
       type="button"
       class="btn btn-link p-0 align-baseline"
       disabled.bind="disabled"

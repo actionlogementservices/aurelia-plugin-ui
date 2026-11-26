@@ -158,7 +158,8 @@ The table emits a `change` event whose `detail` is the selection.
 
 Once the rows of the page are all selected, the detail bar offers to select the rows of every page ("Sélectionner les
 120 résultats", with an array `datasource` only: the other pages of a `{ items, totalCount }` one are not loaded), and
-a selection going beyond the page can be cleared at once ("Effacer la sélection").
+a selection going beyond the page can be cleared at once ("Effacer la sélection"). As the button appears before the
+table, above the focused checkbox, the screen readers announce it.
 
 The header of the sorted column carries `aria-sort` (`ascending` or `descending`): the screen readers tell the sort
 order, which the icon only shows.

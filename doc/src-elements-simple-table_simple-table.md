@@ -288,6 +288,8 @@ __pageSize__ | `undefined` | *Effective &#x60;maxRows&#x60;, a number even when 
 __pageCount__ | `undefined` | *Number of pages.*
 __pages__ | `undefined` | *Page numbers to display: first, last and current ±1, &#x60;undefined&#x60; standing for an ellipsis.*
 __countText__ | `undefined` | *Row count of the detail bar, with the range of the displayed rows when paginated (e.g. &#x60;11–20 sur 120 résultat(s).&#x60;).*
+__canSelectAllResults__ | `undefined` | *Can the rows of every page be selected at once? Once the selectable rows of the page are all selected, with an
+array datasource whose other pages hold selectable rows not selected yet.*
 __selectAllButtonText__ | `undefined` | *Text of the button selecting the rows of every page.*
 __notDisplayedWarningText__ | `undefined` | *Warning text regarding items not displayed.*
 ___container__ | `HTMLTemplateElement` | *Html container of the custom element. @type {HTMLTemplateElement}*

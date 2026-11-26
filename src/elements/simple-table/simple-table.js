@@ -493,6 +493,28 @@ export class SimpleTable {
   }
 
   /**
+   * Can the rows of every page be selected at once? Once the selectable rows of the page are all selected, with an
+   * array datasource whose other pages hold selectable rows not selected yet.
+   * @returns {boolean} true to offer the button selecting the rows of every page
+   */
+  @computedFrom(
+    'selectionMode',
+    'totalSelectableCount',
+    'selectableItemCount',
+    'pageSelectedCount',
+    'selectedItems'
+  )
+  get canSelectAllResults() {
+    return (
+      this.selectionMode === 'multiple' &&
+      this.selectableItemCount > 0 &&
+      this.pageSelectedCount === this.selectableItemCount &&
+      this.totalSelectableCount > this.selectableItemCount &&
+      this.selectedItems.length < this.totalSelectableCount
+    );
+  }
+
+  /**
    * Text of the button selecting the rows of every page.
    * @returns {string} button text
    */
