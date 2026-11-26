@@ -2,10 +2,18 @@
   <require from="./simple-table.css"></require>
   <!-- where columns definition will be projected -->
   <slot></slot>
+  <!-- title of the table, naming it (aria-labelledby): above the detail bar, which a <caption> would come below -->
+  <div if.bind="caption && !hideCaption" id="caption-${uniqueId}" class="fw-semibold fs-5 px-2 mb-1">${caption}</div>
   <!-- detail bar, aligned with the content of the cells (padding of the bootstrap cells) -->
   <div if.bind="!noRowCountHeader" class="d-flex flex-wrap align-items-baseline column-gap-3 px-2 mb-2">
-    <!-- announced by the screen readers when the count changes (filter, page) -->
-    <span role="status"><span if.bind="items.length > 0" class="fw-semibold">${countText}</span></span>
+    <!-- announced by the screen readers when the count changes (filter, page) or the rows are loading -->
+    <span role="status">
+      <span if.bind="loading" class="d-inline-flex align-items-center gap-2 fw-semibold">
+        <span class="spinner-border spinner-border-sm text-primary" aria-hidden="true"></span>
+        ${loadingText}
+      </span>
+      <span if.bind="!loading && items.length > 0" class="fw-semibold">${countText}</span>
+    </span>
     <!-- tells the screen readers that the button selecting every page appeared before the table, above the focus -->
     <span role="status" class="visually-hidden">
       ${canSelectAllResults ? selectAllHintText.replace('{button}', selectAllButtonText) : ''}
@@ -37,7 +45,12 @@
     </span>
   </div>
   <div class="table-wrapper" css="max-height: ${maxHeight}">
-    <table id="grid-${uniqueId}" class="table table-hover ${disabled ? 'table-disabled' : ''}">
+    <table
+      id="grid-${uniqueId}"
+      class="table table-hover ${disabled || loading ? 'table-disabled' : ''}"
+      aria-labelledby.bind="caption && !hideCaption ? 'caption-' + uniqueId : null"
+      aria-label.bind="caption && hideCaption ? caption : null"
+      aria-busy.bind="loading ? 'true' : null">
       <thead>
         <!-- column headers -->
         <tr>
@@ -120,7 +133,7 @@
         class="form-select form-select-sm w-auto"
         disabled.bind="disabled"
         change.trigger="$event.stopPropagation() || changePageSize($event.target.value)">
-        <option repeat.for="size of [10, 20, 50, 100]" value.bind="size" selected.bind="size === pageSize">
+        <option repeat.for="size of pageSizes" value.bind="size" selected.bind="size === pageSize">
           ${size}
         </option>
       </select>

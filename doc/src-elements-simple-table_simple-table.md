@@ -237,19 +237,20 @@ Synchronizes the keys of the selected items, and the selection count of the page
 
 ---
 
-### `removeSelectionTooltips()`
+### `removeCellTooltips()`
 
 ![modifier: public](images/badges/modifier-public.png)
 
-Removes bootstrap tooltips on cells.
+Removes the bootstrap tooltips of the cells.
 
 ---
 
-### `addSelectionTooltips()`
+### `addCellTooltips()`
 
 ![modifier: public](images/badges/modifier-public.png)
 
-Adds bootstrap tooltips on cells.
+Adds the bootstrap tooltips of the cells: on the elements of the column templates with &#x60;data-bs-toggle&#x3D;&quot;tooltip&quot;&#x60;,
+and on the cells whose content is truncated (ellipsis).
 
 ---
 
@@ -290,6 +291,12 @@ __parentRef__ | `any` | *Parent memory reference @type { any }}*
 __disabled__ | `boolean` | *Enable/Disable the custom element to prevent user modification. @type {boolean}*
 __maxRows__ | `number` | *Maximal number of displayed rows, the page size when paginated (defaults: 50, 10 when paginated).
 Two-way: with a &#x60;{ items, totalCount }&#x60; datasource, the parent reloads the page when the user changes it.*
+__caption__ | `string` | *Title of the table, displayed above it and naming it for the screen readers (&#x60;aria-labelledby&#x60;).*
+__hideCaption__ | `boolean` | *Hides the &#x60;caption&#x60;, which still names the table (&#x60;aria-label&#x60;), e.g. when a visible heading already titles it.*
+__loading__ | `boolean` | *The parent loads the rows (a page, a sort...): the table is busy (&#x60;aria-busy&#x60;), dimmed and out of reach of the
+mouse, and the detail bar tells the wait. The controls keep the keyboard focus.*
+__loadingText__ | `string` | *Text of the detail bar while loading, announced by the screen readers. @type {string}*
+__pageSizes__ | `number[]` | *Page sizes offered by the page size selector. @type {number[]}*
 __maxHeight__ | `string` | *CSS max height of the table. @type {string}*
 __selectionMode__ | `'none' \| 'single' \| 'multiple'` | *Selection mode. @type {&#x27;none&#x27; | &#x27;single&#x27; | &#x27;multiple&#x27;}*
 __noRowCountHeader__ | `boolean` | *Hides the detail bar above the table: row count, selection count and warning. @type {boolean}*

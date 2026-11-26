@@ -409,6 +409,47 @@ describe('simple-table accessibility', () => {
     );
   });
 
+  test('is named by its caption, displayed above the table or hidden', async () => {
+    component = await stage('datasource.bind="ds" caption="Contrats en cours"', { ds: ds(3) });
+    const table = () => document.querySelector('simple-table table');
+    const title = document.getElementById(table().getAttribute('aria-labelledby'));
+    expect(title.textContent.trim()).toBe('Contrats en cours');
+    // above the detail bar, not a <caption> coming below it
+    expect(title.compareDocumentPosition(table()) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+    component.dispose();
+
+    component = await stage('datasource.bind="ds" caption="Contrats en cours" hide-caption="true"', {
+      ds: ds(3)
+    });
+    expect(table().getAttribute('aria-label')).toBe('Contrats en cours');
+    expect(table().hasAttribute('aria-labelledby')).toBe(false);
+    expect(document.body.textContent).not.toContain('Contrats en cours');
+  });
+
+  test('tells the loading of the rows, keeping the controls focusable', async () => {
+    const context = { ds: ds(25), loading: true };
+    component = await stage('datasource.bind="ds" paginated="true" loading.bind="loading"', context);
+    const table = document.querySelector('simple-table table');
+    const status = document.querySelector('simple-table [role="status"]');
+    expect(table.getAttribute('aria-busy')).toBe('true');
+    expect(table.classList).toContain('table-disabled');
+    expect(status.textContent.trim()).toBe('Chargement en cours');
+    // a disabled control would lose the keyboard focus
+    expect(document.querySelector('simple-table [aria-label="Page suivante"]').disabled).toBe(false);
+
+    context.loading = false;
+    await flush();
+    expect(table.hasAttribute('aria-busy')).toBe(false);
+    expect(status.textContent.trim()).toBe('1–10 sur 25 résultat(s).');
+  });
+
+  test('offers the page sizes set by the application', async () => {
+    component = await stage('datasource.bind="ds" paginated="true" page-sizes.bind="[5, 25]"', {
+      ds: ds(30)
+    });
+    expect([...select().options].map(option => option.value)).toEqual(['5', '25']);
+  });
+
   test('tells the sort order of the sorted column to the screen readers', async () => {
     component = StageComponent.withResources([
       PLATFORM.moduleName('elements/simple-table/simple-table'),

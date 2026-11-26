@@ -49,6 +49,36 @@ export class SimpleTable {
   @bindable({ defaultBindingMode: bindingMode.twoWay })
   maxRows;
 
+  /**
+   * Title of the table, displayed above it and naming it for the screen readers (`aria-labelledby`).
+   * @type {string}
+   */
+  @bindable({ defaultBindingMode: bindingMode.toView })
+  caption;
+
+  /**
+   * Hides the `caption`, which still names the table (`aria-label`), e.g. when a visible heading already titles it.
+   * @type {boolean}
+   */
+  @bindable({ defaultBindingMode: bindingMode.toView })
+  hideCaption = false;
+
+  /**
+   * The parent loads the rows (a page, a sort...): the table is busy (`aria-busy`), dimmed and out of reach of the
+   * mouse, and the detail bar tells the wait. The controls keep the keyboard focus.
+   * @type {boolean}
+   */
+  @bindable({ defaultBindingMode: bindingMode.toView })
+  loading = false;
+
+  /** Text of the detail bar while loading, announced by the screen readers. @type {string} */
+  @bindable({ defaultBindingMode: bindingMode.toView })
+  loadingText = 'Chargement en cours';
+
+  /** Page sizes offered by the page size selector. @type {number[]} */
+  @bindable({ defaultBindingMode: bindingMode.toView })
+  pageSizes = [10, 20, 50, 100];
+
   /** CSS max height of the table. @type {string} */
   @bindable({ defaultBindingMode: bindingMode.toView })
   maxHeight = '500px';
@@ -205,7 +235,7 @@ export class SimpleTable {
   setDisplayedItems() {
     this.totalCount = 0;
     this.items = [];
-    this.removeSelectionTooltips();
+    this.removeCellTooltips();
     if (!this.datasource) return; // the datasource is empty
     if (Array.isArray(this.datasource)) {
       // the datasource is a simple array of items
@@ -217,7 +247,7 @@ export class SimpleTable {
       this.totalSelectableCount = this.datasource.filter(item => !this.isRowDisabled(item)).length;
       this.calculateSelectableItemCount();
       this.synchronizeSelection();
-      this.addSelectionTooltips();
+      this.addCellTooltips();
       return;
     }
     const { items, totalCount } = this.datasource;
@@ -232,7 +262,7 @@ export class SimpleTable {
       this.totalSelectableCount = 0;
       this.calculateSelectableItemCount();
       this.synchronizeSelection();
-      this.addSelectionTooltips();
+      this.addCellTooltips();
     }
   }
 
@@ -425,9 +455,9 @@ export class SimpleTable {
   }
 
   /**
-   * Removes bootstrap tooltips on cells.
+   * Removes the bootstrap tooltips of the cells.
    */
-  removeSelectionTooltips() {
+  removeCellTooltips() {
     this._taskqueue.queueTask(() => {
       if (this._tooltips) {
         for (const tooltip of this._tooltips) {
@@ -443,9 +473,10 @@ export class SimpleTable {
   }
 
   /**
-   * Adds bootstrap tooltips on cells.
+   * Adds the bootstrap tooltips of the cells: on the elements of the column templates with `data-bs-toggle="tooltip"`,
+   * and on the cells whose content is truncated (ellipsis).
    */
-  addSelectionTooltips() {
+  addCellTooltips() {
     this._taskqueue.queueTask(() => {
       // elements with data-bs-toggle tooltip attributes
       const withBsTooltipsElements = this._container.querySelectorAll('[data-bs-toggle="tooltip"]');

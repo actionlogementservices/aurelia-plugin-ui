@@ -201,6 +201,12 @@ export class Home {
     this.toast.info(data.name);
   }
 
+  /** Simulates the loading of the rows of the table by the parent. */
+  async simulateTableLoading() {
+    this.tableLoading = true;
+    await wait(1500).finally(() => (this.tableLoading = false));
+  }
+
   @computedFrom('selectedDialogMode')
   get isDialogModalMode() {
     return this.selectedDialogMode === 'modal';

@@ -140,6 +140,20 @@ property, and the content of the element, where `item` is the current row, repla
 
 In a column template, `parentRef` is the viewmodel bound to `parent-ref`, and `metadata` the value bound to `metadata`.
 
+### Title and loading
+
+Give the table a title with `caption`: it is displayed above the table and names it for the screen readers
+(`aria-labelledby`, RGAA criterion 5.4). When a visible heading of the page already titles the table, set
+`hide-caption="true"`: the caption only names the table (`aria-label`).
+
+While the parent loads the rows (a page, a sort...), bind `loading`: the table is busy (`aria-busy`), dimmed and out of
+reach of the mouse, and the detail bar displays "Chargement en cours", announced by the screen readers. The controls
+are not disabled, so that they keep the keyboard focus.
+
+```html
+<simple-table caption="Contrats en cours" datasource.bind="pageResult" loading.bind="isLoading" ...>
+```
+
 ### Detail bar
 
 Above the table, aligned with the content of the cells, a bar displays the row count (the range of the page when
@@ -225,6 +239,11 @@ A click on the header of a `sortable` column sorts the rows by its `cell-key`, a
 | `paginated` | Enables the pagination | `true` or `false` | `false` |
 | `page` | Current page, 1-based (two-way binding) | Any number > 0 | `1` |
 | `page-size-text` | Label of the page size selector | Any string | `Éléments par page` |
+| `page-sizes` | Page sizes offered by the page size selector | Array of numbers | `[10, 20, 50, 100]` |
+| `caption` | Title of the table, displayed above it and naming it | Any string | |
+| `hide-caption` | Hides the caption, which still names the table | `true` or `false` | `false` |
+| `loading` | The parent loads the rows: the table is busy and tells the wait | `true` or `false` | `false` |
+| `loading-text` | Text of the detail bar while loading | Any string | `Chargement en cours` |
 | `max-height` | CSS max height of the table | Any CSS height | `500px` |
 | `fixed-row-height` | Fixed row height. When `false`, the text wraps and the rows may have different heights | `true` or `false` | `true` |
 | `no-row-count-header` | Hides the detail bar above the table: row count, selection count and warning | `true` or `false` | `false` |
