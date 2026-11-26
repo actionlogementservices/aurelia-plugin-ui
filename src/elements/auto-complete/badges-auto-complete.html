@@ -1,4 +1,4 @@
-<template role="list" aria-haspopup="listbox">
+<template>
   <require from="./auto-complete.css"></require>
   <div id="badges-auto-complete-${uniqueId}" class="dropdown">
     <!-- badges section -->
@@ -6,45 +6,62 @@
       <span
         repeat.for="b of selectedItems"
         class="badge bg-secondary m-1 p-2 d-inline-flex align-items-center justify-content-center">
-        <i class="bi bi-x-lg fs-6 me-2" role="button" click.trigger="removeItem(b)"></i>
+        <button
+          type="button"
+          class="btn border-0 p-0 me-2 text-white lh-1"
+          aria-label="Retirer ${b[$parent.labelKey]}"
+          disabled.bind="disabled"
+          click.trigger="removeItem(b)">
+          <i class="bi bi-x-lg fs-6" aria-hidden="true"></i>
+        </button>
         ${b[$parent.labelKey]}
       </span>
     </div>
-    <!-- input field displaying label key property and enabling filtering -->
+    <!-- combobox (WAI-ARIA combobox pattern, see core/combobox) -->
     <input
       id="searchText-${uniqueId}"
       placeholder="${placeholder || ''}"
       type="text"
       disabled.bind="disabled"
       class="form-control border-0 shadow-none ${selectedItems.length > 0 ? 'items-selected' : ''}"
-      aria-autocomplete="none"
       autocomplete="off"
       autocorrect="off"
       spellcheck="false"
       data-bs-toggle="dropdown"
       style="cursor: auto"
-      role="button"
-      role="searchbox"
+      role="combobox"
+      aria-autocomplete="list"
+      aria-expanded="false"
+      aria-controls="dropDown-${uniqueId}"
       input.trigger="onInputChange($event.target.value) & debounce:delay"
       click.trigger="hideDropdown()"
       blur.trigger="onInputBlur()"
-      keydown.trigger="manageKey($event.code)" />
-    <!-- dropdown -->
+      keydown.trigger="manageKey($event)" />
+    <!-- listbox: a click on an option keeps the focus on the input -->
     <div
       id="dropDown-${uniqueId}"
-      class="dropdown-menu dropdown-menu-scroll ${autosize ? 'dropdown-menu-autosize' : ''}">
-      <button
+      class="dropdown-menu dropdown-menu-scroll ${autosize ? 'dropdown-menu-autosize' : ''}"
+      role="listbox"
+      mousedown.trigger="$event.preventDefault()">
+      <div
         repeat.for="item of items"
-        type="button"
+        id="${uniqueId}-option-${$index}"
         class="dropdown-item"
-        role="listitem"
-        keydown.trigger="selectItem(item)"
-        mousedown.delegate="selectItem(item)">
+        role="option"
+        aria-selected="false"
+        click.trigger="selectItem(item)">
         <template replaceable part="itemTemplate">
           <compose view.bind="itemView" view-model.bind="item"></compose>
         </template>
-      </button>
-      <div show.bind="itemsCount === 0" class="dropdown-item disabled">${noResultText}</div>
+      </div>
+      <div
+        show.bind="itemsCount === 0"
+        class="dropdown-item disabled"
+        role="option"
+        aria-selected="false"
+        aria-disabled="true">
+        ${noResultText}
+      </div>
     </div>
   </div>
 </template>

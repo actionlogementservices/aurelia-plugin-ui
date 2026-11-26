@@ -96,16 +96,16 @@ Required to participate in aurelia validation system.
 
 ---
 
-### `manageKey(keyCode) ► boolean`
+### `manageKey(event) ► boolean`
 
 ![modifier: public](images/badges/modifier-public.png)
 
-Defines the logic triggered when user uses keyboard.
+Defines the logic triggered when user uses keyboard (WAI-ARIA combobox keys, see &#x60;handleComboboxKey&#x60;).
 
 Parameters | Type | Description
 --- | --- | ---
-__keyCode__ | `string` | *key code*
-__*return*__ | `boolean` | *true*
+__event__ | `KeyboardEvent` | *keydown event of the input*
+__*return*__ | `boolean` | *true to let the browser handle the key*
 
 ---
 

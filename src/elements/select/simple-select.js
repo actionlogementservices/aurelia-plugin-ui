@@ -10,6 +10,7 @@ import {
 import { Dropdown } from 'bootstrap';
 
 import { generateUniqueId, isNil, isNilOrEmpty, preventEventPropagation } from '../../core/functions';
+import { bindCombobox, handleComboboxKey } from '../../core/combobox';
 // import { setTraceDebugger } from '../../core/debug-tracer';
 
 /**
@@ -85,6 +86,7 @@ export class SimpleSelect {
     this._input.addEventListener('change', preventEventPropagation);
     this._dropdownList = this._container.querySelector(`#dropDown-${this.uniqueId}`);
     this._dropdown = Dropdown.getOrCreateInstance(this._input, { offset: [0, 4] });
+    bindCombobox(this._input, this._dropdownList);
   }
 
   /**
@@ -162,22 +164,12 @@ export class SimpleSelect {
   }
 
   /**
-   * Defines the logic triggered when user uses keyboard.
-   * @param {string} keyCode key code
-   * @returns {boolean} true
+   * Defines the logic triggered when user uses keyboard (WAI-ARIA combobox keys, see `handleComboboxKey`).
+   * @param {KeyboardEvent} event keydown event of the input
+   * @returns {boolean} true to let the browser handle the key
    */
-  manageKey(keyCode) {
-    this._keyCode = keyCode;
-    // pass focus to first listitem when up/down/tab keys are pressed
-    if (
-      this._dropdownList?.children?.length &&
-      (keyCode === 'ArrowUp' || keyCode === 'ArrowDown' || keyCode === 'Tab')
-    ) {
-      this._dropdownList.querySelectorAll('button').item(0).focus();
-    } else {
-      this._input.focus();
-    }
-    return true;
+  manageKey(event) {
+    return handleComboboxKey(event, this._dropdownList, this._dropdown);
   }
 
   /**

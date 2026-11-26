@@ -1,49 +1,59 @@
-<template role="list" aria-haspopup="listbox">
+<template>
   <require from="./select.css"></require>
   <div id="filterable-select-${uniqueId}" class="dropdown">
-    <!-- input field displaying label key property and enabling filtering -->
+    <!-- combobox displaying label key property and enabling filtering (WAI-ARIA combobox pattern, see core/combobox) -->
     <input
       id="searchText-${uniqueId}"
       placeholder="${placeholder || ''}"
       type="text"
       disabled.bind="disabled"
       class="form-select border-0 shadow-none"
-      aria-autocomplete="none"
       autocomplete="off"
       autocorrect="off"
       spellcheck="false"
       data-bs-toggle="dropdown"
       style="cursor: auto"
-      role="button"
-      role="searchbox"
+      role="combobox"
+      aria-autocomplete="list"
+      aria-expanded="false"
+      aria-controls="dropDown-${uniqueId}"
       input.trigger="onInputChange($event.target.value)"
       blur.trigger="onInputBlur()"
-      keydown.trigger="manageKey($event.code)" />
-    <!-- dropdown -->
+      keydown.trigger="manageKey($event)" />
+    <!-- listbox: a click on an option keeps the focus on the input -->
     <div
       id="dropDown-${uniqueId}"
-      class="dropdown-menu dropdown-menu-scroll ${autosize ? 'dropdown-menu-autosize' : ''}">
-      <button
+      class="dropdown-menu dropdown-menu-scroll ${autosize ? 'dropdown-menu-autosize' : ''}"
+      role="listbox"
+      mousedown.trigger="$event.preventDefault()">
+      <div
         if.bind="selectedItem"
-        type="button"
+        id="${uniqueId}-option-clear"
         class="dropdown-item border-bottom border-top"
-        role="listitem"
-        keydown.trigger="selectItem(null)"
-        mousedown.trigger="selectItem(null)">
+        role="option"
+        aria-selected="false"
+        click.trigger="selectItem(null)">
         <div class="text-muted">${clearSelectionText}</div>
-      </button>
-      <button
+      </div>
+      <div
         repeat.for="item of filteredItems"
-        type="button"
+        id="${uniqueId}-option-${$index}"
         class="dropdown-item"
-        role="listitem"
-        keydown.trigger="selectItem(item)"
-        mousedown.delegate="selectItem(item)">
+        role="option"
+        aria-selected="${item === selectedItem}"
+        click.trigger="selectItem(item)">
         <template replaceable part="itemTemplate">
           <compose view.bind="itemView" view-model.bind="item"></compose>
         </template>
-      </button>
-      <div show.bind="filteredItemsCount === 0" class="dropdown-item disabled">${noResultText}</div>
+      </div>
+      <div
+        show.bind="filteredItemsCount === 0"
+        class="dropdown-item disabled"
+        role="option"
+        aria-selected="false"
+        aria-disabled="true">
+        ${noResultText}
+      </div>
     </div>
   </div>
 </template>

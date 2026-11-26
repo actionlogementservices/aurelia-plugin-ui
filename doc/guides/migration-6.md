@@ -23,6 +23,10 @@ rg -n "\|\s*numberFormat\b" --glob "*.html"
 rg -n "formInputNumberFormat" --glob "*.html"
 # toast message: the files using the ToastService, then the calls .info( .success( .warning( .error( of its instance
 rg -l "ToastService" --glob "*.{js,ts}"
+# combobox selects and auto-completes: the styles, the end-to-end tests and the code reaching their inner DOM or methods
+rg -n "(simple-select|filterable-select|badges-select|auto-complete)[^{,]*(button|bi-x-lg|\[role)" --glob "*.{css,scss,less}"
+rg -n "listitem|searchText-|dropDown-|\.dropdown-item|bi-x-lg" --glob "*.{js,ts,cy.*,spec.*,e2e.*}"
+rg -n "manageKey|ignoringReset" --glob "*.{js,ts,html}"
 ```
 
 ## Breaking changes
@@ -170,6 +174,64 @@ text, and the comments are removed.
 **Change**: a message with a link or a styled element loses them. Display the link in the page or in a dialog
 (`DialogService`) instead of the toast. A message that is text or formatting only needs no change.
 
+### The selects and auto-completes are WAI-ARIA comboboxes
+
+`simple-select`, `filterable-select`, `badges-select`, `auto-complete` and `badges-auto-complete` follow the
+[WAI-ARIA combobox pattern](https://www.w3.org/WAI/ARIA/apg/patterns/combobox/) (see
+[Keyboard and accessibility](./selects.md#keyboard-and-accessibility)): the focus stays on the input while the arrows
+move the active option. Their attributes, events (`change`, `blur`) and item templates are unchanged, but their inner
+DOM and keyboard behavior change:
+
+| | 5.x | 6.0.0 |
+|---|---|---|
+| Input | `role="button"` (or `searchbox`) | `role="combobox"`, `aria-expanded`, `aria-controls`, `aria-activedescendant` |
+| List | `div.dropdown-menu` | `div.dropdown-menu[role="listbox"]` |
+| Options | `button.dropdown-item[role="listitem"]` | `div.dropdown-item[role="option"]`, `aria-selected` |
+| Host element | `role="list"`, `aria-haspopup="listbox"` | no role |
+| Badge removal | `i.bi-x-lg[role="button"]` | `button[aria-label="Retirer <label>"]` containing `i.bi-x-lg` |
+| `↓` / `↑` / `Tab` | move the focus to the first option | move the active option / leave the field |
+| Any key on an option | picks it | the focus never leaves the input |
+| After picking | the input loses the focus | the input keeps the focus |
+| `manageKey(keyCode: string)` | | `manageKey(event: KeyboardEvent)`; `ignoringReset` is removed |
+
+**Change:**
+
+- **Styles** of the application targeting the options as buttons or the badge icon: target the classes instead.
+
+  ```css
+  /* before */
+  simple-select button.dropdown-item { ... }
+  badges-select .badge i.bi-x-lg { ... }
+  /* after */
+  simple-select .dropdown-item { ... }
+  badges-select .badge button { ... }
+  ```
+
+- **End-to-end tests** opening the list with a click on a `button` role, or picking a `listitem`: use the combobox and
+  option roles (Testing Library, Playwright), or the keyboard.
+
+  ```javascript
+  // before
+  await page.getByRole('button', { name: 'Ville' }).click();
+  await page.getByRole('listitem').filter({ hasText: 'Paris' }).click();
+  // after
+  await page.getByRole('combobox', { name: 'Ville' }).click();
+  await page.getByRole('option', { name: /Paris/ }).click();
+  // or with the keyboard
+  await page.getByRole('combobox', { name: 'Ville' }).press('ArrowDown');
+  await page.keyboard.press('Enter');
+  ```
+
+  A badge is removed with `getByRole('button', { name: 'Retirer Paris' })`.
+
+- **Code calling `manageKey`** or setting `ignoringReset` through the view-model: remove it, the keyboard is handled by
+  the element.
+- **Code relying on the native `blur` of the inner input after a pick** (e.g. to move to the next field): listen to the
+  `blur` event of the element, still dispatched after each pick, or let the user move on with `Tab`.
+
+**Check**: in the browser, open each of these fields with `↓`, move with the arrows, pick with `Enter`, and leave with
+`Tab`; with `badges-*`, reach a badge with `Shift+Tab` and remove it with `Enter`.
+
 ## Visible changes
 
 They need no code change, unless the application styles the same elements.
@@ -177,6 +239,8 @@ They need no code change, unless the application styles the same elements.
 - **Focus ring**: every link, the tabs (`.nav-link`), the pagination (`.page-link`) and the close buttons (`.btn-close`)
   get the focus ring of the theme on keyboard focus, instead of the browser default or the Bootstrap glow. Check the
   `:focus` and `:focus-visible` rules of the application on these elements (search `focus`, `*.css` and `*.scss`).
+- **Selects and auto-completes**: the field gets the focus ring of the theme instead of the Bootstrap glow; while the
+  arrows move in the list, the ring moves to the active option. The cross of a badge is a 24px button with a white ring.
 - **Info color**: `$info` is the info blue of the DSFR, `#0063cb`, instead of `#0080ff`, whose text did not reach the
   contrast required by the WCAG: the info toast has a white text. It also colors `btn-info`, `alert-info`, `table-info`
   (the row count of `simple-table`), the badges and the `loading-indicator` bar. `$cyan` is back to the Bootstrap cyan

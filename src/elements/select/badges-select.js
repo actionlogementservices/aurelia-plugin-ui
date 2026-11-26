@@ -11,6 +11,7 @@ import {
 import { Dropdown } from 'bootstrap';
 
 import { generateUniqueId, isNilOrEmpty, preventEventPropagation } from '../../core/functions';
+import { bindCombobox, handleComboboxKey } from '../../core/combobox';
 // import { setTraceDebugger } from '../../core/debug-tracer';
 
 /**
@@ -66,7 +67,6 @@ export class BadgesSelect {
   /** Html dropdown host element. @type {HTMLDivElement} */ _dropdownList;
   /** Bootstrap dropdown. @type {Dropdown} */ _dropdown;
   /** Prevents reentrancy. @type {boolean} */ _guard;
-  /** Prevents the input field to be reset when click outside dropdown? @type {Boolean} */ ignoringReset = false;
 
   /**
    * Creates an instance of the `badges-select` custom element.
@@ -90,6 +90,7 @@ export class BadgesSelect {
     this._input.addEventListener('change', preventEventPropagation);
     this._dropdownList = this._container.querySelector(`#dropDown-${this.uniqueId}`);
     this._dropdown = Dropdown.getOrCreateInstance(this._input, { offset: [0, 4] });
+    bindCombobox(this._input, this._dropdownList);
   }
 
   /**
@@ -145,6 +146,8 @@ export class BadgesSelect {
     this.synchronizeSelection(items);
     this.triggerChangeEvent();
     this.triggerBlurEvent();
+    // the button disappears with its badge: the focus goes back to the input
+    this._input.focus();
   }
 
   /**
@@ -183,23 +186,15 @@ export class BadgesSelect {
   }
 
   /**
-   * Defines the logic triggered when user uses keyboard.
-   * @param {string} keyCode key code
-   * @returns {boolean} true
+   * Defines the logic triggered when user uses keyboard (WAI-ARIA combobox keys, see `handleComboboxKey`).
+   * @param {KeyboardEvent} event keydown event of the input
+   * @returns {boolean} true to let the browser handle the key
    */
-  manageKey(keyCode) {
-    this._keyCode = keyCode;
-    // pass focus to first listitem when up/down/tab keys are pressed
-    if (
-      this._dropdownList?.children?.length &&
-      (keyCode === 'ArrowUp' || keyCode === 'ArrowDown' || keyCode === 'Tab')
-    ) {
-      this.ignoringReset = true;
-      this._dropdownList.querySelectorAll('button').item(0).focus();
-      this.ignoringReset = false;
-    }
+  manageKey(event) {
+    this._keyCode = event.code;
+    if (!handleComboboxKey(event, this._dropdownList, this._dropdown)) return false;
     // do nothing (=return false) if input field is empty and enter is pressed to avoid remove selected items
-    return !(keyCode === 'Enter' && !this._input?.value?.length);
+    return !(event.key === 'Enter' && !this._input?.value?.length);
   }
 
   /**
@@ -294,7 +289,7 @@ export class BadgesSelect {
    * Defines the logic triggered when user clicks outside of the html input element.
    */
   onInputBlur() {
-    if (!this.ignoringReset) this.clearHtmlInput();
+    this.clearHtmlInput();
   }
 
   /**

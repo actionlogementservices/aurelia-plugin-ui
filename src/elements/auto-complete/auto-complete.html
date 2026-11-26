@@ -1,38 +1,50 @@
-<template role="list" aria-haspopup="listbox">
+<template>
   <require from="./auto-complete.css"></require>
+  <!-- combobox (WAI-ARIA combobox pattern, see core/combobox) -->
   <input
     id="searchText-${uniqueId}"
     placeholder="${placeholder || ''}"
     type="text"
     disabled.bind="disabled"
     class="form-control border-0 shadow-none"
-    aria-autocomplete="none"
     autocomplete="off"
     autocorrect="off"
     spellcheck="false"
     data-bs-toggle="dropdown"
-    role="searchbox"
+    role="combobox"
+    aria-autocomplete="list"
+    aria-expanded="false"
+    aria-controls="dropDown-${uniqueId}"
     input.trigger="onInputChange($event.target.value) & debounce:delay"
     click.trigger="hideDropdown()"
     blur.trigger="onInputBlur()"
-    keydown.trigger="manageKey($event.code)" />
+    keydown.trigger="manageKey($event)" />
   <div id="auto-complete-${uniqueId}" class="dropdown">
-    <!-- dropdown -->
+    <!-- listbox: a click on an option keeps the focus on the input -->
     <div
       id="dropDown-${uniqueId}"
-      class="dropdown-menu dropdown-menu-scroll ${autosize ? 'dropdown-menu-autosize' : ''}">
-      <button
+      class="dropdown-menu dropdown-menu-scroll ${autosize ? 'dropdown-menu-autosize' : ''}"
+      role="listbox"
+      mousedown.trigger="$event.preventDefault()">
+      <div
         repeat.for="item of items"
-        type="button"
+        id="${uniqueId}-option-${$index}"
         class="dropdown-item"
-        role="listitem"
-        keydown.trigger="selectItem(item)"
-        mousedown.delegate="selectItem(item)">
+        role="option"
+        aria-selected="false"
+        click.trigger="selectItem(item)">
         <template replaceable part="itemTemplate">
           <compose view.bind="itemView" view-model.bind="item"></compose>
         </template>
-      </button>
-      <div show.bind="itemsCount === 0" class="dropdown-item disabled">${noResultText}</div>
+      </div>
+      <div
+        show.bind="itemsCount === 0"
+        class="dropdown-item disabled"
+        role="option"
+        aria-selected="false"
+        aria-disabled="true">
+        ${noResultText}
+      </div>
     </div>
   </div>
 </template>

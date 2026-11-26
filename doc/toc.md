@@ -2,6 +2,12 @@
 
 ## Table of contents
 
+* ![category:core](https://img.shields.io/badge/category-core-blue.svg?style=flat-square)
+  * [core/combobox](src-core_combobox.md) - _Keyboard of the select and auto-complete custom elements, after the WAI-ARIA combobox pattern with a listbox popup
+(https://www.w3.org/WAI/ARIA/apg/patterns/combobox/): the focus stays on the input, the arrows move the active
+option (&#x60;aria-activedescendant&#x60;) from the selected one, Enter (and Space on a read-only input) picks it, Escape
+closes the listbox and Tab leaves the field._
+
 * ![category:internal](https://img.shields.io/badge/category-internal-6b6b6b.svg?style=flat-square)
   * [core/decorators](src-core_decorators.md) - _Defines common decorators._
   * [core/functions](src-core_functions.md) - _Defines common functions._

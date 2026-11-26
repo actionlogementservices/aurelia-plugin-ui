@@ -11,6 +11,7 @@ import {
 import { Dropdown } from 'bootstrap';
 
 import { generateUniqueId, isNil, isNilOrEmpty, preventEventPropagation } from '../../core/functions';
+import { bindCombobox, handleComboboxKey } from '../../core/combobox';
 // import { setTraceDebugger } from '../../core/debug-tracer';
 
 /** @template T,U @typedef {import('./auto-complete-controller').AutoCompleteController<T,U>} AutoCompleteController<T,U> */
@@ -73,7 +74,6 @@ export class AutoComplete {
 
   /** List of retrieved items. @type {(U | T)[]} */ items = [];
   /** Prevents reentrancy @type {boolean} */ _guard;
-  /** Prevents the input field to be reset when click outside dropdown? @type {Boolean} */ ignoringReset = false;
 
   /**
    * Creates an instance of the `auto-complete` custom element.
@@ -97,6 +97,7 @@ export class AutoComplete {
     this._input.addEventListener('change', preventEventPropagation);
     this._dropdownList = this._container.querySelector(`#dropDown-${this.uniqueId}`);
     this._dropdown = Dropdown.getOrCreateInstance(this._input, { offset: [0, 4] });
+    bindCombobox(this._input, this._dropdownList);
   }
 
   /**
@@ -144,10 +145,8 @@ export class AutoComplete {
     this.synchronizeSelection(item, keepValue);
     // sets the html input element content with the label
     this.setHtmlInputContent(item);
-    if (item) {
-      this.hideDropdown();
-      this._input?.blur();
-    }
+    // the focus stays on the input, where the user expects it after picking a value
+    if (item) this.hideDropdown();
     // triggers events if applicable
     if (notify) {
       this.triggerChangeEvent();
@@ -189,22 +188,12 @@ export class AutoComplete {
   }
 
   /**
-   * Defines the logic triggered when user uses keyboard.
-   * @param {string} keyCode key code
-   * @returns {boolean} true
+   * Defines the logic triggered when user uses keyboard (WAI-ARIA combobox keys, see `handleComboboxKey`).
+   * @param {KeyboardEvent} event keydown event of the input
+   * @returns {boolean} true to let the browser handle the key
    */
-  manageKey(keyCode) {
-    // pass focus to first listitem when up/down/tab keys are pressed
-    // (the "no result" line is always a child of the list: look for an item, not for any child)
-    const firstItem = this._dropdownList?.querySelector('button');
-    if (firstItem && (keyCode === 'ArrowUp' || keyCode === 'ArrowDown' || keyCode === 'Tab')) {
-      this.ignoringReset = true;
-      firstItem.focus();
-      this.ignoringReset = false;
-    } else {
-      this._input.focus();
-    }
-    return true;
+  manageKey(event) {
+    return handleComboboxKey(event, this._dropdownList, this._dropdown);
   }
 
   /**
@@ -255,7 +244,6 @@ export class AutoComplete {
    * validates it, like a native input (aurelia-validation `blur` trigger).
    */
   onInputBlur() {
-    if (this.ignoringReset) return;
     this.selectItem(this.selectedItem, false);
     this.triggerBlurEvent();
   }

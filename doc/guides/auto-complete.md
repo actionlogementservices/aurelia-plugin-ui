@@ -89,6 +89,13 @@ Both elements accept an optional template for the dropdown items, where `item` i
 </auto-complete>
 ```
 
+## Keyboard and accessibility
+
+Like the [selection elements](./selects.md#keyboard-and-accessibility), both elements follow the WAI-ARIA combobox
+pattern: `↓` / `↑` move the active option among the results while the focus stays on the input, `Enter` picks it,
+`Escape` closes the list and `Tab` leaves the field. The "no result" line cannot be picked. The badges of
+`badges-auto-complete` are removed with a button named "Retirer <label>", after which the focus goes back to the input.
+
 ## In a form
 
 Place `auto-complete` in an [`als-field`](./forms.md#als-field) and bind the selection with `& validate`. The label

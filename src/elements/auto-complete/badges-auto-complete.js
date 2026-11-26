@@ -11,6 +11,7 @@ import {
 import { Dropdown } from 'bootstrap';
 
 import { generateUniqueId, isNilOrEmpty, preventEventPropagation } from '../../core/functions';
+import { bindCombobox, handleComboboxKey } from '../../core/combobox';
 // import { setTraceDebugger } from '../../core/debug-tracer';
 
 /** @template T,U @typedef {import('./auto-complete-controller').AutoCompleteController<T,U>} AutoCompleteController<T,U> */
@@ -74,7 +75,6 @@ export class BadgesAutoComplete {
 
   /** List of retrieved items. @type {(U | T)[]} */ items = [];
   /** Prevents reentrancy @type {boolean} */ _guard;
-  /** Prevents the input field to be reset when click outside dropdown? @type {Boolean} */ ignoringReset = false;
 
   /**
    * Creates an instance of the `badges-auto-complete` custom element.
@@ -98,6 +98,7 @@ export class BadgesAutoComplete {
     this._input.addEventListener('change', preventEventPropagation);
     this._dropdownList = this._container.querySelector(`#dropDown-${this.uniqueId}`);
     this._dropdown = Dropdown.getOrCreateInstance(this._input, { offset: [0, 4] });
+    bindCombobox(this._input, this._dropdownList);
   }
 
   /**
@@ -158,6 +159,8 @@ export class BadgesAutoComplete {
     this.synchronizeSelection(items);
     this.triggerChangeEvent();
     this.triggerBlurEvent();
+    // the button disappears with its badge: the focus goes back to the input
+    this._input.focus();
   }
 
   /**
@@ -195,22 +198,13 @@ export class BadgesAutoComplete {
   }
 
   /**
-   * Defines the logic triggered when user uses keyboard.
-   * @param {string} keyCode key code
-   * @returns {boolean} true
+   * Defines the logic triggered when user uses keyboard (WAI-ARIA combobox keys, see `handleComboboxKey`).
+   * @param {KeyboardEvent} event keydown event of the input
+   * @returns {boolean} true to let the browser handle the key
    */
-  manageKey(keyCode) {
-    this._keyCode = keyCode;
-    // pass focus to first listitem when up/down/tab keys are pressed
-    if (
-      this._dropdownList?.children?.length > 0 &&
-      (keyCode === 'ArrowUp' || keyCode === 'ArrowDown' || keyCode === 'Tab')
-    ) {
-      this.ignoringReset = true;
-      this._dropdownList.querySelectorAll('button').item(0).focus();
-      this.ignoringReset = false;
-    }
-    return true;
+  manageKey(event) {
+    this._keyCode = event.code;
+    return handleComboboxKey(event, this._dropdownList, this._dropdown);
   }
 
   /**
@@ -251,7 +245,7 @@ export class BadgesAutoComplete {
    * Resets the html input.
    */
   onInputBlur() {
-    if (!this.ignoringReset) this.clearHtmlInput();
+    this.clearHtmlInput();
   }
 
   /**

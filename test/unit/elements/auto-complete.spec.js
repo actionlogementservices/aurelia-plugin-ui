@@ -17,7 +17,15 @@ describe('auto-complete in an als-field', () => {
   let component;
   let controller;
   let model;
-  beforeAll(() => Object.assign(validationMessages, frenchValidationMessages));
+  beforeAll(() => {
+    Object.assign(validationMessages, frenchValidationMessages);
+    // bootstrap creates its events with the global classes: they must be jsdom's (window), not node's (global)
+    /* eslint-disable unicorn/prefer-global-this */
+    global.Event = window.Event;
+    /* eslint-enable unicorn/prefer-global-this */
+    // not implemented by jsdom
+    window.HTMLElement.prototype.scrollIntoView = jest.fn();
+  });
 
   beforeEach(async () => {
     model = { city: undefined };
@@ -84,23 +92,28 @@ describe('auto-complete in an als-field', () => {
     expect(message.textContent.trim()).toBe('');
   });
 
-  test.each(['ArrowDown', 'ArrowUp', 'Tab'])(
-    'moves the focus to the first item on %s, and keeps it on the input when there is no result',
-    async keyCode => {
-      const input = document.querySelector('auto-complete > input');
-      const viewModel = document.querySelector('auto-complete').au['auto-complete'].viewModel;
+  test('the arrows move the active option among the results, the focus staying on the input', async () => {
+    const input = document.querySelector('auto-complete > input');
+    const viewModel = document.querySelector('auto-complete').au['auto-complete'].viewModel;
+    const press = key => input.dispatchEvent(new window.KeyboardEvent('keydown', { key, bubbles: true }));
+    input.focus();
 
-      await viewModel.loadItems('Inconnue');
-      await flush();
-      expect(() => viewModel.manageKey(keyCode)).not.toThrow();
-      expect(document.activeElement).toBe(input);
+    await viewModel.loadItems('Inconnue');
+    await flush();
+    press('ArrowDown');
+    expect(input.hasAttribute('aria-activedescendant')).toBe(false);
 
-      await viewModel.loadItems('Par');
-      await flush();
-      viewModel.manageKey(keyCode);
-      expect(document.activeElement.textContent.trim()).toBe('Paris');
-    }
-  );
+    await viewModel.loadItems('Par');
+    await flush();
+    press('ArrowDown');
+    expect(document.getElementById(input.getAttribute('aria-activedescendant')).textContent.trim()).toBe('Paris');
+    expect(document.activeElement).toBe(input);
+
+    press('Enter');
+    await flush();
+    expect(model.city).toBe('75056');
+    expect(document.activeElement).toBe(input);
+  });
 
   test('validates when leaving the field, e.g. after clearing the selection', async () => {
     const input = document.querySelector('auto-complete > input');

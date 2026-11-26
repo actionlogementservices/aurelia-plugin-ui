@@ -40,6 +40,24 @@ Each element accepts an optional template for the dropdown items, where `item` i
 </filterable-select>
 ```
 
+## Keyboard and accessibility
+
+The elements follow the [WAI-ARIA combobox pattern](https://www.w3.org/WAI/ARIA/apg/patterns/combobox/): the input is
+a `combobox` controlling a `listbox` of `option`s, and the focus stays on the input while the keyboard moves the active
+option (`aria-activedescendant`), which shows the focus ring.
+
+| Key | Effect |
+|---|---|
+| `↓` / `↑` | Opens the list and moves the active option (from the last one to the first one, and back) |
+| `Enter` | Picks the active option; opens the list of `simple-select` |
+| `Space` | `simple-select` only: opens the list or picks the active option |
+| `Escape` | Closes the list (an enclosing dialog stays open) |
+| `Tab` | Closes the list and leaves the field |
+
+The focus stays on the input after picking a value. The badges of `badges-select` are removed with a button named
+"Retirer <label>", after which the focus goes back to the input. Give the element an accessible name, e.g. with an
+[`als-field`](./forms.md#als-field) label.
+
 ## Selection: `selected-*` attributes
 
 The selection elements (these ones and the auto-complete elements) expose the user selection in two complementary

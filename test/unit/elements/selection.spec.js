@@ -351,3 +351,114 @@ describe('badges-auto-complete', () => {
     expect(context.values).toEqual([1, 2]);
   });
 });
+
+describe('keyboard (WAI-ARIA combobox pattern)', () => {
+  let component;
+  beforeAll(() => {
+    // not implemented by jsdom
+    window.HTMLElement.prototype.scrollIntoView = jest.fn();
+    // bootstrap creates its events with the global classes: they must be jsdom's (window), not node's (global)
+    /* eslint-disable unicorn/prefer-global-this */
+    global.Event = window.Event;
+    /* eslint-enable unicorn/prefer-global-this */
+  });
+  afterEach(() => component?.dispose());
+
+  const input = () => document.querySelector('input');
+  const listbox = () => document.querySelector('[role="listbox"]');
+  const activeOption = () => document.getElementById(input().getAttribute('aria-activedescendant'));
+  const press = key => input().dispatchEvent(new window.KeyboardEvent('keydown', { key, bubbles: true }));
+
+  test.each(['simple-select', 'filterable-select'])(
+    '%s: the arrows move the active option, Enter picks it and the focus stays on the input',
+    async name => {
+      const ds = datasource();
+      const context = { ds, value: undefined };
+      component = await stage(name, 'datasource.bind="ds" selected-value.bind="value"', context);
+      expect(input().getAttribute('role')).toBe('combobox');
+      expect(input().getAttribute('aria-controls')).toBe(listbox().id);
+      input().focus();
+
+      press('ArrowDown');
+      expect(listbox().classList).toContain('show');
+      expect(input().getAttribute('aria-expanded')).toBe('true');
+      expect(activeOption().textContent.trim()).toBe('zero');
+      press('ArrowUp');
+      expect(activeOption().textContent.trim()).toBe('three');
+      press('ArrowDown');
+      expect(activeOption().textContent.trim()).toBe('zero');
+      expect(document.activeElement).toBe(input());
+
+      press('Enter');
+      await flush();
+      expect(context.value).toBe(0);
+      expect(listbox().classList).not.toContain('show');
+      expect(input().hasAttribute('aria-activedescendant')).toBe(false);
+      expect(document.activeElement).toBe(input());
+      expect(document.querySelector('[aria-selected="true"]').textContent.trim()).toBe('zero');
+    }
+  );
+
+  test('Escape and Tab close the listbox without picking an option', async () => {
+    const context = { ds: datasource(), value: undefined };
+    component = await stage('simple-select', 'datasource.bind="ds" selected-value.bind="value"', context);
+    input().focus();
+    press('ArrowDown');
+    press('Escape');
+    expect(listbox().classList).not.toContain('show');
+    expect(input().hasAttribute('aria-activedescendant')).toBe(false);
+    press('Enter');
+    expect(listbox().classList).toContain('show');
+    press('Tab');
+    await flush();
+    expect(listbox().classList).not.toContain('show');
+    expect(context.value).toBeUndefined();
+  });
+
+  test('the active option starts from the selected one, like a native select', async () => {
+    const context = { ds: datasource(), value: 2 };
+    component = await stage('simple-select', 'datasource.bind="ds" selected-value.bind="value"', context);
+    input().focus();
+    press(' ');
+    expect(listbox().classList).toContain('show');
+    expect(activeOption().textContent.trim()).toBe('two');
+    press('ArrowDown');
+    expect(activeOption().textContent.trim()).toBe('three');
+    press('Escape');
+    press('ArrowUp');
+    expect(activeOption().textContent.trim()).toBe('two');
+  });
+
+  test('a text change (typed, pasted, dictated) clears the active option', async () => {
+    component = await stage('filterable-select', 'datasource.bind="ds"', { ds: datasource() });
+    input().focus();
+    press('ArrowDown');
+    expect(input().hasAttribute('aria-activedescendant')).toBe(true);
+    input().value = 't';
+    input().dispatchEvent(new window.Event('input'));
+    expect(input().hasAttribute('aria-activedescendant')).toBe(false);
+    expect(document.querySelector('.active-option')).toBeNull();
+  });
+
+  test('the "no result" line is not an option to pick', async () => {
+    const context = { ds: datasource() };
+    component = await stage('filterable-select', 'datasource.bind="ds"', context);
+    input().focus();
+    component.viewModel.onInputChange('none');
+    await flush();
+    press('ArrowDown');
+    expect(input().hasAttribute('aria-activedescendant')).toBe(false);
+  });
+
+  test('a badge is removed with a named button, and the focus goes back to the input', async () => {
+    const ds = datasource();
+    const context = { ds, values: [1, 2] };
+    component = await stage('badges-select', 'datasource.bind="ds" selected-values.bind="values"', context);
+    const button = document.querySelector('.badges-container button');
+    expect(button.getAttribute('aria-label')).toBe('Retirer one');
+    button.click();
+    await flush();
+    expect(context.values).toEqual([2]);
+    expect(document.activeElement).toBe(input());
+  });
+});
