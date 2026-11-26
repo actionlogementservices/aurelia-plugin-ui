@@ -96,7 +96,7 @@
       <select
         class="form-select form-select-sm w-auto"
         disabled.bind="disabled"
-        change.trigger="changePageSize($event.target.value)">
+        change.trigger="$event.stopPropagation() || changePageSize($event.target.value)">
         <option repeat.for="size of [10, 20, 50, 100]" value.bind="size" selected.bind="size === pageSize">
           ${size}
         </option>

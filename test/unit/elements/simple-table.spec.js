@@ -178,9 +178,9 @@ describe('simple-table page size selector', () => {
   });
 
   test('user change resizes the page and updates the parent', async () => {
-    const context = { ds: ds(25), page: 3, size: undefined };
+    const context = { ds: ds(25), page: 3, size: undefined, changes: [] };
     component = await stage(
-      'datasource.bind="ds" paginated="true" page.bind="page" max-rows.bind="size"',
+      'datasource.bind="ds" paginated="true" page.bind="page" max-rows.bind="size" change.trigger="changes.push($event.detail)"',
       context
     );
     select().value = '20';
@@ -189,6 +189,8 @@ describe('simple-table page size selector', () => {
     expect(context.size).toBe(20);
     expect(context.page).toBe(1);
     expect(rowCount()).toBe(20);
+    // the change event of the table carries the selection: the one of the page size selector stays inside
+    expect(context.changes).toEqual([]);
   });
 });
 
