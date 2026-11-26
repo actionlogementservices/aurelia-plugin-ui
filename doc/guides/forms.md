@@ -71,7 +71,7 @@ the field displays the errors of the controls it contains, and sets `is-invalid`
 | Attribute | Role | Possible values | Default value |
 |---|---|---|---|
 | `label` | Label displayed above the control | Any string | `''` |
-| `required` | Displays the required marker, the rule itself is declared with `ValidationRules` | `true` or `false` | `false` |
+| `required` | Displays the required marker, read "(obligatoire)" by the screen readers; the rule itself is declared with `ValidationRules` | `true` or `false` | `false` |
 | `hint` | Help text displayed below the control | Any string | `''` |
 | `group` | Lays out a group of controls answering a single question (radio buttons, checkboxes, composite inputs) | `true` or `false` | `false` |
 

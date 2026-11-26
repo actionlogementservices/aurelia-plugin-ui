@@ -51,6 +51,13 @@ describe('als-field', () => {
     ));
     expect(document.querySelector('label').getAttribute('for')).toBe('name');
     expect(document.querySelector('label span').textContent).toBe('*');
+    // the screen readers read the requirement in the name of the control
+    expect(document.querySelector('label .visually-hidden').textContent).toBe('(obligatoire)');
+  });
+
+  test('does not mark an optional control as required', async () => {
+    ({ component } = await stage('<als-field label="Name"><input></als-field>', {}, false));
+    expect(document.querySelector('label span')).toBeNull();
   });
 
   test('displays the hint and references it from the control', async () => {
@@ -168,6 +175,7 @@ describe('als-field', () => {
       expect(group.getAttribute('aria-labelledby')).toBe(label.id);
       expect(label.textContent).toContain('Civilité');
       expect(label.querySelector('span').textContent).toBe('*');
+      expect(label.querySelector('.visually-hidden').textContent).toBe('(obligatoire)');
       expect(document.querySelector('.input-group')).toBeNull();
     });
 

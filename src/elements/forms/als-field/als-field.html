@@ -6,13 +6,17 @@
     role.bind="group ? 'group' : null & attr"
     aria-labelledby.bind="group && label ? labelId : null"
     aria-describedby.bind="group ? groupDescribedBy : null">
+    <!-- the marker is hidden from the screen readers, which read "(obligatoire)" in the name of the control or group,
+         whatever its role (aria-required is not supported by a button or a group) -->
     <label if.bind="label && !group" for.bind="controlId" class="form-label text-primary">
       ${label}
       <span if.bind="required" class="text-danger" aria-hidden="true">*</span>
+      <span if.bind="required" class="visually-hidden">(obligatoire)</span>
     </label>
     <div if.bind="label && group" id.bind="labelId" class="form-label text-primary">
       ${label}
       <span if.bind="required" class="text-danger" aria-hidden="true">*</span>
+      <span if.bind="required" class="visually-hidden">(obligatoire)</span>
     </div>
     <div class.bind="group ? '' : 'input-group'">
       <slot></slot>

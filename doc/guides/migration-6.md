@@ -247,6 +247,9 @@ They need no code change, unless the application styles the same elements.
   `#0dcaf0`: check the uses of `$cyan` and `--bs-cyan` in the application.
 - **Toasts**: a delay of `0` keeps the toast until the user closes it (it used to fail); the close button is labelled
   "Fermer"; the screen readers announce `info` and `success` politely (`role="status"`), `error` and `warning` at once.
+- **`als-field`**: with `required="true"`, the label ends with a visually hidden "(obligatoire)", so that the screen
+  readers announce the required fields: the accessible name of the control becomes e.g. "Nom (obligatoire)". Check the
+  end-to-end tests finding the field by its exact name (`getByLabel('Nom', { exact: true })`).
 - **`environment-ribbon`**: without `environment`, the ribbon displays nothing instead of failing.
 
 The deprecated `als-input-number`, `als-input-text`, `als-input-password` and `als-select` are still available in
