@@ -341,7 +341,8 @@ environment = { name: 'RECETTE', type: 'recette' };
 
 ### `loading-indicator`
 
-Striped progress bar displayed while `loading` is `true`, e.g. during api calls.
+Striped progress bar displayed while `loading` is `true`, e.g. during api calls. It is an indeterminate progress bar
+(no value) named "Chargement en cours".
 
 ```html
 <loading-indicator loading.bind="api.isRequesting"></loading-indicator>

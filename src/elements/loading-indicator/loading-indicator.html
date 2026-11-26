@@ -2,13 +2,11 @@
   <require from="./loading-indicator.css"></require>
 
   <div class="progress" if.bind="loading">
+    <!-- indeterminate: no aria-valuenow, the width only animates the bar -->
     <div
       class="progress-bar progress-bar-striped progress-bar-simulation bg-info"
-      title="indicateur de chargement"
       role="progressbar"
-      style="width: 50%"
-      aria-valuenow="50"
-      aria-valuemin="0"
-      aria-valuemax="100"></div>
+      aria-label="Chargement en cours"
+      style="width: 50%"></div>
   </div>
 </template>

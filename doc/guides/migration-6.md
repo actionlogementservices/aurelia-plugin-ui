@@ -301,5 +301,7 @@ They need no code change, unless the application styles the same elements.
 - **`environment-ribbon`**: without `environment`, the ribbon displays nothing instead of failing.
 - **`breadcrumbs`**: the navigation is named "Fil d'Ariane" instead of "breadcrumb": update the end-to-end tests finding
   it by its name (`getByRole('navigation', { name: 'breadcrumb' })`).
+- **`loading-indicator`**: the bar is an indeterminate progress bar named "Chargement en cours", without the fixed
+  `aria-valuenow="50"` and the `title` tooltip.
 The deprecated `als-input-number`, `als-input-text`, `als-input-password` and `als-select` are still available in
 6.0.0; see [Deprecated components](./forms.md#deprecated-components) to replace them.
