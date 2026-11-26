@@ -44,12 +44,12 @@ __delay__ | `number` | *delay in ms before hiding toast, &#x60;defaultHideDelay&
 
 ![modifier: public](images/badges/modifier-public.png)
 
-Displays a toast error message.
+Displays a toast error message, kept until closed by default: the user may need time to read it and act on it.
 
 Parameters | Type | Description
 --- | --- | ---
 __message__ | `string` | *toast message*
-__delay__ | `number` | *delay in ms before hiding toast, &#x60;defaultHideDelay&#x60; by default, &#x60;0&#x60; to keep it until closed*
+__delay__ | `number` | *delay in ms before hiding toast, &#x60;0&#x60; (kept until closed) by default*
 
 ---
 

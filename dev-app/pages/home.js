@@ -170,15 +170,15 @@ export class Home {
   }
 
   showError() {
-    this.toast.error('Error!');
+    this.toast.error('Error <b>displayed until closed</b>, <img src="x" onerror="alert(1)">without its image!');
   }
 
   showSuccess() {
     this.toast.success('Success!');
   }
 
-  showPersistentError() {
-    this.toast.error('Error <b>displayed until closed</b>, <img src="x" onerror="alert(1)">without its image!', 0);
+  showHidingError() {
+    this.toast.error('Error hidden after 4 seconds', 4000);
   }
 
   async showDialog() {

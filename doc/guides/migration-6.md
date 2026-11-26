@@ -247,6 +247,8 @@ They need no code change, unless the application styles the same elements.
   `#0dcaf0`: check the uses of `$cyan` and `--bs-cyan` in the application.
 - **Toasts**: a delay of `0` keeps the toast until the user closes it (it used to fail); the close button is labelled
   "Fermer"; the screen readers announce `info` and `success` politely (`role="status"`), `error` and `warning` at once.
+  `error` keeps its toast until closed by default, instead of hiding it after 4 seconds: pass a delay to keep the
+  former behavior, e.g. `error(message, 4000)` (search `\.error\(` in `*.js`).
 - **`als-field`**: with `required="true"`, the label ends with a visually hidden "(obligatoire)", so that the screen
   readers announce the required fields: the accessible name of the control becomes e.g. "Nom (obligatoire)". Check the
   end-to-end tests finding the field by its exact name (`getByLabel('Nom', { exact: true })`).

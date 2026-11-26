@@ -84,6 +84,13 @@ describe('ToastService', () => {
     await closed;
   });
 
+  test('keeps an error until closed by default', async () => {
+    const { closed, toast } = await show('error', 'Message');
+    expect(Toast.getInstance(toast)._config.autohide).toBe(false);
+    toast.querySelector('button').click();
+    await closed;
+  });
+
   test('stays until closed with a delay of 0', async () => {
     const { closed, toast } = await show('warning', 'Message', 0);
     expect(Toast.getInstance(toast)._config.autohide).toBe(false);

@@ -80,11 +80,11 @@ export class ToastService {
   }
 
   /**
-   * Displays a toast error message.
+   * Displays a toast error message, kept until closed by default: the user may need time to read it and act on it.
    * @param {string} message toast message
-   * @param {number} [delay] delay in ms before hiding toast, `defaultHideDelay` by default, `0` to keep it until closed
+   * @param {number} [delay] delay in ms before hiding toast, `0` (kept until closed) by default
    */
-  async error(message, delay = defaultHideDelay) {
+  async error(message, delay = 0) {
     await this._show(message, toastType.error, delay);
   }
 

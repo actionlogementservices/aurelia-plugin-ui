@@ -114,8 +114,9 @@ focus goes back to the element that opened it. A dialog opened from another one 
 ## `ToastService`
 
 Inject the `ToastService` and call `info`, `success`, `warning` or `error` with the message, and optionally the delay
-in ms before the toast hides (`4000` by default, `0` to keep it until the user closes it, e.g. for an error that must
-be read). The method returns a promise resolved once the toast is closed.
+in ms before the toast hides (`0` to keep it until the user closes it). The default delay is `4000`, except for `error`,
+kept until closed by default: the user may need more time to read an error and act on it (WCAG 2.2.1). The method
+returns a promise resolved once the toast is closed. A toast does not hide while the pointer or the focus is on it.
 
 The message is text, or html limited to the formatting tags `b`, `strong`, `i`, `em`, `br`, `p`, `ul`, `ol` and `li`.
 Against XSS, their attributes and the other elements (links, images, scripts...) are removed, keeping their text: a
@@ -137,7 +138,7 @@ export class Example {
 
   save() {
     this._toast.success('Enregistrement effectué.');
-    this._toast.error('Le service est indisponible.', 0);
+    this._toast.error('Le service est indisponible.');
   }
 }
 ```
@@ -146,14 +147,6 @@ export class Example {
 
 The `LockService` holds the lock state (`isLocked`), shared by the whole application. The `<lock>` custom element
 displays it as a backdrop preventing any interaction: place it once, in the root view of the application.
-
-```html
-<!-- app.html -->
-<template>
-  <lock locked.bind="lock.isLocked"></lock>
-  <router-view></router-view>
-</template>
-```
 
 Inject the service where you need to lock the screen, and always unlock it, even when the operation fails:
 
