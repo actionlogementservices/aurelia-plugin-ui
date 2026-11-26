@@ -92,7 +92,10 @@ Each item is a link when &#x60;href&#x60; is set, otherwise &#x60;click&#x60; is
   * [elements/environment-ribbon/environment-ribbon](src-elements-environment-ribbon_environment-ribbon.md) - _Implements the **&#x60;environment-ribbon&#x60; custom element** that displays the current environment._
   * [elements/input-datepicker/input-datepicker](src-elements-input-datepicker_input-datepicker.md) - _Implements the **&#x60;input-datepicker&#x60; custom element** that provides a dropdown calendar to select a single date._
   * [elements/loading-indicator/loading-indicator](src-elements-loading-indicator_loading-indicator.md) - _Implements the **&#x60;loading-indicator&#x60; custom element** that tracks api calls._
-  * [elements/lock/lock](src-elements-lock_lock.md) - _Implements the **&#x60;lock&#x60; custom element** that displays a logic lock preventing user from interaction._
+  * [elements/lock/lock](src-elements-lock_lock.md) - _Implements the **&#x60;lock&#x60; custom element** that displays a logic lock preventing user from interaction.
+
+While locked, the rest of the page is &#x60;inert&#x60; (out of the tab order and of the accessibility tree, like behind a
+modal dialog), screen readers announce the wait, and the focus goes back to the element that had it on unlock._
 
 * ![category:select](https://img.shields.io/badge/category-select-3b631b.svg?style=flat-square)
   * [elements/select/badges-select](src-elements-select_badges-select.md) - _Implements the **&#x60;badges-select&#x60; custom element** that provides a dropdown list based on a datasource with on the fly filtering and a multiple selection with badge rendering._

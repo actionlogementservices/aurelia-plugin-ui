@@ -148,6 +148,17 @@ export class Example {
 The `LockService` holds the lock state (`isLocked`), shared by the whole application. The `<lock>` custom element
 displays it as a backdrop preventing any interaction: place it once, in the root view of the application.
 
+While locked, the rest of the page is `inert`: out of reach of the mouse, the keyboard and the screen readers, which
+announce "Veuillez patienter.". On unlock, the focus goes back to the element that had it (e.g. the save button).
+
+```html
+<!-- app.html -->
+<template>
+  <lock locked.bind="lock.isLocked"></lock>
+  <router-view></router-view>
+</template>
+```
+
 Inject the service where you need to lock the screen, and always unlock it, even when the operation fails:
 
 ```javascript

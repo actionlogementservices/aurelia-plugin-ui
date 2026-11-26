@@ -249,6 +249,8 @@ They need no code change, unless the application styles the same elements.
   "Fermer"; the screen readers announce `info` and `success` politely (`role="status"`), `error` and `warning` at once.
   `error` keeps its toast until closed by default, instead of hiding it after 4 seconds: pass a delay to keep the
   former behavior, e.g. `error(message, 4000)` (search `\.error\(` in `*.js`).
+- **`lock`**: while locked, the rest of the page is `inert` (out of reach of the keyboard too) and the screen readers
+  announce "Veuillez patienter."; the focus goes back to the element that had it on unlock.
 - **`als-field`**: with `required="true"`, the label ends with a visually hidden "(obligatoire)", so that the screen
   readers announce the required fields: the accessible name of the control becomes e.g. "Nom (obligatoire)". Check the
   end-to-end tests finding the field by its exact name (`getByLabel('Nom', { exact: true })`).
