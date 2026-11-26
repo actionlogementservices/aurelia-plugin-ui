@@ -38,6 +38,15 @@ __*return*__ | `Promise.<void>` | *await closing*
 
 ---
 
+### `nameByTitle()`
+
+![modifier: public](images/badges/modifier-public.png)
+
+Names the dialog with its title (&#x60;.modal-title&#x60; or &#x60;.offcanvas-title&#x60;) through &#x60;aria-labelledby&#x60;, as the WAI-ARIA
+dialog pattern requires, unless the view names it itself.
+
+---
+
 ### `hide()`
 
 ![modifier: public](images/badges/modifier-public.png)

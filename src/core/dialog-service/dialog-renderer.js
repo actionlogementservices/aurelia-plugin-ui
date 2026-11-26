@@ -1,6 +1,8 @@
 import { DOM } from 'aurelia-framework';
 import { Modal, Offcanvas } from 'bootstrap';
 
+import { generateUniqueId } from '../functions';
+
 /** @typedef {import('types').DialogRendererOptions} DialogRendererOptions */
 
 /** dialogs currently open, the last one on top @type {DialogRenderer[]} */
@@ -51,6 +53,7 @@ export class DialogRenderer {
    */
   async open(options) {
     const { mode = 'modal', locked, fullscreen } = options;
+    this.nameByTitle();
     this._opener = document.activeElement;
     this._modal =
       mode === 'offcanvas'
@@ -80,6 +83,18 @@ export class DialogRenderer {
         resolve();
       });
     });
+  }
+
+  /**
+   * Names the dialog with its title (`.modal-title` or `.offcanvas-title`) through `aria-labelledby`, as the WAI-ARIA
+   * dialog pattern requires, unless the view names it itself.
+   */
+  nameByTitle() {
+    const title = this._hostDiv.querySelector('.modal-title, .offcanvas-title');
+    if (!title || this._hostDiv.hasAttribute('aria-labelledby') || this._hostDiv.hasAttribute('aria-label'))
+      return;
+    title.id ||= `dialog-title-${generateUniqueId()}`;
+    this._hostDiv.setAttribute('aria-labelledby', title.id);
   }
 
   /**

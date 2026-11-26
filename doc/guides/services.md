@@ -39,7 +39,8 @@
    ```
 
    The view contains the inner markup of a Bootstrap modal (`modal-dialog`), or of an offcanvas (`offcanvas-header` and
-   `offcanvas-body`):
+   `offcanvas-body`). The dialog is named by its `modal-title` or `offcanvas-title` (`aria-labelledby`), unless the
+   view names it itself:
 
    ```html
    <!-- example-dialog.html -->

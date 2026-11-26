@@ -306,5 +306,8 @@ They need no code change, unless the application styles the same elements.
 - **`als-pre-login`**: the title is a `h1` sized as a `h2` (`.h2`) instead of a `h2`, the logo is wrapped in a
   `div.als-logo[role="img"]` named "Action Logement", and the side image is decorative (`alt=""`). Check the styles
   targeting `als-pre-login h2` or `pre-login-logo.als-logo`.
+- **Dialogs**: the dialog is named by its `modal-title` or `offcanvas-title` (`aria-labelledby`), unless the view names
+  it itself.
+
 The deprecated `als-input-number`, `als-input-text`, `als-input-password` and `als-select` are still available in
 6.0.0; see [Deprecated components](./forms.md#deprecated-components) to replace them.

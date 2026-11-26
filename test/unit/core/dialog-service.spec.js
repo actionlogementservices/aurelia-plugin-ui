@@ -14,7 +14,8 @@ class TestDialog {
 /** composes the view-model in the host, as the aurelia composition engine does */
 const compositionEngine = {
   async compose({ host, container, viewModel }) {
-    host.innerHTML = '<div class="modal-dialog"><div class="modal-content"><button>Action</button></div></div>';
+    host.innerHTML =
+      '<div class="modal-dialog"><div class="modal-content"><h5 class="modal-title">Titre</h5><button>Action</button></div></div>';
     const vm = container.invoke(viewModel);
     host.vm = vm;
     return { attached() {}, view: { unbind() {}, removeNodes() {} }, viewModel: vm };
@@ -54,6 +55,15 @@ describe('DialogService', () => {
   });
 
   afterEach(() => document.body.replaceChildren());
+
+  test('names the dialog with its title', async () => {
+    const { closed, host } = await openDialog(service);
+    const title = host.querySelector('.modal-title');
+    expect(title.id).toMatch(/^dialog-title-/);
+    expect(host.getAttribute('aria-labelledby')).toBe(title.id);
+    host.vm.controller.cancel();
+    await closed;
+  });
 
   test('stacks a second modal above the first one, each dialog with its own result', async () => {
     const { closed: formClosed, host: formHost } = await openDialog(service);
