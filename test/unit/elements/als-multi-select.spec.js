@@ -15,11 +15,26 @@ function check(checkbox) {
   checkbox.click();
 }
 
+/**
+ * Presses a key on the target.
+ * @param {Element} target focused element
+ * @param {string} key key name
+ */
+function press(target, key) {
+  target.dispatchEvent(new window.KeyboardEvent('keydown', { key, bubbles: true, cancelable: true }));
+}
+
 describe('als-multi-select', () => {
   let component;
   let controller;
   let model;
-  beforeAll(() => Object.assign(validationMessages, frenchValidationMessages));
+  beforeAll(() => {
+    Object.assign(validationMessages, frenchValidationMessages);
+    // bootstrap creates its events with the global classes: they must be jsdom's (window), not node's (global)
+    /* eslint-disable unicorn/prefer-global-this */
+    global.Event = window.Event;
+    /* eslint-enable unicorn/prefer-global-this */
+  });
 
   beforeEach(async () => {
     model = { years: [] };
@@ -55,6 +70,24 @@ describe('als-multi-select', () => {
   });
 
   afterEach(() => component.dispose());
+
+  test('moves between the checkboxes with the arrows, the menu being a list', async () => {
+    const menu = document.querySelector('.dropdown-menu');
+    // the divider too is in a list item
+    expect([...menu.children].every(child => child.tagName === 'LI')).toBe(true);
+    const [all, first, second] = document.querySelectorAll('.dropdown-menu input[type="checkbox"]');
+    const toggle = document.querySelector('.dropdown-toggle');
+    toggle.focus();
+    press(toggle, 'ArrowDown');
+    await flush();
+    expect(document.activeElement).toBe(all);
+    press(all, 'ArrowDown');
+    expect(document.activeElement).toBe(first);
+    press(first, 'ArrowDown');
+    expect(document.activeElement).toBe(second);
+    press(second, 'ArrowUp');
+    expect(document.activeElement).toBe(first);
+  });
 
   test('links the label to the toggle button and updates the bound value', async () => {
     const toggle = document.querySelector('.dropdown-toggle');

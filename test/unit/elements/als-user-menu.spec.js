@@ -15,9 +15,25 @@ function click(target) {
   return event.defaultPrevented;
 }
 
+/**
+ * Presses a key on the target.
+ * @param {Element} target focused element
+ * @param {string} key key name
+ */
+function press(target, key) {
+  target.dispatchEvent(new window.KeyboardEvent('keydown', { key, bubbles: true, cancelable: true }));
+}
+
 describe('als-user-menu', () => {
   let component;
   const logout = jest.fn();
+
+  beforeAll(() => {
+    // bootstrap creates its events with the global classes: they must be jsdom's (window), not node's (global)
+    /* eslint-disable unicorn/prefer-global-this */
+    global.Event = window.Event;
+    /* eslint-enable unicorn/prefer-global-this */
+  });
 
   beforeEach(async () => {
     component = StageComponent.withResources([
@@ -48,15 +64,37 @@ describe('als-user-menu', () => {
     expect(action.querySelector('i')).toBeNull();
   });
 
-  test('a link item navigates, an action item calls click without navigating', () => {
+  test('a link item navigates, an action item is a button calling click', () => {
     const [link, action] = document.querySelectorAll('.als-user-menu-item');
+    expect(link.tagName).toBe('A');
     expect(link.getAttribute('href')).toBe('#profil');
-    expect(link.getAttribute('role')).toBeNull();
-    expect(action.getAttribute('role')).toBe('button');
+    // a button: activated by Enter and Space, unlike a link
+    expect(action.tagName).toBe('BUTTON');
+    expect(action.getAttribute('type')).toBe('button');
 
     expect(click(link)).toBe(false);
     expect(logout).not.toHaveBeenCalled();
-    expect(click(action)).toBe(true);
+    click(action);
     expect(logout).toHaveBeenCalledTimes(1);
+  });
+
+  test('the items are list items, reached with the arrows', async () => {
+    const menu = document.querySelector('.dropdown-menu');
+    expect([...menu.children].every(child => child.tagName === 'LI')).toBe(true);
+    const toggle = document.querySelector('.als-user-menu-toggle');
+    const [link, action] = document.querySelectorAll('.als-user-menu-item');
+
+    press(toggle, 'ArrowDown');
+    await flush();
+    expect(document.activeElement).toBe(link);
+    press(link, 'ArrowDown');
+    expect(document.activeElement).toBe(action);
+    // cycles
+    press(action, 'ArrowDown');
+    expect(document.activeElement).toBe(link);
+    press(link, 'End');
+    expect(document.activeElement).toBe(action);
+    press(action, 'Home');
+    expect(document.activeElement).toBe(link);
   });
 });

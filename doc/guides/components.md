@@ -289,8 +289,9 @@ The attributes are read once (`one-time` binding):
 
 ### `als-user-menu`
 
-User initials in an avatar, opening a menu of account actions. Each item is a link when `href` is set, otherwise its
-`click` function is called.
+User initials in an avatar, opening a menu of account actions. Each item is a link when `href` is set, otherwise a
+button calling its `click` function (activated by `Enter` and `Space`). The keyboard is the one of
+[`als-dropdown`](#als-dropdown).
 
 ```html
 <als-user-menu initials="UA" items.bind="userMenuItems"></als-user-menu>
@@ -355,7 +356,17 @@ Striped progress bar displayed while `loading` is `true`, e.g. during api calls.
 ### `als-dropdown`
 
 Generic Bootstrap dropdown, used by `als-user-menu` and `als-multi-select`. Its content is projected into the menu
-(a `<ul class="dropdown-menu">`), and the content of a `slot="toggle"` element into the toggle button.
+(a `<ul class="dropdown-menu">`), and the content of a `slot="toggle"` element into the toggle button. Each projected
+element that is not a `<li>` is wrapped in one: a `<li class="dropdown-item">`, or a plain `<li>` for a Bootstrap
+element such as a `<hr class="dropdown-divider">`.
+
+| Key | Effect |
+|---|---|
+| `↓` / `↑` on the toggle button | Opens the menu on its first / last control |
+| `↓` / `↑` in the menu | Moves the focus to the next / previous control (link, button, checkbox...), from the last one to the first one, and back |
+| `Home` / `End` in the menu | Moves the focus to the first / last control |
+| `Escape` | Closes the menu, the focus going back to the toggle button |
+| `Tab` | Moves through the controls of the menu, then leaves it |
 
 ```html
 <als-dropdown label="Actions" menu-class="dropdown-menu-end">
@@ -374,7 +385,7 @@ Generic Bootstrap dropdown, used by `als-user-menu` and `als-multi-select`. Its 
 | `menu-class` | CSS classes of the menu | Any string | `''` |
 | `aria-label` | Accessible name of the toggle button, overriding its content | Any string | |
 | `aria-describedby`, `aria-invalid` | Applied to the toggle button, e.g. to link an error message | Ids / `true` or `false` | |
-| `menu-aria-label` | Accessible name of the menu, e.g. to group checkboxes | Any string | |
+| `menu-aria-label` | Accessible name of the menu (a list), named by the toggle button otherwise | Any string | |
 | `on-focus`, `on-blur` | Called when the toggle button gets or loses the focus | Function receiving the `FocusEvent` | |
 
 ### `no-submit` custom attribute

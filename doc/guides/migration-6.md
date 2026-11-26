@@ -308,6 +308,11 @@ They need no code change, unless the application styles the same elements.
   targeting `als-pre-login h2` or `pre-login-logo.als-logo`.
 - **Dialogs**: the dialog is named by its `modal-title` or `offcanvas-title` (`aria-labelledby`), unless the view names
   it itself.
+- **`als-dropdown`, `als-user-menu`, `als-multi-select`**: the arrows move the focus between the controls of the menu
+  (they did nothing); a projected `dropdown-divider` is wrapped in a `<li>`; the menu stays a list (no more
+  `role="group"`), named by `menu-aria-label` or else by the toggle button. The actions of `als-user-menu` (items
+  without `href`) are buttons instead of `a[href="#"][role="button"]`: check the styles and end-to-end tests targeting
+  `.als-user-menu-item` links.
 
 The deprecated `als-input-number`, `als-input-text`, `als-input-password` and `als-select` are still available in
 6.0.0; see [Deprecated components](./forms.md#deprecated-components) to replace them.

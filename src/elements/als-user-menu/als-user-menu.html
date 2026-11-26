@@ -6,14 +6,16 @@
       <span class="als-user-menu-avatar" aria-hidden="true">${initials}</span>
       <span>${label}</span>
     </span>
-    <a
-      repeat.for="item of items"
-      class="als-user-menu-item"
-      href.bind="item.href || '#'"
-      role.bind="item.href ? null : 'button'"
-      click.delegate="item.href ? true : item.click()">
-      <i if.bind="item.icon" class="bi ${item.icon}" aria-hidden="true"></i>
-      ${item.label}
-    </a>
+    <!-- a link navigates, a button triggers an action (Enter and Space, unlike a link) -->
+    <template repeat.for="item of items">
+      <a if.bind="item.href" class="als-user-menu-item" href.bind="item.href">
+        <i if.bind="item.icon" class="bi ${item.icon}" aria-hidden="true"></i>
+        ${item.label}
+      </a>
+      <button else type="button" class="als-user-menu-item" click.trigger="item.click()">
+        <i if.bind="item.icon" class="bi ${item.icon}" aria-hidden="true"></i>
+        ${item.label}
+      </button>
+    </template>
   </als-dropdown>
 </template>

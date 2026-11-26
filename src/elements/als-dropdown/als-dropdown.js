@@ -48,7 +48,7 @@ export class AlsDropdown {
   @bindable({ defaultBindingMode: bindingMode.toView })
   ariaInvalid;
 
-  /** Accessible name applied to the dropdown menu, e.g. to group a set of checkboxes. @type {string} */
+  /** Accessible name of the dropdown menu (a list), instead of the content of the toggle button. @type {string} */
   @bindable({ defaultBindingMode: bindingMode.toView })
   menuAriaLabel;
 
@@ -65,6 +65,17 @@ export class AlsDropdown {
   };
   /** Bound handler used to track the dropdown closed state. @type {() => void} */ _handleHide = () => {
     this.expanded = false;
+  };
+  /**
+   * Keydown listener of the window, in the capture phase: it runs before bootstrap's one, which listens to the
+   * document in the capture phase too and stops the arrows of the toggle button and of the menu.
+   * @type {(event: KeyboardEvent) => void}
+   */
+  _handleKeydown = event => {
+    if (this._container.contains(/** @type {Node} */ (event.target)) && !this.handleKeydown(event)) {
+      event.preventDefault();
+      event.stopPropagation();
+    }
   };
   /**
    * Observes the menu for projected content added after `attached()`, e.g. from async-bound `repeat.for` items.
@@ -102,22 +113,52 @@ export class AlsDropdown {
     this._dropdown = Dropdown.getOrCreateInstance(this._toggle, { autoClose: this.autoClose });
     this._toggle.addEventListener('show.bs.dropdown', this._handleShow);
     this._toggle.addEventListener('hide.bs.dropdown', this._handleHide);
+    this._container.ownerDocument.defaultView.addEventListener('keydown', this._handleKeydown, true);
   }
 
   /**
-   * Wraps the children of the dropdown menu in `<li class="dropdown-item">` elements, as required by bootstrap.
+   * Wraps the children of the dropdown menu in `<li>` elements, the only children allowed in a list: a
+   * `<li class="dropdown-item">` for the content, a plain `<li>` for a bootstrap element such as a `dropdown-divider`.
    */
   wrapChildren() {
-    const children = Array.from(this._menu.children).filter(
-      child => child.nodeType === Node.ELEMENT_NODE && !child.className.startsWith('dropdown-')
-    );
+    const children = Array.from(this._menu.children).filter(child => child.tagName !== 'LI');
 
     for (const child of children) {
       const item = document.createElement('li');
-      item.className = 'dropdown-item';
+      if (!child.className.startsWith('dropdown-')) item.className = 'dropdown-item';
       child.replaceWith(item);
       item.append(child);
     }
+  }
+
+  /**
+   * Moves the focus between the controls of the menu with the arrows, `Home` and `End` (cycling), the arrows of the
+   * toggle button opening the menu on the first or last control. Bootstrap moves the focus between `.dropdown-item`
+   * elements, which are not focusable here (the `<li>` wrapping the content), and ignores the arrows on an input;
+   * `Escape` is left to bootstrap, which closes the menu and focuses the toggle button.
+   * @param {KeyboardEvent} event keydown event of the toggle button or the menu
+   * @returns {boolean} false when the key has been handled
+   */
+  handleKeydown(event) {
+    const keys = ['ArrowDown', 'ArrowUp', 'Home', 'End'];
+    const onToggle = event.target === this._toggle;
+    if (!keys.includes(event.key) || (onToggle && !event.key.startsWith('Arrow'))) return true;
+    if (onToggle) this.show();
+    /** @type {HTMLElement[]} */
+    const controls = Array.from(
+      this._menu.querySelectorAll('a[href], button, input, select, textarea, [tabindex]:not([tabindex="-1"])')
+    ).filter(control => !control.matches(':disabled'));
+    if (controls.length === 0) return false;
+    const index = controls.indexOf(/** @type {HTMLElement} */ (event.target));
+    const last = controls.length - 1;
+    const next = {
+      Home: 0,
+      End: last,
+      ArrowDown: index === last ? 0 : index + 1,
+      ArrowUp: index <= 0 ? last : index - 1
+    }[event.key];
+    controls[next].focus();
+    return false;
   }
 
   /**
@@ -125,6 +166,7 @@ export class AlsDropdown {
    */
   detached() {
     this._menuObserver?.disconnect();
+    this._container.ownerDocument.defaultView.removeEventListener('keydown', this._handleKeydown, true);
     this._toggle.removeEventListener('show.bs.dropdown', this._handleShow);
     this._toggle.removeEventListener('hide.bs.dropdown', this._handleHide);
     this._dropdown?.dispose();

@@ -39,7 +39,24 @@ Defines the logic triggered when the custom element is added to the DOM.
 
 ![modifier: public](images/badges/modifier-public.png)
 
-Wraps the children of the dropdown menu in &#x60;&lt;li class&#x3D;&quot;dropdown-item&quot;&gt;&#x60; elements, as required by bootstrap.
+Wraps the children of the dropdown menu in &#x60;&lt;li&gt;&#x60; elements, the only children allowed in a list: a
+&#x60;&lt;li class&#x3D;&quot;dropdown-item&quot;&gt;&#x60; for the content, a plain &#x60;&lt;li&gt;&#x60; for a bootstrap element such as a &#x60;dropdown-divider&#x60;.
+
+---
+
+### `handleKeydown(event) ► boolean`
+
+![modifier: public](images/badges/modifier-public.png)
+
+Moves the focus between the controls of the menu with the arrows, &#x60;Home&#x60; and &#x60;End&#x60; (cycling), the arrows of the
+toggle button opening the menu on the first or last control. Bootstrap moves the focus between &#x60;.dropdown-item&#x60;
+elements, which are not focusable here (the &#x60;&lt;li&gt;&#x60; wrapping the content), and ignores the arrows on an input;
+&#x60;Escape&#x60; is left to bootstrap, which closes the menu and focuses the toggle button.
+
+Parameters | Type | Description
+--- | --- | ---
+__event__ | `KeyboardEvent` | *keydown event of the toggle button or the menu*
+__*return*__ | `boolean` | *false when the key has been handled*
 
 ---
 
@@ -114,7 +131,7 @@ __label__ | `string` | *Label displayed in the toggle button when no &#x60;toggl
 __ariaLabel__ | `string` | *Accessible name applied to the toggle button, overriding its visible content. @type {string}*
 __ariaDescribedby__ | `string` | *Id(s) of the element(s) describing the toggle button, e.g. an error message. @type {string}*
 __ariaInvalid__ | `boolean\|'true'\|'false'` | *Applied to the toggle button to expose invalid state to assistive technology. @type {boolean|&#x27;true&#x27;|&#x27;false&#x27;}*
-__menuAriaLabel__ | `string` | *Accessible name applied to the dropdown menu, e.g. to group a set of checkboxes. @type {string}*
+__menuAriaLabel__ | `string` | *Accessible name of the dropdown menu (a list), instead of the content of the toggle button. @type {string}*
 __expanded__ | `boolean` | *Whether the dropdown menu is currently open, reflected in &#x60;aria-expanded&#x60;. @type {boolean}*
 __uniqueId__ | `string` | *Unique id to identify the custom element instance. @type {string}*
 __onFocus__ | `(event: FocusEvent) => void` | *onFocus @type {(event: FocusEvent) &#x3D;&gt; void}*
@@ -125,4 +142,6 @@ ___menu__ | `HTMLUListElement` | *Html dropdown menu element. @type {HTMLUListEl
 ___dropdown__ | `Dropdown` | *Bootstrap dropdown. @type {Dropdown}*
 ___handleShow__ | `() => void` | *Bound handler used to track the dropdown open state. @type {() &#x3D;&gt; void}*
 ___handleHide__ | `() => void` | *Bound handler used to track the dropdown closed state. @type {() &#x3D;&gt; void}*
+___handleKeydown__ | `(event: KeyboardEvent) => void` | *Keydown listener of the window, in the capture phase: it runs before bootstrap&#x27;s one, which listens to the
+document in the capture phase too and stops the arrows of the toggle button and of the menu.*
 ___menuObserver__ | `MutationObserver` | *Observes the menu for projected content added after &#x60;attached()&#x60;, e.g. from async-bound &#x60;repeat.for&#x60; items.*

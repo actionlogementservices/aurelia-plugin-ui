@@ -214,7 +214,8 @@ An [`input-datepicker`](./components.md#input-datepicker) with the calendar icon
 ## `als-multi-select`
 
 A dropdown of checkboxes selecting several values. Place it inside an `als-field` to get the label and the validation
-errors, like a native control:
+errors, like a native control. `↓` opens the list on "Tout sélectionner", the arrows move between the checkboxes,
+`Space` checks them and `Escape` closes the list (see [`als-dropdown`](./components.md#als-dropdown)):
 
 ```html
 <als-field label="Années" required="true">

@@ -17,8 +17,7 @@
     <ul
       id="menu-${uniqueId}"
       class="dropdown-menu ${menuClass} ${autosize ? 'w-100' : ''}"
-      aria-labelledby="toggle-${uniqueId}"
-      role.bind="menuAriaLabel ? 'group' : null"
+      aria-labelledby.bind="menuAriaLabel ? null : 'toggle-' + uniqueId"
       aria-label.bind="menuAriaLabel">
       <slot></slot>
     </ul>
