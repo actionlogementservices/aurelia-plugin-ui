@@ -52,6 +52,10 @@ describe('breadcrumbs', () => {
     expect(items).toEqual(['Accueil', 'Contrats', 'Contrat']);
   });
 
+  test('is a navigation named in French', () => {
+    expect(document.querySelector('nav').getAttribute('aria-label')).toBe("Fil d'Ariane");
+  });
+
   test('the last step is the current page, the other steps are keyboard reachable links', () => {
     const [home, step, current] = document.querySelectorAll('.breadcrumb-item');
     expect(current.getAttribute('aria-current')).toBe('page');

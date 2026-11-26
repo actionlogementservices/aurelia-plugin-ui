@@ -311,7 +311,8 @@ userMenuItems = [
 
 Breadcrumbs of the current route of the root Aurelia router: an `Accueil` link to the root, then a step per route
 having a `title`, except the default route (`''`). The last step is the current page (`aria-current="page"`), the
-other ones are links to their route, which must have a `name`. It has no attribute.
+other ones are links to their route, which must have a `name`. The navigation is named "Fil d'Ariane", and the
+loading icon displayed while the router navigates is read "Chargement en cours". It has no attribute.
 
 ```html
 <breadcrumbs></breadcrumbs>

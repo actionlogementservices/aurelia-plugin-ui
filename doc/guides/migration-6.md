@@ -299,6 +299,7 @@ They need no code change, unless the application styles the same elements.
   readers announce the required fields: the accessible name of the control becomes e.g. "Nom (obligatoire)". Check the
   end-to-end tests finding the field by its exact name (`getByLabel('Nom', { exact: true })`).
 - **`environment-ribbon`**: without `environment`, the ribbon displays nothing instead of failing.
-
+- **`breadcrumbs`**: the navigation is named "Fil d'Ariane" instead of "breadcrumb": update the end-to-end tests finding
+  it by its name (`getByRole('navigation', { name: 'breadcrumb' })`).
 The deprecated `als-input-number`, `als-input-text`, `als-input-password` and `als-select` are still available in
 6.0.0; see [Deprecated components](./forms.md#deprecated-components) to replace them.
