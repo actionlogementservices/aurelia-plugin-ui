@@ -136,11 +136,16 @@ a:focus-visible,
     box-shadow: none;
   }
   // a field with an addon (€, calendar...) is one box: the focus ring wraps the field and its addon
-  // (a focused button addon, e.g. the password toggle, keeps its own ring)
-  &:has(> .input-group-text):has(> .form-control:focus, > .form-select:focus-within) {
+  // (a focused button addon, e.g. the password toggle, keeps its own ring, and an auto-complete shows the focus on
+  // its active option while there is one, see core/combobox)
+  &:has(> .input-group-text):has(
+      > .form-control:focus,
+      > .form-select:focus-within,
+      > .form-control [role='combobox']:focus:not([aria-activedescendant])
+    ) {
     @include als-focus-ring;
 
-    > .form-control:focus,
+    > .form-control:focus-within,
     > .form-select:focus-within {
       outline: 0;
     }
