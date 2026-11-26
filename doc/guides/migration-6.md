@@ -188,7 +188,7 @@ DOM and keyboard behavior change:
 | | 5.x | 6.0.0 |
 |---|---|---|
 | Input | `role="button"` (or `searchbox`) | `role="combobox"`, `aria-expanded`, `aria-controls`, `aria-activedescendant` |
-| List | `div.dropdown-menu` | `div.dropdown-menu[role="listbox"]` |
+| List | `div.dropdown-menu` | `div.dropdown-menu[role="listbox"]`, named by the label of the field |
 | Options | `button.dropdown-item[role="listitem"]` | `div.dropdown-item[role="option"]`, `aria-selected` |
 | Host element | `role="list"`, `aria-haspopup="listbox"` | no role |
 | Badge removal | `i.bi-x-lg[role="button"]` | `button[aria-label="Retirer <label>"]` containing `i.bi-x-lg` |

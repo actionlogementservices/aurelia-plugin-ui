@@ -369,6 +369,24 @@ describe('keyboard (WAI-ARIA combobox pattern)', () => {
   const activeOption = () => document.getElementById(input().getAttribute('aria-activedescendant'));
   const press = key => input().dispatchEvent(new window.KeyboardEvent('keydown', { key, bubbles: true }));
 
+  test('the listbox is named like the field: by its label, or else by the aria-label of the input', async () => {
+    component = await stage('simple-select', 'datasource.bind="ds"', { ds: datasource() });
+    const label = document.createElement('label');
+    label.htmlFor = input().id;
+    label.textContent = 'Pays';
+    document.body.prepend(label);
+    press('ArrowDown');
+    expect(listbox().getAttribute('aria-labelledby')).toBe(label.id);
+    expect(document.getElementById(label.id).textContent).toBe('Pays');
+    press('Escape');
+    label.remove();
+
+    input().setAttribute('aria-label', 'Pays');
+    press('ArrowDown');
+    expect(listbox().getAttribute('aria-label')).toBe('Pays');
+    expect(listbox().hasAttribute('aria-labelledby')).toBe(false);
+  });
+
   test.each(['simple-select', 'filterable-select'])(
     '%s: the arrows move the active option, Enter picks it and the focus stays on the input',
     async name => {

@@ -21,12 +21,32 @@ function clearActiveOption(input, listbox) {
 }
 
 /**
- * Clears the active option when the listbox closes, and when the text changes the options (typed, pasted, dictated...).
+ * Names the listbox like its combobox: by the label of the input (e.g. the one of an `als-field`), or else by its
+ * `aria-label`.
+ * @param {HTMLInputElement} input combobox input
+ * @param {HTMLElement} listbox listbox of the options
+ */
+function nameListbox(input, listbox) {
+  const label = input.labels?.[0];
+  if (label) {
+    label.id ||= `${input.id}-label`;
+    listbox.setAttribute('aria-labelledby', label.id);
+  } else {
+    listbox.removeAttribute('aria-labelledby');
+    if (input.hasAttribute('aria-label'))
+      listbox.setAttribute('aria-label', input.getAttribute('aria-label'));
+  }
+}
+
+/**
+ * Names the listbox when it opens, once the label of the field is linked to the input, and clears the active option
+ * when the listbox closes, and when the text changes the options (typed, pasted, dictated...).
  * @param {HTMLInputElement} input combobox input, the toggle of the bootstrap dropdown
  * @param {HTMLElement} listbox listbox of the options
  */
 export function bindCombobox(input, listbox) {
   const clear = () => clearActiveOption(input, listbox);
+  input.addEventListener('show.bs.dropdown', () => nameListbox(input, listbox));
   input.addEventListener('hidden.bs.dropdown', clear);
   input.addEventListener('input', clear);
 }

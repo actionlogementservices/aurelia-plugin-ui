@@ -56,7 +56,7 @@ option (`aria-activedescendant`), which shows the focus ring.
 
 The focus stays on the input after picking a value. The badges of `badges-select` are removed with a button named
 "Retirer <label>", after which the focus goes back to the input. Give the element an accessible name, e.g. with an
-[`als-field`](./forms.md#als-field) label.
+[`als-field`](./forms.md#als-field) label: the listbox is named like the field, by its label or its `aria-label`.
 
 ## Selection: `selected-*` attributes
 

@@ -15,7 +15,8 @@ closes the listbox and Tab leaves the field.
 
 ![modifier: public](images/badges/modifier-public.png) ![modifier: static](images/badges/modifier-static.png)
 
-Clears the active option when the listbox closes, and when the text changes the options (typed, pasted, dictated...).
+Names the listbox when it opens, once the label of the field is linked to the input, and clears the active option
+when the listbox closes, and when the text changes the options (typed, pasted, dictated...).
 
 Parameters | Type | Description
 --- | --- | ---
@@ -44,6 +45,20 @@ __*return*__ | `boolean` | *true to let the browser handle the key, false when t
 ![modifier: private](images/badges/modifier-private.png)
 
 Clears the active option of a combobox.
+
+Parameters | Type | Description
+--- | --- | ---
+__input__ | `HTMLInputElement` | *combobox input*
+__listbox__ | `HTMLElement` | *listbox of the options*
+
+---
+
+### `nameListbox(input, listbox)`
+
+![modifier: private](images/badges/modifier-private.png)
+
+Names the listbox like its combobox: by the label of the input (e.g. the one of an &#x60;als-field&#x60;), or else by its
+&#x60;aria-label&#x60;.
 
 Parameters | Type | Description
 --- | --- | ---
