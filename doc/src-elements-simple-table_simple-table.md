@@ -269,7 +269,13 @@ __resultText__ | `string` | *Text corresponding to &#x27;result(s)&#x27;. @type 
 __selectedText__ | `string` | *Text displayed after the number of selected items. @type {string}*
 __selectAllText__ | `string` | *Text of the button selecting the rows of every page, shown once the rows of the page are all selected. The
 &#x60;{count}&#x60; token is replaced by the number of selectable rows.*
+__selectAllSelectableText__ | `string` | *Text of the button selecting the rows of every page when some rows are disabled. The &#x60;{count}&#x60; token is replaced
+by the number of selectable rows.*
 __clearSelectionText__ | `string` | *Text of the button clearing a selection that goes beyond the displayed page. @type {string}*
+__selectPageText__ | `string` | *Accessible name of the checkbox selecting the rows of the page. @type {string}*
+__selectRowText__ | `string` | *Accessible name of the checkbox of a row. The &#x60;{row}&#x60; token is replaced by the number of the row in the page.*
+__selectAllHintText__ | `string` | *Announced to the screen readers when the button selecting the rows of every page appears. The &#x60;{button}&#x60; token is
+replaced by the text of the button.*
 __warningTemplateText__ | `string` | *Text corresponding to &#x27;only first %s items displayed&#x27; warning. @type {string}*
 __pageSizeText__ | `string` | *Text corresponding to &#x27;items per page&#x27;. @type {string}*
 __disableableRows__ | `boolean` | *Whether we can disable some rows or not. @type {boolean}*
@@ -290,7 +296,7 @@ __pages__ | `undefined` | *Page numbers to display: first, last and current ±1,
 __countText__ | `undefined` | *Row count of the detail bar, with the range of the displayed rows when paginated (e.g. &#x60;11–20 sur 120 résultat(s).&#x60;).*
 __canSelectAllResults__ | `undefined` | *Can the rows of every page be selected at once? Once the selectable rows of the page are all selected, with an
 array datasource whose other pages hold selectable rows not selected yet.*
-__selectAllButtonText__ | `undefined` | *Text of the button selecting the rows of every page.*
+__selectAllButtonText__ | `undefined` | *Text of the button selecting the rows of every page, telling that the disabled rows are left out.*
 __notDisplayedWarningText__ | `undefined` | *Warning text regarding items not displayed.*
 ___container__ | `HTMLTemplateElement` | *Html container of the custom element. @type {HTMLTemplateElement}*
 ___tooltips__ | `Tooltip[]` | *Cells tooltips @type {Tooltip[]}*

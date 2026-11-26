@@ -330,6 +330,24 @@ describe('simple-table accessibility', () => {
     expect(document.activeElement).toBe(checkboxes()[0]);
   });
 
+  test('tells that the disabled rows are left out of every page, and takes custom texts', async () => {
+    const context = { ds: ds(25).map(item => ({ ...item, disabled: item.id === 24 })), selected: [] };
+    component = await stage(
+      'datasource.bind="ds" paginated="true" selection-mode="multiple" value-key="id" disableable-rows="true" selected-items.bind="selected" select-page-text="Toute la page" select-row-text="Ligne {row}"',
+      context
+    );
+    const [all, first] = checkboxes();
+    expect(all.getAttribute('aria-label')).toBe('Toute la page');
+    expect(first.getAttribute('aria-label')).toBe('Ligne 1');
+
+    all.click();
+    await flush();
+    const texts = [...document.querySelectorAll('simple-table button.btn-link')].map(button =>
+      button.textContent.trim()
+    );
+    expect(texts).toContain('Sélectionner les 24 résultats sélectionnables');
+  });
+
   test('tells the sort order of the sorted column to the screen readers', async () => {
     component = StageComponent.withResources([
       PLATFORM.moduleName('elements/simple-table/simple-table'),

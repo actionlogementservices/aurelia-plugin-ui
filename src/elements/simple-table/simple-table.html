@@ -8,7 +8,7 @@
     <span role="status"><span if.bind="items.length > 0" class="fw-semibold">${countText}</span></span>
     <!-- tells the screen readers that the button selecting every page appeared before the table, above the focus -->
     <span role="status" class="visually-hidden">
-      ${canSelectAllResults ? 'Toutes les lignes de la page sont sélectionnées. Bouton « ' + selectAllButtonText + ' » disponible au-dessus du tableau.' : ''}
+      ${canSelectAllResults ? selectAllHintText.replace('{button}', selectAllButtonText) : ''}
     </span>
     <span if.bind="selectedItems.length > 0" class="text-body-secondary">
       ${selectedItems.length} ${selectedText}
@@ -52,7 +52,7 @@
               checked.one-way="selectableItemCount > 0 && pageSelectedCount === selectableItemCount"
               indeterminate.one-way="pageSelectedCount > 0 && pageSelectedCount < selectableItemCount"
               disabled.bind="disabled || selectableItemCount === 0"
-              aria-label="Tout sélectionner"
+              aria-label.bind="selectPageText"
               change.trigger="$event.stopPropagation() || toggleAllSelection()" />
           </th>
           <th
@@ -96,7 +96,7 @@
               class="form-check-input d-block m-0"
               checked.one-way="item.selected"
               disabled.bind="disabled || (disableableRows && item[disablePropName] === true)"
-              aria-label="Sélectionner la ligne ${$index + 1}"
+              aria-label.bind="selectRowText.replace('{row}', $index + 1)"
               change.trigger="$event.stopPropagation() || toggleSelection(item)" />
           </td>
           <td

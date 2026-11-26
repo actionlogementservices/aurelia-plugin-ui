@@ -84,9 +84,37 @@ export class SimpleTable {
   @bindable({ defaultBindingMode: bindingMode.toView })
   selectAllText = 'Sélectionner les {count} résultats';
 
+  /**
+   * Text of the button selecting the rows of every page when some rows are disabled. The `{count}` token is replaced
+   * by the number of selectable rows.
+   * @type {string}
+   */
+  @bindable({ defaultBindingMode: bindingMode.toView })
+  selectAllSelectableText = 'Sélectionner les {count} résultats sélectionnables';
+
   /** Text of the button clearing a selection that goes beyond the displayed page. @type {string} */
   @bindable({ defaultBindingMode: bindingMode.toView })
   clearSelectionText = 'Effacer la sélection';
+
+  /** Accessible name of the checkbox selecting the rows of the page. @type {string} */
+  @bindable({ defaultBindingMode: bindingMode.toView })
+  selectPageText = 'Tout sélectionner';
+
+  /**
+   * Accessible name of the checkbox of a row. The `{row}` token is replaced by the number of the row in the page.
+   * @type {string}
+   */
+  @bindable({ defaultBindingMode: bindingMode.toView })
+  selectRowText = 'Sélectionner la ligne {row}';
+
+  /**
+   * Announced to the screen readers when the button selecting the rows of every page appears. The `{button}` token is
+   * replaced by the text of the button.
+   * @type {string}
+   */
+  @bindable({ defaultBindingMode: bindingMode.toView })
+  selectAllHintText =
+    'Toutes les lignes de la page sont sélectionnées. Bouton « {button} » disponible au-dessus du tableau.';
 
   /** Text corresponding to 'only first %s items displayed' warning. @type {string} */
   @bindable({ defaultBindingMode: bindingMode.toView })
@@ -515,12 +543,14 @@ export class SimpleTable {
   }
 
   /**
-   * Text of the button selecting the rows of every page.
+   * Text of the button selecting the rows of every page, telling that the disabled rows are left out.
    * @returns {string} button text
    */
-  @computedFrom('totalSelectableCount', 'selectAllText')
+  @computedFrom('totalSelectableCount', 'totalCount', 'selectAllText', 'selectAllSelectableText')
   get selectAllButtonText() {
-    return this.selectAllText.replace('{count}', this.totalSelectableCount.toString());
+    const text =
+      this.totalSelectableCount < this.totalCount ? this.selectAllSelectableText : this.selectAllText;
+    return text.replace('{count}', this.totalSelectableCount.toString());
   }
 
   /**

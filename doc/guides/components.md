@@ -213,7 +213,11 @@ Set `paginated="true"`: a page size selector (`10`, `20`, `50` or `100`) is disp
 | `result-text` | Text displayed after the number of items | Any string | `résultat(s).` |
 | `selected-text` | Text displayed after the number of selected items | Any string | `sélectionné(s)` |
 | `select-all-text` | Button selecting the rows of every page. Must contain the `{count}` token | Any string with `{count}` | `Sélectionner les {count} résultats` |
+| `select-all-selectable-text` | Button selecting the rows of every page when some rows are disabled. Must contain the `{count}` token | Any string with `{count}` | `Sélectionner les {count} résultats sélectionnables` |
 | `clear-selection-text` | Button clearing a selection going beyond the page | Any string | `Effacer la sélection` |
+| `select-page-text` | Accessible name of the checkbox selecting the rows of the page | Any string | `Tout sélectionner` |
+| `select-row-text` | Accessible name of the checkbox of a row. The `{row}` token is replaced by its number in the page | Any string | `Sélectionner la ligne {row}` |
+| `select-all-hint-text` | Announced when the button selecting every page appears. The `{button}` token is replaced by its text | Any string | `Toutes les lignes de la page sont sélectionnées. Bouton « {button} » disponible au-dessus du tableau.` |
 | `warning-template-text` | Warning displayed when not all the items are displayed. Must contain the `{maxRows}` token | Any string with `{maxRows}` | `Seuls les {maxRows} premiers résultats sont affichés.` |
 | `metadata` | Extra data available in the column templates | Any | |
 | `parent-ref` | Viewmodel available in the column templates as `parentRef` | Any object | |
