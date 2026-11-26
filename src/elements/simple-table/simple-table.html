@@ -9,6 +9,24 @@
     <span if.bind="selectedItems.length > 0" class="text-body-secondary">
       ${selectedItems.length} ${selectedText}
     </span>
+    <!-- the rows of the other pages of an array datasource, once the rows of the page are all selected -->
+    <button
+      if.bind="selectionMode == 'multiple' && totalSelectableCount > selectableItemCount && selectableItemCount > 0 && pageSelectedCount === selectableItemCount && selectedItems.length < totalSelectableCount"
+      type="button"
+      class="btn btn-link p-0 align-baseline"
+      disabled.bind="disabled"
+      click.trigger="selectAllResults()">
+      ${selectAllButtonText}
+    </button>
+    <!-- a selection beyond the page can't be cleared from the page -->
+    <button
+      if.bind="selectedItems.length > pageSelectedCount"
+      type="button"
+      class="btn btn-link p-0 align-baseline clear-selection"
+      disabled.bind="disabled"
+      click.trigger="clearSelection()">
+      ${clearSelectionText}
+    </button>
     <span if.bind="items.length > 0 && !allItemsDisplayed" class="text-warning-emphasis">
       <i class="bi bi-exclamation-triangle-fill me-1" aria-hidden="true"></i>
       ${notDisplayedWarningText}
@@ -21,14 +39,14 @@
         <tr>
           <!-- optional tick header -->
           <th if.bind="selectionMode != 'none'" class="selection align-middle">
-            <!-- mixed when a part of the rows is selected; the native change of the checkboxes stays inside the table,
+            <!-- for the rows of the page, mixed when a part of them is selected; the native change of the checkboxes stays inside the table,
                  which emits its own change event with the selection -->
             <input
               if.bind="selectionMode == 'multiple'"
               type="checkbox"
               class="form-check-input d-block m-0"
-              checked.one-way="selectableItemCount > 0 && selectedItems.length === selectableItemCount"
-              indeterminate.one-way="selectedItems.length > 0 && selectedItems.length < selectableItemCount"
+              checked.one-way="selectableItemCount > 0 && pageSelectedCount === selectableItemCount"
+              indeterminate.one-way="pageSelectedCount > 0 && pageSelectedCount < selectableItemCount"
               disabled.bind="disabled || selectableItemCount === 0"
               aria-label="Tout sélectionner"
               change.trigger="$event.stopPropagation() || toggleAllSelection()" />

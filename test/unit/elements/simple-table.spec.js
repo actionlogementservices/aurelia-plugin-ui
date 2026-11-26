@@ -144,6 +144,37 @@ describe('simple-table selection', () => {
     expect(table.selectedItems).toEqual([]);
   });
 
+  test('toggleAllSelection() selects the rows of the page, keeping the selection of the other pages', () => {
+    const table = new SimpleTable(document.createElement('div'), taskQueue);
+    Object.assign(table, { selectionMode: 'multiple', valueKey: 'id', paginated: true, maxRows: 10 });
+    table.datasource = ds(25);
+    table.setDisplayedItems();
+    table.toggleSelection(table.items[0]);
+    table.goToPage(2);
+    table.setDisplayedItems();
+    expect(table.pageSelectedCount).toBe(0);
+
+    table.toggleAllSelection();
+    expect(table.selectedItems.map(item => item.id)).toEqual([0, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19]);
+    expect(table.pageSelectedCount).toBe(10);
+    table.toggleAllSelection();
+    expect(table.selectedItems.map(item => item.id)).toEqual([0]);
+  });
+
+  test('a row of a page reloaded by the parent is unselected by its key', () => {
+    const table = new SimpleTable(document.createElement('div'), taskQueue);
+    Object.assign(table, { selectionMode: 'multiple', valueKey: 'id' });
+    table.datasource = { items: ds(3), totalCount: 30 };
+    table.setDisplayedItems();
+    table.toggleSelection(table.items[1]);
+    // the parent loads the page again: new objects
+    table.datasource = { items: ds(3), totalCount: 30 };
+    table.setDisplayedItems();
+    expect(table.items[1].selected).toBe(true);
+    table.toggleSelection(table.items[1]);
+    expect(table.selectedItems).toEqual([]);
+  });
+
   test('toggleAllSelection() selects every enabled item then unselects them', () => {
     const table = createSelectionTable('multiple');
     expect(table.selectableItemCount).toBe(2);
@@ -263,6 +294,31 @@ describe('simple-table accessibility', () => {
 
     component = await stage('datasource.bind="ds" no-row-count-header="true"', { ds: ds(3) });
     expect(document.querySelector('simple-table [role="status"]')).toBeNull();
+  });
+
+  test('selects the rows of every page from the detail bar, then clears them', async () => {
+    const context = { ds: ds(25), selected: [] };
+    component = await stage(
+      'datasource.bind="ds" paginated="true" selection-mode="multiple" value-key="id" selected-items.bind="selected"',
+      context
+    );
+    const button = text =>
+      [...document.querySelectorAll('simple-table button.btn-link')].find(b => b.textContent.trim() === text);
+    expect(button('Sélectionner les 25 résultats')).toBeUndefined();
+
+    checkboxes()[0].click();
+    await flush();
+    button('Sélectionner les 25 résultats').click();
+    await flush();
+    expect(context.selected).toHaveLength(25);
+    expect(button('Sélectionner les 25 résultats')).toBeUndefined();
+    // the focus goes to the button replacing the clicked one
+    expect(document.activeElement).toBe(button('Effacer la sélection'));
+
+    button('Effacer la sélection').click();
+    await flush();
+    expect(context.selected).toEqual([]);
+    expect(document.activeElement).toBe(checkboxes()[0]);
   });
 
   test('tells the sort order of the sorted column to the screen readers', async () => {

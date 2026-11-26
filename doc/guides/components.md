@@ -152,8 +152,13 @@ displayed. The row count is a status, announced by the screen readers when it ch
 With `selection-mode="single"` or `"multiple"`, each row starts with a checkbox named "Sélectionner la ligne <n>",
 reachable with `Tab` and toggled with `Space`; a click elsewhere on the row also toggles it, except on a control of a
 cell (link, button, input). In `multiple` mode, the "Tout sélectionner" checkbox of the header selects every enabled
-row, and is mixed when only a part of them is selected. The table emits a `change` event whose `detail` is the
-selection.
+row of the displayed page, and is mixed when only a part of them is selected; the selection of the other pages is
+kept. The selection is identified by `value-key`: it survives the page changes, even when the parent reloads the page.
+The table emits a `change` event whose `detail` is the selection.
+
+Once the rows of the page are all selected, the detail bar offers to select the rows of every page ("Sélectionner les
+120 résultats", with an array `datasource` only: the other pages of a `{ items, totalCount }` one are not loaded), and
+a selection going beyond the page can be cleared at once ("Effacer la sélection").
 
 The header of the sorted column carries `aria-sort` (`ascending` or `descending`): the screen readers tell the sort
 order, which the icon only shows.
@@ -206,6 +211,8 @@ Set `paginated="true"`: a page size selector (`10`, `20`, `50` or `100`) is disp
 | `no-result-text` | Text displayed when there is no item | Any string | `Aucun résultat` |
 | `result-text` | Text displayed after the number of items | Any string | `résultat(s).` |
 | `selected-text` | Text displayed after the number of selected items | Any string | `sélectionné(s)` |
+| `select-all-text` | Button selecting the rows of every page. Must contain the `{count}` token | Any string with `{count}` | `Sélectionner les {count} résultats` |
+| `clear-selection-text` | Button clearing a selection going beyond the page | Any string | `Effacer la sélection` |
 | `warning-template-text` | Warning displayed when not all the items are displayed. Must contain the `{maxRows}` token | Any string with `{maxRows}` | `Seuls les {maxRows} premiers résultats sont affichés.` |
 | `metadata` | Extra data available in the column templates | Any | |
 | `parent-ref` | Viewmodel available in the column templates as `parentRef` | Any object | |

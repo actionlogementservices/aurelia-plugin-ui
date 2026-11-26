@@ -50,11 +50,24 @@ Sets the displayed items.
 
 ---
 
+### `isRowDisabled(item) ► boolean`
+
+![modifier: public](images/badges/modifier-public.png)
+
+Is the row of the item disabled?
+
+Parameters | Type | Description
+--- | --- | ---
+__item__ | `T` | *item of the row*
+__*return*__ | `boolean` | *true when the row can&#x27;t be selected*
+
+---
+
 ### `calculateSelectableItemCount()`
 
 ![modifier: public](images/badges/modifier-public.png)
 
-Calculate the number of selectable items.
+Calculate the number of selectable displayed items.
 
 ---
 
@@ -125,12 +138,38 @@ __item__ | `T & {selected: boolean}` | *item to select or unselect*
 
 ![modifier: public](images/badges/modifier-public.png)
 
-Defines the logic triggered when the &quot;select all&quot; checkbox is changed.
+Defines the logic triggered when the &quot;select all&quot; checkbox is changed: selects the selectable rows of the displayed
+page, or unselects them when they are all selected, keeping the selection of the other pages.
 
 Parameters | Type | Description
 --- | --- | ---
 __notify__ | `boolean` | *should we dispatch custom element events?*
 __*return*__ | `boolean` | *let event propagates*
+
+---
+
+### `selectAllResults()`
+
+![modifier: public](images/badges/modifier-public.png)
+
+Selects the selectable rows of every page of an array datasource. The focus goes to the button clearing the
+selection, which replaces the clicked one.
+
+---
+
+### `clearSelection()`
+
+![modifier: public](images/badges/modifier-public.png)
+
+Clears the selection of every page. The focus goes to the &quot;select all&quot; checkbox, the clicked button being removed.
+
+---
+
+### `notifySelection()`
+
+![modifier: public](images/badges/modifier-public.png)
+
+Synchronizes the displayed rows with the selection, and emits the &#x60;change&#x60; and &#x60;blur&#x60; events.
 
 ---
 
@@ -228,6 +267,9 @@ __fixedRowHeight__ | `boolean` | *Enable/Disable the fixed row height feature. @
 __noResultText__ | `string` | *Text corresponding to &#x27;no result&#x27;. @type {string}*
 __resultText__ | `string` | *Text corresponding to &#x27;result(s)&#x27;. @type {string}*
 __selectedText__ | `string` | *Text displayed after the number of selected items. @type {string}*
+__selectAllText__ | `string` | *Text of the button selecting the rows of every page, shown once the rows of the page are all selected. The
+&#x60;{count}&#x60; token is replaced by the number of selectable rows.*
+__clearSelectionText__ | `string` | *Text of the button clearing a selection that goes beyond the displayed page. @type {string}*
 __warningTemplateText__ | `string` | *Text corresponding to &#x27;only first %s items displayed&#x27; warning. @type {string}*
 __pageSizeText__ | `string` | *Text corresponding to &#x27;items per page&#x27;. @type {string}*
 __disableableRows__ | `boolean` | *Whether we can disable some rows or not. @type {boolean}*
@@ -238,12 +280,15 @@ With a &#x60;{ items, totalCount }&#x60; datasource, the parent loads the page i
 __uniqueId__ | `string` | *Unique id to identify the custom element instance. @type {string}*
 __items__ | `(T & {selected?: boolean})[]` | *Displayed items. @type {(T &amp; {selected?: boolean})[]}*
 __totalCount__ | `number` | *The total count of items including not displayed one. @type {number}*
-__selectableItemCount__ | `number` | *Count of selectable items @type {number}*
+__selectableItemCount__ | `number` | *Count of selectable displayed items @type {number}*
+__pageSelectedCount__ | `number` | *Count of selected and selectable displayed items @type {number}*
+__totalSelectableCount__ | `number` | *Count of selectable items of an array datasource, every page included @type {number}*
 __allItemsDisplayed__ | `undefined` | *Are all items displayed?*
 __pageSize__ | `undefined` | *Effective &#x60;maxRows&#x60;, a number even when set as a plain attribute.*
 __pageCount__ | `undefined` | *Number of pages.*
 __pages__ | `undefined` | *Page numbers to display: first, last and current ±1, &#x60;undefined&#x60; standing for an ellipsis.*
 __countText__ | `undefined` | *Row count of the detail bar, with the range of the displayed rows when paginated (e.g. &#x60;11–20 sur 120 résultat(s).&#x60;).*
+__selectAllButtonText__ | `undefined` | *Text of the button selecting the rows of every page.*
 __notDisplayedWarningText__ | `undefined` | *Warning text regarding items not displayed.*
 ___container__ | `HTMLTemplateElement` | *Html container of the custom element. @type {HTMLTemplateElement}*
 ___tooltips__ | `Tooltip[]` | *Cells tooltips @type {Tooltip[]}*

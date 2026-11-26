@@ -76,6 +76,18 @@ export class SimpleTable {
   @bindable({ defaultBindingMode: bindingMode.toView })
   selectedText = 'sélectionné(s)';
 
+  /**
+   * Text of the button selecting the rows of every page, shown once the rows of the page are all selected. The
+   * `{count}` token is replaced by the number of selectable rows.
+   * @type {string}
+   */
+  @bindable({ defaultBindingMode: bindingMode.toView })
+  selectAllText = 'Sélectionner les {count} résultats';
+
+  /** Text of the button clearing a selection that goes beyond the displayed page. @type {string} */
+  @bindable({ defaultBindingMode: bindingMode.toView })
+  clearSelectionText = 'Effacer la sélection';
+
   /** Text corresponding to 'only first %s items displayed' warning. @type {string} */
   @bindable({ defaultBindingMode: bindingMode.toView })
   warningTemplateText = `Seuls les {maxRows} premiers résultats sont affichés.`;
@@ -109,7 +121,9 @@ export class SimpleTable {
   /** Displayed items. @type {(T & {selected?: boolean})[]} */ items = [];
   /** The total count of items including not displayed one. @type {number} */ totalCount = 0;
   /** Cells tooltips @type {Tooltip[]} */ _tooltips;
-  /** Count of selectable items @type {number} */ selectableItemCount = this.items.length;
+  /** Count of selectable displayed items @type {number} */ selectableItemCount = this.items.length;
+  /** Count of selected and selectable displayed items @type {number} */ pageSelectedCount = 0;
+  /** Count of selectable items of an array datasource, every page included @type {number} */ totalSelectableCount = 0;
   /** Sort applied to the whole array datasource when paginated @type {(a: T, b: T) => number} */ _sortComparer;
 
   /**
@@ -150,7 +164,9 @@ export class SimpleTable {
       const source = this._sortComparer ? [...this.datasource].sort(this._sortComparer) : this.datasource;
       const page = this.paginated ? this.page : 1;
       this.items = source.slice((page - 1) * this.pageSize, page * this.pageSize);
+      this.totalSelectableCount = this.datasource.filter(item => !this.isRowDisabled(item)).length;
       this.calculateSelectableItemCount();
+      this.synchronizeSelection();
       this.addSelectionTooltips();
       return;
     }
@@ -159,39 +175,28 @@ export class SimpleTable {
       // the datasource is a { items, totalCount } object
       this.totalCount = totalCount;
       this.items = items.slice(0, this.pageSize);
+      // the other pages are not loaded: their rows can't be selected at once
+      this.totalSelectableCount = 0;
       this.calculateSelectableItemCount();
+      this.synchronizeSelection();
       this.addSelectionTooltips();
     }
   }
 
   /**
-   * Calculate the number of selectable items.
+   * Is the row of the item disabled?
+   * @param {T} item item of the row
+   * @returns {boolean} true when the row can't be selected
+   */
+  isRowDisabled(item) {
+    return this.disableableRows && item[this.disablePropName] === true;
+  }
+
+  /**
+   * Calculate the number of selectable displayed items.
    */
   calculateSelectableItemCount() {
-    // If some rows are not disableable then EVERY item is selectable
-    if (!this.disableableRows) {
-      this.selectableItemCount = this.items.length;
-      return;
-    }
-
-    // eslint-disable-next-line unicorn/prevent-abbreviations
-    const propName = this.disablePropName;
-
-    const itemsWithProperty = this.items.filter(
-      item => Object.hasOwn(item, propName) && typeof item[propName] === 'boolean'
-    ).length;
-
-    // Still check if all the items has the property just in case
-    if (itemsWithProperty !== this.items.length) {
-      this.selectableItemCount = this.items.length;
-      return;
-    }
-
-    // From here - the disableableRows is true AND all the items have the boolean property
-    this.selectableItemCount = this.items.filter(
-      // @ts-ignore
-      item => !item[propName]
-    ).length;
+    this.selectableItemCount = this.items.filter(item => !this.isRowDisabled(item)).length;
   }
 
   /**
@@ -260,48 +265,69 @@ export class SimpleTable {
    * @param {T & {selected: boolean}} item item to select or unselect
    */
   toggleSelection(item) {
-    const selectable =
-      this.valueKey &&
-      this.selectionMode !== 'none' &&
-      !(this.disableableRows && item[this.disablePropName] === true);
-    if (selectable) {
-      const index = this.selectedItems.indexOf(item);
-      if (index === -1) {
-        // not selected => select
-        this.selectedItems = this.selectionMode === 'multiple' ? [...this.selectedItems, item] : [item];
-      } else {
-        // selected => unselect
-        this.selectedItems.splice(index, 1);
-        this.selectedItems = [...this.selectedItems];
-      }
-      this.synchronizeSelection();
-      this.triggerChangeEvent(this.selectedItems);
-      this.triggerBlurEvent(this.selectedItems);
+    if (!this.valueKey || this.selectionMode === 'none' || this.isRowDisabled(item)) return;
+    // by key: a page reloaded by the parent holds new objects
+    const key = item[this.valueKey];
+    const others = this.selectedItems.filter(selected => selected?.[this.valueKey] !== key);
+    if (others.length < this.selectedItems.length) {
+      this.selectedItems = others;
+    } else {
+      this.selectedItems = this.selectionMode === 'multiple' ? [...this.selectedItems, item] : [item];
     }
+    this.notifySelection();
   }
 
   /**
-   * Defines the logic triggered when the "select all" checkbox is changed.
+   * Defines the logic triggered when the "select all" checkbox is changed: selects the selectable rows of the displayed
+   * page, or unselects them when they are all selected, keeping the selection of the other pages.
    * @param {boolean} notify should we dispatch custom element events?
    * @returns {boolean} let event propagates
    */
   toggleAllSelection(notify = true) {
     if (this.selectionMode === 'none') return false;
-    const selectionCount = this.selectedItems.length;
-    // all checked => uncheck all otherwise check all
-    this.selectedItems =
-      selectionCount === this.selectableItemCount || this.selectionMode === 'single' ? [] : [...this.items];
-
-    if (this.disableableRows) {
-      this.selectedItems = this.selectedItems.filter(item => !item[this.disablePropName]);
+    if (this.selectionMode === 'single') {
+      this.selectedItems = [];
+    } else {
+      const page = this.items.filter(item => !this.isRowDisabled(item));
+      const pageKeys = new Set(page.map(item => item[this.valueKey]));
+      const others = this.selectedItems.filter(item => !pageKeys.has(item?.[this.valueKey]));
+      this.selectedItems =
+        this.pageSelectedCount === this.selectableItemCount ? others : [...others, ...page];
     }
-
-    this.synchronizeSelection();
     if (notify) {
-      this.triggerChangeEvent(this.selectedItems);
-      this.triggerBlurEvent(this.selectedItems);
+      this.notifySelection();
+    } else {
+      this.synchronizeSelection();
     }
     return true;
+  }
+
+  /**
+   * Selects the selectable rows of every page of an array datasource. The focus goes to the button clearing the
+   * selection, which replaces the clicked one.
+   */
+  selectAllResults() {
+    this.selectedItems = /** @type {T[]} */ (this.datasource).filter(item => !this.isRowDisabled(item));
+    this.notifySelection();
+    this._taskqueue.queueTask(() => this._container.querySelector('.clear-selection')?.focus());
+  }
+
+  /**
+   * Clears the selection of every page. The focus goes to the "select all" checkbox, the clicked button being removed.
+   */
+  clearSelection() {
+    this.selectedItems = [];
+    this.notifySelection();
+    this._taskqueue.queueTask(() => this._container.querySelector('th.selection input')?.focus());
+  }
+
+  /**
+   * Synchronizes the displayed rows with the selection, and emits the `change` and `blur` events.
+   */
+  notifySelection() {
+    this.synchronizeSelection();
+    this.triggerChangeEvent(this.selectedItems);
+    this.triggerBlurEvent(this.selectedItems);
   }
 
   /**
@@ -328,10 +354,13 @@ export class SimpleTable {
    * Synchronizes selection from the `values` attribute.
    */
   synchronizeSelection() {
-    const selectedKeys = new Set(this.selectedItems.filter(v => !isNil(v)).map(v => v[this.valueKey]));
+    const selectedKeys = new Set(
+      (this.selectedItems ?? []).filter(v => !isNil(v)).map(v => v[this.valueKey])
+    );
     for (const item of this.items) {
       item.selected = selectedKeys.has(item[this.valueKey]);
     }
+    this.pageSelectedCount = this.items.filter(item => item.selected && !this.isRowDisabled(item)).length;
   }
 
   /**
@@ -461,6 +490,15 @@ export class SimpleTable {
     if (!this.paginated) return `${this.totalCount} ${this.resultText}`;
     const first = (this.page - 1) * this.pageSize + 1;
     return `${first}–${first + this.items.length - 1} sur ${this.totalCount} ${this.resultText}`;
+  }
+
+  /**
+   * Text of the button selecting the rows of every page.
+   * @returns {string} button text
+   */
+  @computedFrom('totalSelectableCount', 'selectAllText')
+  get selectAllButtonText() {
+    return this.selectAllText.replace('{count}', this.totalSelectableCount.toString());
   }
 
   /**

@@ -289,6 +289,8 @@ They need no code change, unless the application styles the same elements.
   sort icon of the sorted column is primary blue instead of the brand red, and the one of the other sortable columns is
   a neutral grey instead of the nearly invisible `text-light`; the checkboxes are aligned with the text of the cells;
   the selected rows are tinted in primary blue (`table-primary`) instead of the brand red (`table-secondary`).
+  With pagination, "Tout sélectionner" selects or unselects the rows of the page and keeps the selection of the other
+  pages (it used to replace it), and the detail bar offers to select the rows of every page.
 - **`lock`**: while locked, the rest of the page is `inert` (out of reach of the keyboard too) and the screen readers
   announce "Veuillez patienter."; the focus goes back to the element that had it on unlock.
 - **`als-field`**: with `required="true"`, the label ends with a visually hidden "(obligatoire)", so that the screen
