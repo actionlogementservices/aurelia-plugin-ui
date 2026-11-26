@@ -65,12 +65,42 @@ describe('simple-table pagination', () => {
     expect(table.pages).toEqual([1, 2, undefined, 10]);
   });
 
-  test('sorting a paginated array sorts the whole datasource', () => {
+  test('sorting a paginated array sorts the whole datasource, from the first page', () => {
     const table = createTable();
+    const column = { cellKey: 'id', sortable: true, sortType: 'numeric' };
+    table.columns = [column];
     table.page = 2;
-    table.sortDisplayedItems({ cellKey: 'id', sortable: true, sortType: 'numeric', sortOrder: 'asc' });
+    table.sortDisplayedItems(column);
+    expect(table.sort).toEqual({ key: 'id', order: 'asc' });
+    expect(column.sortOrder).toBe('asc');
+    table.sortDisplayedItems(column);
+    expect(table.sort).toEqual({ key: 'id', order: 'desc' });
     expect(table.page).toBe(1);
     expect(table.items[0].id).toBe(24);
+  });
+
+  test('sorting an array without pagination sorts the rows beyond the displayed ones too', () => {
+    const table = new SimpleTable(document.createElement('div'), taskQueue);
+    const column = { cellKey: 'id', sortable: true, sortType: 'numeric' };
+    Object.assign(table, { columns: [column], maxRows: 10, datasource: items });
+    table.setDisplayedItems();
+    table.sortDisplayedItems(column);
+    table.sortDisplayedItems(column);
+    expect(table.items.map(item => item.id)).toEqual([24, 23, 22, 21, 20, 19, 18, 17, 16, 15]);
+  });
+
+  test('a { items, totalCount } datasource: a sort restarts from the first page, reloaded by the parent', () => {
+    const table = createTable();
+    const column = { cellKey: 'id', sortable: true, sortType: 'numeric' };
+    table.columns = [column];
+    table.datasource = { items: items.slice(10, 20), totalCount: 25 };
+    table.page = 2;
+    table.setDisplayedItems();
+    table.sortDisplayedItems(column);
+    table.sortDisplayedItems(column);
+    expect(table.page).toBe(1);
+    // the displayed page is sorted in memory until the parent reloads it
+    expect(table.items[0].id).toBe(19);
   });
 
   test('changePageSize() resizes pages and restarts from the first one', () => {
@@ -125,7 +155,9 @@ describe('simple-table selection', () => {
     table.toggleItemSelection(disabled, click());
     table.toggleItemSelection(first, click('button'));
     expect(table.selectedItems).toEqual([first, last]);
-    expect(table.items.map(item => !!item.selected)).toEqual([true, false, true]);
+    expect(table.items.map(item => table.selectedKeys.has(item.id))).toEqual([true, false, true]);
+    // the data of the application is left untouched
+    expect(table.items.some(item => Object.hasOwn(item, 'selected'))).toBe(false);
     table.toggleItemSelection(first, click());
     expect(table.selectedItems).toEqual([last]);
   });
@@ -170,7 +202,8 @@ describe('simple-table selection', () => {
     // the parent loads the page again: new objects
     table.datasource = { items: ds(3), totalCount: 30 };
     table.setDisplayedItems();
-    expect(table.items[1].selected).toBe(true);
+    expect(table.selectedKeys.has(table.items[1].id)).toBe(true);
+    expect(table.pageSelectedCount).toBe(1);
     table.toggleSelection(table.items[1]);
     expect(table.selectedItems).toEqual([]);
   });
@@ -346,6 +379,34 @@ describe('simple-table accessibility', () => {
       button.textContent.trim()
     );
     expect(texts).toContain('Sélectionner les 24 résultats sélectionnables');
+  });
+
+  test('the sort-order of a column is the initial sort, and the sort bound by the parent sorts the rows', async () => {
+    const context = { ds: ds(3), sort: undefined };
+    component = StageComponent.withResources([
+      PLATFORM.moduleName('elements/simple-table/simple-table'),
+      PLATFORM.moduleName('elements/simple-table/column')
+    ])
+      .inView(
+        '<simple-table datasource.bind="ds" sort.bind="sort"><column header="Id" cell-key="id" sortable="true" sort-type="numeric" sort-order="desc"></column></simple-table>'
+      )
+      .boundTo(context);
+    await component.create(bootstrap);
+    await flush();
+    const ids = () =>
+      [...document.querySelectorAll('simple-table tbody td')].map(td => td.textContent.trim());
+    expect(context.sort).toEqual({ key: 'id', order: 'desc' });
+    expect(ids()).toEqual(['2', '1', '0']);
+    expect(document.querySelector('simple-table th[scope="col"]').getAttribute('aria-sort')).toBe(
+      'descending'
+    );
+
+    context.sort = { key: 'id', order: 'asc' };
+    await flush();
+    expect(ids()).toEqual(['0', '1', '2']);
+    expect(document.querySelector('simple-table th[scope="col"]').getAttribute('aria-sort')).toBe(
+      'ascending'
+    );
   });
 
   test('tells the sort order of the sorted column to the screen readers', async () => {

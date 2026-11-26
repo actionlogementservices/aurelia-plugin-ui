@@ -597,6 +597,7 @@
                   metadata.bind="{ currentYear: 2026 }"
                   datasource.bind="itemsList"
                   selected-items.bind="selectedItems"
+                  sort.bind="tableSort"
                   selection-mode="multiple"
                   disableable-rows="true"
                   paginated="true">
@@ -611,7 +612,7 @@
                       </span>
                     </small>
                   </column>
-                  <column header="Name" cell-key="name" sortable="true">${item.name}</column>
+                  <column header="Name" cell-key="name" sortable="true" sort-order="asc">${item.name}</column>
                   <column cell-key="headcount" sortable="true">
                     <template replace-part="header">
                       ${metadata.currentYear} Headcount
@@ -657,6 +658,7 @@
                     </button>
                   </column>
                 </simple-table>
+                <p class="mt-2">SORT = ${tableSort.key} ${tableSort.order}</p>
               </div>
             </div>
           </div>

@@ -88,13 +88,13 @@
         <tr
           repeat.for="item of items"
           click.trigger="toggleItemSelection(item, $event)"
-          class="align-middle ${item.selected ? 'table-primary' : ''} ${selectionMode != 'none' ? 'selection' : ''}">
+          class="align-middle ${selectedKeys.has(item[valueKey]) ? 'table-primary' : ''} ${selectionMode != 'none' ? 'selection' : ''}">
           <!-- optional tick cell -->
           <td if.bind="selectionMode != 'none'" class="py-0 align-middle selection">
             <input
               type="checkbox"
               class="form-check-input d-block m-0"
-              checked.one-way="item.selected"
+              checked.one-way="selectedKeys.has(item[valueKey])"
               disabled.bind="disabled || (disableableRows && item[disablePropName] === true)"
               aria-label.bind="selectRowText.replace('{row}', $index + 1)"
               change.trigger="$event.stopPropagation() || toggleSelection(item)" />

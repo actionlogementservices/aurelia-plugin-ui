@@ -25,6 +25,9 @@ export enum EnvironmentTypeEnum {
   prod
 }
 
+/** Sort of a simple-table: the `cell-key` of the sorted column and the order. */
+export type TableSort = { key: string; order: 'asc' | 'desc' };
+
 export type EnvironmentType = 'dev' | 'recette' | 'preprod' | 'prod';
 
 export type EnvironmentDescriptor = {

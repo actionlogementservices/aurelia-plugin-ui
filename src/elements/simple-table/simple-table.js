@@ -5,6 +5,7 @@ import { generateUniqueId, isNil } from '../../core/functions';
 import { sortPerKey } from '../../core/sorting';
 
 /** @typedef {import('./column').Column} Column */
+/** @typedef {import('types').TableSort} TableSort */
 
 /**
  * Implements the **`simple-table` custom element** that provides a simple grid with customizable columns.
@@ -144,15 +145,25 @@ export class SimpleTable {
   @bindable({ defaultBindingMode: bindingMode.twoWay })
   page = 1;
 
+  /**
+   * Sort of the rows: the `cell-key` of the sorted column and the order (two-way), initialized from the `sort-order`
+   * of a column. An array datasource is sorted as a whole; with a `{ items, totalCount }` datasource, the parent
+   * reloads the page sorted when it changes (the displayed page being sorted in memory meanwhile).
+   * @type {TableSort | undefined}
+   */
+  @bindable({ defaultBindingMode: bindingMode.twoWay })
+  sort;
+
   /** Unique id to identify the custom element instance. @type {string} */ uniqueId = generateUniqueId();
   /** Html container of the custom element. @type {HTMLTemplateElement} */ _container;
-  /** Displayed items. @type {(T & {selected?: boolean})[]} */ items = [];
+  /** Displayed items. @type {T[]} */ items = [];
   /** The total count of items including not displayed one. @type {number} */ totalCount = 0;
   /** Cells tooltips @type {Tooltip[]} */ _tooltips;
   /** Count of selectable displayed items @type {number} */ selectableItemCount = this.items.length;
+  /** Keys (`value-key`) of the selected items, the data of the application being left untouched @type {Set<any>} */
+  selectedKeys = new Set();
   /** Count of selected and selectable displayed items @type {number} */ pageSelectedCount = 0;
   /** Count of selectable items of an array datasource, every page included @type {number} */ totalSelectableCount = 0;
-  /** Sort applied to the whole array datasource when paginated @type {(a: T, b: T) => number} */ _sortComparer;
 
   /**
    * Creates an instance of the `simple-table` custom element.
@@ -168,7 +179,17 @@ export class SimpleTable {
    * Defines the logic triggered when the custom element is added to the DOM.
    */
   attached() {
-    this.setDisplayedItems();
+    this.columnsChanged();
+  }
+
+  /**
+   * Defines the logic triggered when the columns are known: the `sort-order` of a column is the initial sort, unless
+   * the parent binds one.
+   */
+  columnsChanged() {
+    const sorted = this.columns.find(column => column.sortable && column.sortOrder);
+    if (!this.sort && sorted) this.sort = { key: sorted.cellKey, order: sorted.sortOrder };
+    this.sortChanged();
   }
 
   /**
@@ -189,7 +210,8 @@ export class SimpleTable {
     if (Array.isArray(this.datasource)) {
       // the datasource is a simple array of items
       this.totalCount = this.datasource.length;
-      const source = this._sortComparer ? [...this.datasource].sort(this._sortComparer) : this.datasource;
+      const comparer = this.sortComparer();
+      const source = comparer ? [...this.datasource].sort(comparer) : this.datasource;
       const page = this.paginated ? this.page : 1;
       this.items = source.slice((page - 1) * this.pageSize, page * this.pageSize);
       this.totalSelectableCount = this.datasource.filter(item => !this.isRowDisabled(item)).length;
@@ -203,6 +225,9 @@ export class SimpleTable {
       // the datasource is a { items, totalCount } object
       this.totalCount = totalCount;
       this.items = items.slice(0, this.pageSize);
+      // the parent sorts the pages it loads: the page is only sorted in memory while it is reloaded
+      const comparer = this.sortComparer();
+      if (comparer) this.items.sort(comparer);
       // the other pages are not loaded: their rows can't be selected at once
       this.totalSelectableCount = 0;
       this.calculateSelectableItemCount();
@@ -228,31 +253,38 @@ export class SimpleTable {
   }
 
   /**
-   * Sorts the displayed items by the specified column.
+   * Comparer of the current sort, using the `sort-type` of the sorted column.
+   * @returns {((a: T, b: T) => number) | undefined} comparer, undefined when the rows are not sorted
+   */
+  sortComparer() {
+    if (!this.sort?.key) return;
+    const column = this.columns.find(c => c.cellKey === this.sort.key);
+    return sortPerKey(this.sort.order, column?.sortType ?? 'text', this.sort.key);
+  }
+
+  /**
+   * Sorts the rows by the specified column, ascending first, then descending, from the first page.
    * @param {Column} columnToSort the column that will define the order of the items
    */
   sortDisplayedItems(columnToSort) {
     if (!columnToSort.cellKey || !columnToSort.sortable) return;
-    // remove sort order from other columns
-    for (const column of this.columns.filter(c => c.cellKey && c.sortable && c !== columnToSort)) {
-      column.sortOrder = undefined;
+    const ascending = this.sort?.key !== columnToSort.cellKey || this.sort.order === 'desc';
+    this.sort = { key: columnToSort.cellKey, order: ascending ? 'asc' : 'desc' };
+    // the first page of the new order (loaded by the parent with a { items, totalCount } datasource)
+    this.goToPage(1);
+    // at once, aurelia calling sortChanged asynchronously
+    this.sortChanged();
+  }
+
+  /**
+   * Defines the logic triggered when `sort` attribute is databound: shows the sort on the column headers and sorts the
+   * rows.
+   */
+  sortChanged() {
+    for (const column of this.columns) {
+      column.sortOrder = column.cellKey === this.sort?.key ? this.sort.order : undefined;
     }
-    // apply sort order to selected column.
-    const sortOrder = isNil(columnToSort.sortOrder) || columnToSort.sortOrder === 'desc' ? 'asc' : 'desc';
-    columnToSort.sortOrder = sortOrder;
-    const comparer = sortPerKey(sortOrder, columnToSort.sortType, columnToSort.cellKey);
-    if (this.paginated && Array.isArray(this.datasource)) {
-      // sort the whole datasource, not only the displayed page
-      this._sortComparer = comparer;
-      this.goToPage(1);
-      this.setDisplayedItems();
-      return;
-    }
-    // A paginated { items, totalCount } datasource is only sorted per page, emit a sort event if server sort is needed
-    this.removeSelectionTooltips();
-    // order items
-    this.items.sort(comparer);
-    this.addSelectionTooltips();
+    this.setDisplayedItems();
   }
 
   /**
@@ -276,7 +308,7 @@ export class SimpleTable {
   /**
    * Toggles the selection of the clicked row, unless the click targets a control of a cell (link, button, input...),
    * the row checkbox included.
-   * @param {T & {selected: boolean}} item item of the clicked row
+   * @param {T} item item of the clicked row
    * @param {Event} event click event
    * @returns {boolean} always true: aurelia prevents the default action (links, inputs in cells) otherwise
    */
@@ -290,7 +322,7 @@ export class SimpleTable {
 
   /**
    * Toggles the selection of an item, unless the selection is off or the row is disabled.
-   * @param {T & {selected: boolean}} item item to select or unselect
+   * @param {T} item item to select or unselect
    */
   toggleSelection(item) {
     if (!this.valueKey || this.selectionMode === 'none' || this.isRowDisabled(item)) return;
@@ -383,16 +415,13 @@ export class SimpleTable {
   }
 
   /**
-   * Synchronizes selection from the `values` attribute.
+   * Synchronizes the keys of the selected items, and the selection count of the page, with `selected-items`.
    */
   synchronizeSelection() {
-    const selectedKeys = new Set(
-      (this.selectedItems ?? []).filter(v => !isNil(v)).map(v => v[this.valueKey])
-    );
-    for (const item of this.items) {
-      item.selected = selectedKeys.has(item[this.valueKey]);
-    }
-    this.pageSelectedCount = this.items.filter(item => item.selected && !this.isRowDisabled(item)).length;
+    this.selectedKeys = new Set((this.selectedItems ?? []).filter(v => !isNil(v)).map(v => v[this.valueKey]));
+    this.pageSelectedCount = this.items.filter(
+      item => this.selectedKeys.has(item[this.valueKey]) && !this.isRowDisabled(item)
+    ).length;
   }
 
   /**

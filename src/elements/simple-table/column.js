@@ -62,7 +62,10 @@ export class Column {
   @bindable({ defaultBindingMode: bindingMode.toView })
   sortable = false;
 
-  /** Sorting order of the column. @type {undefined | 'asc' | 'desc'} */
+  /**
+   * Sorting order of the column: the initial sort of the table when set, then the `sort` of the table.
+   * @type {undefined | 'asc' | 'desc'}
+   */
   @bindable({ defaultBindingMode: bindingMode.toView })
   sortOrder;
 
@@ -86,16 +89,6 @@ export class Column {
     this.cellTemplate = elementInstruction.template;
     this.headerTemplate = elementInstruction.headerTemplate;
   }
-
-  /**
-   * Defines the logic triggered when the custom element is added to the DOM.
-   */
-  attached() {}
-
-  /**
-   * Defines the logic triggered when the custom element is removed from the DOM.
-   */
-  detached() {}
 
   /**
    * Sort order of the column for the screen readers (`aria-sort` of its header), none when the column is not sorted.

@@ -34,6 +34,15 @@ Defines the logic triggered when the custom element is added to the DOM.
 
 ---
 
+### `columnsChanged()`
+
+![modifier: public](images/badges/modifier-public.png)
+
+Defines the logic triggered when the columns are known: the &#x60;sort-order&#x60; of a column is the initial sort, unless
+the parent binds one.
+
+---
+
 ### `detached()`
 
 ![modifier: public](images/badges/modifier-public.png)
@@ -71,15 +80,36 @@ Calculate the number of selectable displayed items.
 
 ---
 
+### `sortComparer() ► `
+
+![modifier: public](images/badges/modifier-public.png)
+
+Comparer of the current sort, using the &#x60;sort-type&#x60; of the sorted column.
+
+Parameters | Type | Description
+--- | --- | ---
+__*return*__ | `undefined` | **
+
+---
+
 ### `sortDisplayedItems(columnToSort)`
 
 ![modifier: public](images/badges/modifier-public.png)
 
-Sorts the displayed items by the specified column.
+Sorts the rows by the specified column, ascending first, then descending, from the first page.
 
 Parameters | Type | Description
 --- | --- | ---
 __columnToSort__ | [Column](src-elements-simple-table_column.md) | *the column that will define the order of the items*
+
+---
+
+### `sortChanged()`
+
+![modifier: public](images/badges/modifier-public.png)
+
+Defines the logic triggered when &#x60;sort&#x60; attribute is databound: shows the sort on the column headers and sorts the
+rows.
 
 ---
 
@@ -116,7 +146,7 @@ the row checkbox included.
 
 Parameters | Type | Description
 --- | --- | ---
-__item__ | `T & {selected: boolean}` | *item of the clicked row*
+__item__ | `T` | *item of the clicked row*
 __event__ | `Event` | *click event*
 __*return*__ | `boolean` | *always true: aurelia prevents the default action (links, inputs in cells) otherwise*
 
@@ -130,7 +160,7 @@ Toggles the selection of an item, unless the selection is off or the row is disa
 
 Parameters | Type | Description
 --- | --- | ---
-__item__ | `T & {selected: boolean}` | *item to select or unselect*
+__item__ | `T` | *item to select or unselect*
 
 ---
 
@@ -203,7 +233,7 @@ __values__ | `Array.<T>` | *selected values*
 
 ![modifier: public](images/badges/modifier-public.png)
 
-Synchronizes selection from the &#x60;values&#x60; attribute.
+Synchronizes the keys of the selected items, and the selection count of the page, with &#x60;selected-items&#x60;.
 
 ---
 
@@ -283,10 +313,14 @@ __disablePropName__ | `string` | *Property name to check to disable a row. @type
 __paginated__ | `boolean` | *Enable/Disable pagination, &#x60;maxRows&#x60; being the page size. @type {boolean}*
 __page__ | `number` | *Current page (1-based).
 With a &#x60;{ items, totalCount }&#x60; datasource, the parent loads the page itself when it changes.*
+__sort__ | `TableSort` | *Sort of the rows: the &#x60;cell-key&#x60; of the sorted column and the order (two-way), initialized from the &#x60;sort-order&#x60;
+of a column. An array datasource is sorted as a whole; with a &#x60;{ items, totalCount }&#x60; datasource, the parent
+reloads the page sorted when it changes (the displayed page being sorted in memory meanwhile).*
 __uniqueId__ | `string` | *Unique id to identify the custom element instance. @type {string}*
-__items__ | `(T & {selected?: boolean})[]` | *Displayed items. @type {(T &amp; {selected?: boolean})[]}*
+__items__ | `T[]` | *Displayed items. @type {T[]}*
 __totalCount__ | `number` | *The total count of items including not displayed one. @type {number}*
 __selectableItemCount__ | `number` | *Count of selectable displayed items @type {number}*
+__selectedKeys__ | `Set<any>` | *Keys (&#x60;value-key&#x60;) of the selected items, the data of the application being left untouched @type {Set&lt;any&gt;}*
 __pageSelectedCount__ | `number` | *Count of selected and selectable displayed items @type {number}*
 __totalSelectableCount__ | `number` | *Count of selectable items of an array datasource, every page included @type {number}*
 __allItemsDisplayed__ | `undefined` | *Are all items displayed?*
@@ -300,4 +334,3 @@ __selectAllButtonText__ | `undefined` | *Text of the button selecting the rows o
 __notDisplayedWarningText__ | `undefined` | *Warning text regarding items not displayed.*
 ___container__ | `HTMLTemplateElement` | *Html container of the custom element. @type {HTMLTemplateElement}*
 ___tooltips__ | `Tooltip[]` | *Cells tooltips @type {Tooltip[]}*
-___sortComparer__ | `(a: T, b: T) => number` | *Sort applied to the whole array datasource when paginated @type {(a: T, b: T) &#x3D;&gt; number}*

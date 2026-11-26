@@ -170,14 +170,32 @@ Set `paginated="true"`: a page size selector (`10`, `20`, `50` or `100`) is disp
 
 - With an array `datasource`, pagination and sorting are done in memory on the whole array.
 - With a `{ items, totalCount }` `datasource` (`pageResult` below), the parent loads the requested page itself: bind
-  `page` and `max-rows` to viewmodel properties and reload on their change. Sorting then only applies to the displayed
-  page.
+  `page`, `max-rows` and `sort` to viewmodel properties and reload on their change. A sort chosen by the user restarts
+  from the first page; the displayed page is sorted in memory until the parent reloads it.
 
 ```html
-<simple-table datasource.bind="pageResult" paginated="true" page.bind="page" max-rows.bind="pageSize">
+<simple-table
+  datasource.bind="pageResult"
+  paginated="true"
+  page.bind="page"
+  max-rows.bind="pageSize"
+  sort.bind="sort">
   ...
 </simple-table>
 ```
+
+```javascript
+// sort: { key: 'name', order: 'asc' }, key being the cell-key of the sorted column
+async load() {
+  this.pageResult = await this.api.search({ page: this.page, size: this.pageSize, sort: this.sort });
+}
+```
+
+### Sorting
+
+A click on the header of a `sortable` column sorts the rows by its `cell-key`, ascending then descending. An array
+`datasource` is sorted as a whole, beyond the displayed rows and pages. The sort is the two-way `sort` attribute
+(`{ key, order }`), initialized from the `sort-order` of a column.
 
 ### Tooltips
 
@@ -198,7 +216,8 @@ Set `paginated="true"`: a page size selector (`10`, `20`, `50` or `100`) is disp
 | `datasource` | Items to display | Array of objects, or `{ items, totalCount }` when paginated by the parent | |
 | `value-key` | Property of the item used to differentiate them | Any string representing a property present on the item | `name` |
 | `selection-mode` | Selection mode | `none`, `single` or `multiple` | `none` |
-| `selected-items` | Selected items | Array of objects | `[]` |
+| `selected-items` | Selected items, identified by `value-key` (the items themselves are not modified) | Array of objects | `[]` |
+| `sort` | Sort of the rows (two-way): the `cell-key` of the sorted column and the order | `{ key, order }`, `order` being `asc` or `desc` | the `sort-order` of a column |
 | `disabled` | Disables the user interaction: selection, sorting and page size | `true` or `false` | `false` |
 | `disableable-rows` | Allows disabling rows individually | `true` or `false` | `false` |
 | `disable-prop-name` | Property of the item telling that its row is disabled | Any string | `disabled` |
@@ -227,7 +246,7 @@ Set `paginated="true"`: a page size selector (`10`, `20`, `50` or `100`) is disp
 | `header` | Header of the column. Use `<template replace-part="header">` for an HTML header | Any string | |
 | `cell-key` | Property of the item displayed in the cell, and used for sorting | Any string representing a property present on the item | |
 | `sortable` | Is the column sortable | `true` or `false` | `false` |
-| `sort-order` | Sorting order of the column | `asc` or `desc` | |
+| `sort-order` | Initial sorting order of the table by this column, then reflects the `sort` of the table | `asc` or `desc` | |
 | `sort-type` | Sorting type | `text` or `numeric` | `text` |
 | `width` | CSS width of the column | Any CSS width | `auto` |
 

@@ -44,24 +44,6 @@ __targetInstruction__ | `TargetInstruction` | *instruction for how a target elem
 
 ---
 
-## Methods
-
-### `attached()`
-
-![modifier: public](images/badges/modifier-public.png)
-
-Defines the logic triggered when the custom element is added to the DOM.
-
----
-
-### `detached()`
-
-![modifier: public](images/badges/modifier-public.png)
-
-Defines the logic triggered when the custom element is removed from the DOM.
-
----
-
 ## Members
 
 Name | Type | Description
@@ -69,7 +51,7 @@ Name | Type | Description
 __header__ | `string` | *Header of the column. Ignored if a &#x60;&lt;template replace-part&#x3D;&quot;header&quot;&gt;&#x60; is provided. @type {string}*
 __cellKey__ | `string` | *Property key used on the row object to display as cell content. @type {string}*
 __sortable__ | `boolean` | *Is the column sortable. @type {boolean}*
-__sortOrder__ | `undefined \| 'asc' \| 'desc'` | *Sorting order of the column. @type {undefined | &#x27;asc&#x27; | &#x27;desc&#x27;}*
+__sortOrder__ | `undefined` | *Sorting order of the column: the initial sort of the table when set, then the &#x60;sort&#x60; of the table.*
 __sortType__ | `'text' \| 'numeric'` | *Sorting type of the column. @type {&#x27;text&#x27; | &#x27;numeric&#x27;}*
 __width__ | `string` | *CSS width of the column. @type {string}*
 __cellTemplate__ | `InlineViewStrategy` | *Cell template. @type {InlineViewStrategy}*
