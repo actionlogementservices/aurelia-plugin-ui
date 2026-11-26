@@ -94,7 +94,7 @@ export class SimpleTable {
 
   /** Text corresponding to 'items per page'. @type {string} */
   @bindable({ defaultBindingMode: bindingMode.toView })
-  pageSizeText = 'éléments par page';
+  pageSizeText = 'Éléments par page';
 
   /** Whether we can disable some rows or not. @type {boolean} */
   @bindable({ defaultBindingMode: bindingMode.oneTime })

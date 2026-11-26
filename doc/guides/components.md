@@ -205,7 +205,7 @@ Set `paginated="true"`: a page size selector (`10`, `20`, `50` or `100`) is disp
 | `max-rows` | Maximal number of displayed rows, the page size when paginated (two-way binding) | Any number > 0 | `50`, `10` when paginated |
 | `paginated` | Enables the pagination | `true` or `false` | `false` |
 | `page` | Current page, 1-based (two-way binding) | Any number > 0 | `1` |
-| `page-size-text` | Text displayed next to the page size selector | Any string | `éléments par page` |
+| `page-size-text` | Label of the page size selector | Any string | `Éléments par page` |
 | `max-height` | CSS max height of the table | Any CSS height | `500px` |
 | `fixed-row-height` | Fixed row height. When `false`, the text wraps and the rows may have different heights | `true` or `false` | `true` |
 | `no-row-count-header` | Hides the detail bar above the table: row count, selection count and warning | `true` or `false` | `false` |

@@ -29,6 +29,25 @@ simple-table table thead th button {
   padding: 0;
 }
 
+/* the pagination of the DSFR: no borders, the current page filled with the primary color; the borders stay
+   transparent, so that the page links keep the height of the page size selector */
+simple-table .pagination {
+  --bs-pagination-border-color: transparent;
+  --bs-pagination-hover-border-color: transparent;
+  --bs-pagination-disabled-border-color: transparent;
+  --bs-pagination-bg: transparent;
+  --bs-pagination-disabled-bg: transparent;
+  --bs-pagination-border-radius: var(--bs-border-radius);
+  gap: 0.25rem;
+}
+
+simple-table .pagination .page-item .page-link {
+  min-width: 2rem;
+  margin-left: 0;
+  text-align: center;
+  border-radius: var(--bs-border-radius);
+}
+
 simple-table table tbody tr.selection {
   cursor: pointer;
 }

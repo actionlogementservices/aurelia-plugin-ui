@@ -197,6 +197,8 @@ describe('simple-table page size selector', () => {
   test('is displayed with pagination, 10 being the default', async () => {
     component = await stage('datasource.bind="ds" paginated="true"', { ds: ds(25) });
     expect([...select().options].map(option => option.value)).toEqual(['10', '20', '50', '100']);
+    // labelled by the label wrapping it, the text before the select
+    expect(select().closest('label').firstElementChild.textContent).toBe('Éléments par page');
     expect(select().value).toBe('10');
     expect(rowCount()).toBe(10);
     expect(document.querySelector('simple-table nav')).not.toBeNull();

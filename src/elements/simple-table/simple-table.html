@@ -112,9 +112,10 @@
       </tbody>
     </table>
   </div>
-  <!-- pagination -->
-  <div if.bind="paginated" class="d-flex align-items-center gap-3 mt-2">
+  <!-- pagination, aligned with the content of the cells like the detail bar -->
+  <div if.bind="paginated" class="d-flex align-items-center gap-3 mt-2 px-2">
     <label class="d-flex align-items-center gap-2 small">
+      <span class="text-body-secondary">${pageSizeText}</span>
       <select
         class="form-select form-select-sm w-auto"
         disabled.bind="disabled"
@@ -123,7 +124,6 @@
           ${size}
         </option>
       </select>
-      ${pageSizeText}
     </label>
     <nav if.bind="pageCount > 1" aria-label="Pagination" class="ms-auto">
       <ul class="pagination pagination-sm justify-content-end mb-0">
