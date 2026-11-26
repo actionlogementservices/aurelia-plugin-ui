@@ -74,4 +74,4 @@ __sortType__ | `'text' \| 'numeric'` | *Sorting type of the column. @type {&#x27
 __width__ | `string` | *CSS width of the column. @type {string}*
 __cellTemplate__ | `InlineViewStrategy` | *Cell template. @type {InlineViewStrategy}*
 __headerTemplate__ | `InlineViewStrategy` | *Header template, allowing arbitrary html content in the column header. @type {InlineViewStrategy}*
-__sortIcon__ | `undefined` | *Icon representing the sort order.*
+__ariaSort__ | `'ascending'` | *Sort order of the column for the screen readers (&#x60;aria-sort&#x60; of its header), none when the column is not sorted.*

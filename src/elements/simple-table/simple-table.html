@@ -2,37 +2,43 @@
   <require from="./simple-table.css"></require>
   <!-- where columns definition will be projected -->
   <slot></slot>
+  <!-- detail bar, aligned with the content of the cells (padding of the bootstrap cells) -->
+  <div if.bind="!noRowCountHeader" class="d-flex flex-wrap align-items-baseline column-gap-3 px-2 mb-2">
+    <!-- announced by the screen readers when the count changes (filter, page) -->
+    <span role="status"><span if.bind="items.length > 0" class="fw-semibold">${countText}</span></span>
+    <span if.bind="selectedItems.length > 0" class="text-body-secondary">
+      ${selectedItems.length} ${selectedText}
+    </span>
+    <span if.bind="items.length > 0 && !allItemsDisplayed" class="text-warning-emphasis">
+      <i class="bi bi-exclamation-triangle-fill me-1" aria-hidden="true"></i>
+      ${notDisplayedWarningText}
+    </span>
+  </div>
   <div class="table-wrapper" css="max-height: ${maxHeight}">
     <table id="grid-${uniqueId}" class="table table-hover ${disabled ? 'table-disabled' : ''}">
       <thead>
-        <!-- results count -->
-        <tr if.bind="items.length > 0 && !noRowCountHeader" class="table-info">
-          <th colspan="100%">
-            <div>
-              <small>${totalCount} ${resultText}</small>
-              <span if.bind="!allItemsDisplayed" class="ms-3">
-                <i class="bi bi-exclamation-square text-secondary align-middle"></i>
-                <small class="fw-lighter fst-italic">${notDisplayedWarningText}</small>
-              </span>
-            </div>
-          </th>
-        </tr>
         <!-- column headers -->
         <tr>
           <!-- optional tick header -->
-          <th if.bind="selectionMode != 'none'" class="selection">
-            <button
-              type="button"
+          <th if.bind="selectionMode != 'none'" class="selection align-middle">
+            <!-- mixed when a part of the rows is selected; the native change of the checkboxes stays inside the table,
+                 which emits its own change event with the selection -->
+            <input
               if.bind="selectionMode == 'multiple'"
-              disabled.bind="disabled"
-              click.trigger="toggleAllSelection()"
-              aria-label="Tout sélectionner">
-              <i
-                class="bi bi-check-all fs-5 ${items.length == selectedItems.length ? 'text-secondary' : 'text-light'}"
-                aria-hidden="true"></i>
-            </button>
+              type="checkbox"
+              class="form-check-input d-block m-0"
+              checked.one-way="selectableItemCount > 0 && selectedItems.length === selectableItemCount"
+              indeterminate.one-way="selectedItems.length > 0 && selectedItems.length < selectableItemCount"
+              disabled.bind="disabled || selectableItemCount === 0"
+              aria-label="Tout sélectionner"
+              change.trigger="$event.stopPropagation() || toggleAllSelection()" />
           </th>
-          <th repeat.for="column of columns" css="width: ${column.width}" scope="col" class="align-middle">
+          <th
+            repeat.for="column of columns"
+            css="width: ${column.width}"
+            scope="col"
+            aria-sort.bind="column.sortable ? column.ariaSort : undefined"
+            class="align-middle">
             <button
               type="button"
               if.bind="column.sortable"
@@ -60,10 +66,16 @@
         <tr
           repeat.for="item of items"
           click.trigger="toggleItemSelection(item, $event)"
-          class="align-middle ${item.selected ? 'table-secondary' : ''} ${selectionMode != 'none' ? 'selection' : ''}">
+          class="align-middle ${item.selected ? 'table-primary' : ''} ${selectionMode != 'none' ? 'selection' : ''}">
           <!-- optional tick cell -->
           <td if.bind="selectionMode != 'none'" class="py-0 align-middle selection">
-            <i if.bind="item.selected" class="bi bi-check text-secondary fs-5"></i>
+            <input
+              type="checkbox"
+              class="form-check-input d-block m-0"
+              checked.one-way="item.selected"
+              disabled.bind="disabled || (disableableRows && item[disablePropName] === true)"
+              aria-label="Sélectionner la ligne ${$index + 1}"
+              change.trigger="$event.stopPropagation() || toggleSelection(item)" />
           </td>
           <td
             repeat.for="column of columns"

@@ -101,16 +101,25 @@ export class Column {
    * Icon representing the sort order.
    * @returns {string} bootstrap icon
    */
+  /**
+   * Sort order of the column for the screen readers (`aria-sort` of its header), none when the column is not sorted.
+   * @type {'ascending' | 'descending' | undefined}
+   */
+  @computedFrom('sortOrder')
+  get ariaSort() {
+    return { asc: 'ascending', desc: 'descending' }[this.sortOrder];
+  }
+
   @computedFrom('sortOrder')
   get sortIcon() {
     if (this.sortOrder === 'asc' && this.sortType === 'text')
-      return 'sort-alpha-up align-middle text-secondary fs-6';
+      return 'sort-alpha-up align-middle text-primary fs-6';
     if (this.sortOrder === 'desc' && this.sortType === 'text')
-      return 'sort-alpha-down-alt align-middle text-secondary fs-6';
+      return 'sort-alpha-down-alt align-middle text-primary fs-6';
     if (this.sortOrder === 'asc' && this.sortType === 'numeric')
-      return 'sort-numeric-up align-middle text-secondary fs-6';
+      return 'sort-numeric-up align-middle text-primary fs-6';
     if (this.sortOrder === 'desc' && this.sortType === 'numeric')
-      return 'sort-numeric-down-alt align-middle text-secondary fs-6';
-    return 'sort-up-alt align-middle text-light fs-6';
+      return 'sort-numeric-down-alt align-middle text-primary fs-6';
+    return 'sort-up-alt align-middle text-body-secondary fs-6';
   }
 }

@@ -140,6 +140,24 @@ property, and the content of the element, where `item` is the current row, repla
 
 In a column template, `parentRef` is the viewmodel bound to `parent-ref`, and `metadata` the value bound to `metadata`.
 
+### Detail bar
+
+Above the table, aligned with the content of the cells, a bar displays the row count (the range of the page when
+paginated, e.g. `11–20 sur 120 résultat(s).`), the number of selected rows, and a warning when not all the rows are
+displayed. The row count is a status, announced by the screen readers when it changes. Hide the bar with
+`no-row-count-header="true"`.
+
+### Selection and accessibility
+
+With `selection-mode="single"` or `"multiple"`, each row starts with a checkbox named "Sélectionner la ligne <n>",
+reachable with `Tab` and toggled with `Space`; a click elsewhere on the row also toggles it, except on a control of a
+cell (link, button, input). In `multiple` mode, the "Tout sélectionner" checkbox of the header selects every enabled
+row, and is mixed when only a part of them is selected. The table emits a `change` event whose `detail` is the
+selection.
+
+The header of the sorted column carries `aria-sort` (`ascending` or `descending`): the screen readers tell the sort
+order, which the icon only shows.
+
 ### Pagination
 
 Set `paginated="true"`: a page size selector (`10`, `20`, `50` or `100`) is displayed next to the pagination.
@@ -184,9 +202,10 @@ Set `paginated="true"`: a page size selector (`10`, `20`, `50` or `100`) is disp
 | `page-size-text` | Text displayed next to the page size selector | Any string | `éléments par page` |
 | `max-height` | CSS max height of the table | Any CSS height | `500px` |
 | `fixed-row-height` | Fixed row height. When `false`, the text wraps and the rows may have different heights | `true` or `false` | `true` |
-| `no-row-count-header` | Hides the row count header | `true` or `false` | `false` |
+| `no-row-count-header` | Hides the detail bar above the table: row count, selection count and warning | `true` or `false` | `false` |
 | `no-result-text` | Text displayed when there is no item | Any string | `Aucun résultat` |
 | `result-text` | Text displayed after the number of items | Any string | `résultat(s).` |
+| `selected-text` | Text displayed after the number of selected items | Any string | `sélectionné(s)` |
 | `warning-template-text` | Warning displayed when not all the items are displayed. Must contain the `{maxRows}` token | Any string with `{maxRows}` | `Seuls les {maxRows} premiers résultats sont affichés.` |
 | `metadata` | Extra data available in the column templates | Any | |
 | `parent-ref` | Viewmodel available in the column templates as `parentRef` | Any object | |

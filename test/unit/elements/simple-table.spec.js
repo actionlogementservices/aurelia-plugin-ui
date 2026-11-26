@@ -191,3 +191,98 @@ describe('simple-table page size selector', () => {
     expect(rowCount()).toBe(20);
   });
 });
+
+describe('simple-table accessibility', () => {
+  let component;
+  afterEach(() => component?.dispose());
+
+  const checkboxes = () => [...document.querySelectorAll('simple-table input[type="checkbox"]')];
+
+  test('selects the rows with named checkboxes, the "select all" one being mixed on a partial selection', async () => {
+    const context = { ds: ds(3), selected: [], changes: [] };
+    component = await stage(
+      'datasource.bind="ds" selection-mode="multiple" value-key="id" selected-items.bind="selected" change.trigger="changes.push($event.detail)"',
+      context
+    );
+    const [all, first, second] = checkboxes();
+    expect(all.getAttribute('aria-label')).toBe('Tout sélectionner');
+    expect(first.getAttribute('aria-label')).toBe('Sélectionner la ligne 1');
+
+    first.click();
+    await flush();
+    expect(context.selected).toEqual([context.ds[0]]);
+    expect(first.checked).toBe(true);
+    // selection state in the primary color, like the checked checkbox
+    expect(first.closest('tr').classList).toContain('table-primary');
+    expect(all.indeterminate).toBe(true);
+    // the change event of the table carries the selection, the one of the checkbox stays inside
+    expect(context.changes).toEqual([[context.ds[0]]]);
+
+    all.click();
+    await flush();
+    expect(context.selected).toEqual(context.ds);
+    expect(all.checked).toBe(true);
+    expect(all.indeterminate).toBe(false);
+    expect(second.checked).toBe(true);
+
+    first.click();
+    await flush();
+    expect(context.selected).toEqual(context.ds.slice(1));
+  });
+
+  test('displays the row count above the table, in a status announced by the screen readers', async () => {
+    const context = { ds: ds(25), selected: [] };
+    component = await stage(
+      'datasource.bind="ds" paginated="true" selection-mode="multiple" value-key="id" selected-items.bind="selected"',
+      context
+    );
+    const status = document.querySelector('simple-table [role="status"]');
+    // out of the table: not read as the header of every column
+    expect(status.closest('table')).toBeNull();
+    expect(status.textContent.trim()).toBe('1–10 sur 25 résultat(s).');
+    expect(document.querySelectorAll('simple-table thead tr')).toHaveLength(1);
+
+    checkboxes()[1].click();
+    await flush();
+    expect(status.parentElement.textContent).toContain('1 sélectionné(s)');
+
+    document.querySelector('simple-table [aria-label="Page suivante"]').click();
+    await flush();
+    expect(status.textContent.trim()).toBe('11–20 sur 25 résultat(s).');
+  });
+
+  test('warns when not all the rows are displayed, and hides the detail bar on demand', async () => {
+    component = await stage('datasource.bind="ds" max-rows="10"', { ds: ds(25) });
+    expect(document.querySelector('simple-table [role="status"]').textContent.trim()).toBe('25 résultat(s).');
+    expect(document.querySelector('simple-table .text-warning-emphasis').textContent.trim()).toBe(
+      'Seuls les 10 premiers résultats sont affichés.'
+    );
+    component.dispose();
+
+    component = await stage('datasource.bind="ds" no-row-count-header="true"', { ds: ds(3) });
+    expect(document.querySelector('simple-table [role="status"]')).toBeNull();
+  });
+
+  test('tells the sort order of the sorted column to the screen readers', async () => {
+    component = StageComponent.withResources([
+      PLATFORM.moduleName('elements/simple-table/simple-table'),
+      PLATFORM.moduleName('elements/simple-table/column')
+    ])
+      .inView(
+        '<simple-table datasource.bind="ds"><column header="Id" cell-key="id" sortable="true"></column><column header="Nom"></column></simple-table>'
+      )
+      .boundTo({ ds: ds(3) });
+    await component.create(bootstrap);
+    await flush();
+    const [id, name] = document.querySelectorAll('simple-table th[scope="col"]');
+    expect(id.hasAttribute('aria-sort')).toBe(false);
+
+    id.querySelector('button').click();
+    await flush();
+    expect(id.getAttribute('aria-sort')).toBe('ascending');
+    id.querySelector('button').click();
+    await flush();
+    expect(id.getAttribute('aria-sort')).toBe('descending');
+    expect(name.hasAttribute('aria-sort')).toBe(false);
+  });
+});

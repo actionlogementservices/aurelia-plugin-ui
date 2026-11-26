@@ -56,7 +56,7 @@ export class SimpleTable {
   @bindable({ defaultBindingMode: bindingMode.toView })
   selectionMode = 'none';
 
-  /** Enable/Disable the row count header. @type {boolean} */
+  /** Hides the detail bar above the table: row count, selection count and warning. @type {boolean} */
   @bindable({ defaultBindingMode: bindingMode.toView })
   noRowCountHeader = false;
 
@@ -71,6 +71,10 @@ export class SimpleTable {
   /** Text corresponding to 'result(s)'. @type {string} */
   @bindable({ defaultBindingMode: bindingMode.toView })
   resultText = 'résultat(s).';
+
+  /** Text displayed after the number of selected items. @type {string} */
+  @bindable({ defaultBindingMode: bindingMode.toView })
+  selectedText = 'sélectionné(s)';
 
   /** Text corresponding to 'only first %s items displayed' warning. @type {string} */
   @bindable({ defaultBindingMode: bindingMode.toView })
@@ -237,19 +241,29 @@ export class SimpleTable {
   }
 
   /**
-   * Defines the logic triggered when item is clicked.
-   * @param {T & {selected: boolean}} item item clicked or selected
+   * Toggles the selection of the clicked row, unless the click targets a control of a cell (link, button, input...),
+   * the row checkbox included.
+   * @param {T & {selected: boolean}} item item of the clicked row
    * @param {Event} event click event
    * @returns {boolean} always true: aurelia prevents the default action (links, inputs in cells) otherwise
    */
   toggleItemSelection(item, event) {
     const target = /** @type {HTMLElement} */ (event.target);
+    if (!target?.closest('a, button, input, select, textarea')) {
+      this.toggleSelection(item);
+    }
+    return true;
+  }
+
+  /**
+   * Toggles the selection of an item, unless the selection is off or the row is disabled.
+   * @param {T & {selected: boolean}} item item to select or unselect
+   */
+  toggleSelection(item) {
     const selectable =
       this.valueKey &&
       this.selectionMode !== 'none' &&
-      !(this.disableableRows && item[this.disablePropName] === true) &&
-      // click on button, a, ...
-      !target?.closest('a, button, input, select, textarea');
+      !(this.disableableRows && item[this.disablePropName] === true);
     if (selectable) {
       const index = this.selectedItems.indexOf(item);
       if (index === -1) {
@@ -264,11 +278,10 @@ export class SimpleTable {
       this.triggerChangeEvent(this.selectedItems);
       this.triggerBlurEvent(this.selectedItems);
     }
-    return true;
   }
 
   /**
-   * Defines the logic triggered when the check all button is clicked.
+   * Defines the logic triggered when the "select all" checkbox is changed.
    * @param {boolean} notify should we dispatch custom element events?
    * @returns {boolean} let event propagates
    */
@@ -437,6 +450,17 @@ export class SimpleTable {
       else if (pages.at(-1) !== undefined) pages.push(undefined);
     }
     return pages;
+  }
+
+  /**
+   * Row count of the detail bar, with the range of the displayed rows when paginated (e.g. `11–20 sur 120 résultat(s).`).
+   * @returns {string} row count text
+   */
+  @computedFrom('items', 'totalCount', 'page', 'maxRows', 'paginated', 'resultText')
+  get countText() {
+    if (!this.paginated) return `${this.totalCount} ${this.resultText}`;
+    const first = (this.page - 1) * this.pageSize + 1;
+    return `${first}–${first + this.items.length - 1} sur ${this.totalCount} ${this.resultText}`;
   }
 
   /**

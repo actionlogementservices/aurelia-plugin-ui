@@ -27,6 +27,9 @@ rg -l "ToastService" --glob "*.{js,ts}"
 rg -n "(simple-select|filterable-select|badges-select|auto-complete)[^{,]*(button|bi-x-lg|\[role)" --glob "*.{css,scss,less}"
 rg -n "listitem|searchText-|dropDown-|\.dropdown-item|bi-x-lg" --glob "*.{js,ts,cy.*,spec.*,e2e.*}"
 rg -n "manageKey|ignoringReset" --glob "*.{js,ts,html}"
+# simple-table selection checkboxes: the styles and the end-to-end tests of the tick column
+rg -n "simple-table[^{,]*(\.selection|bi-check|table-info|thead)" --glob "*.{css,scss,less}"
+rg -n "Tout sélectionner|bi-check|\.selection\b|table-info" --glob "*.{js,ts,cy.*,spec.*,e2e.*}"
 ```
 
 ## Breaking changes
@@ -232,6 +235,38 @@ DOM and keyboard behavior change:
 **Check**: in the browser, open each of these fields with `↓`, move with the arrows, pick with `Enter`, and leave with
 `Tab`; with `badges-*`, reach a badge with `Shift+Tab` and remove it with `Enter`.
 
+### The rows of `simple-table` are selected with checkboxes
+
+With `selection-mode="single"` or `"multiple"`, the tick column holds checkboxes, reachable with the keyboard and
+announced as checked by the screen readers (see [Selection and accessibility](./components.md#selection-and-accessibility)).
+The attributes and the `change` and `blur` events of the table are unchanged; a click on a row still toggles it.
+
+| | 5.x | 6.0.0 |
+|---|---|---|
+| Header of the tick column | `button[aria-label="Tout sélectionner"]` with an `i.bi-check-all` icon, colored when all is selected | `input[type="checkbox"][aria-label="Tout sélectionner"]`, checked or mixed |
+| Selected row | `i.bi-check` icon in the tick cell | checked `input[type="checkbox"][aria-label="Sélectionner la ligne <n>"]` |
+| Sorted column header | | `aria-sort="ascending"` or `"descending"` |
+| Row count | first row of the `thead`: `tr.table-info > th[colspan]` | bar above the table, the count in a `[role="status"]`; the range of the page when paginated (`1–10 sur 120 résultat(s).`) and the selection count |
+
+**Change:**
+
+- **Styles** of the application targeting the icons of the tick column: target the checkboxes instead
+  (`simple-table .selection .form-check-input`). Styles targeting the row count row (`thead tr.table-info`), or the
+  first row of the `thead`, now apply to the column headers or nothing: remove them.
+- **End-to-end tests** clicking the "Tout sélectionner" button or checking the `bi-check` icon: use the checkboxes.
+
+  ```javascript
+  // before
+  await page.getByRole('button', { name: 'Tout sélectionner' }).click();
+  await expect(page.locator('tr:nth-child(1) .bi-check')).toBeVisible();
+  // after
+  await page.getByRole('checkbox', { name: 'Tout sélectionner' }).check();
+  await expect(page.getByRole('checkbox', { name: 'Sélectionner la ligne 1' })).toBeChecked();
+  ```
+
+**Check**: in the browser, reach the checkboxes with `Tab`, toggle them with `Space`, and check that the selection
+bound to `selected-items` follows.
+
 ## Visible changes
 
 They need no code change, unless the application styles the same elements.
@@ -249,6 +284,11 @@ They need no code change, unless the application styles the same elements.
   "Fermer"; the screen readers announce `info` and `success` politely (`role="status"`), `error` and `warning` at once.
   `error` keeps its toast until closed by default, instead of hiding it after 4 seconds: pass a delay to keep the
   former behavior, e.g. `error(message, 4000)` (search `\.error\(` in `*.js`).
+- **`simple-table`**: the column headers have a primary text over a 2px primary rule and a taller padding; the row
+  count leaves its blue band for a bar above the table, with the selection count and a warning colored as such; the
+  sort icon of the sorted column is primary blue instead of the brand red, and the one of the other sortable columns is
+  a neutral grey instead of the nearly invisible `text-light`; the checkboxes are aligned with the text of the cells;
+  the selected rows are tinted in primary blue (`table-primary`) instead of the brand red (`table-secondary`).
 - **`lock`**: while locked, the rest of the page is `inert` (out of reach of the keyboard too) and the screen readers
   announce "Veuillez patienter."; the focus goes back to the element that had it on unlock.
 - **`als-field`**: with `required="true"`, the label ends with a visually hidden "(obligatoire)", so that the screen

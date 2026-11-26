@@ -12,6 +12,14 @@ simple-table table thead th {
   z-index: 2;
 }
 
+/* the column headers stand out from the rows like the DSFR tables: primary text over a primary rule, taller cells;
+   the rule is a shadow, which stays with the sticky cells while a collapsed border scrolls with the rows */
+simple-table .table thead th {
+  --bs-table-color: var(--bs-primary);
+  padding-block: 0.75rem;
+  box-shadow: inset 0 -2px 0 var(--bs-primary);
+}
+
 simple-table table thead th button {
   font: inherit;
   color: inherit;
@@ -33,7 +41,6 @@ simple-table table tbody td {
 simple-table table thead th.selection,
 simple-table table tbody td.selection {
   width: 40px;
-  text-align: center;
 }
 
 simple-table table td.fixed-height {

@@ -98,13 +98,26 @@ __size__ | `number` | *new page size*
 
 ![modifier: public](images/badges/modifier-public.png)
 
-Defines the logic triggered when item is clicked.
+Toggles the selection of the clicked row, unless the click targets a control of a cell (link, button, input...),
+the row checkbox included.
 
 Parameters | Type | Description
 --- | --- | ---
-__item__ | `T & {selected: boolean}` | *item clicked or selected*
+__item__ | `T & {selected: boolean}` | *item of the clicked row*
 __event__ | `Event` | *click event*
 __*return*__ | `boolean` | *always true: aurelia prevents the default action (links, inputs in cells) otherwise*
+
+---
+
+### `toggleSelection(item)`
+
+![modifier: public](images/badges/modifier-public.png)
+
+Toggles the selection of an item, unless the selection is off or the row is disabled.
+
+Parameters | Type | Description
+--- | --- | ---
+__item__ | `T & {selected: boolean}` | *item to select or unselect*
 
 ---
 
@@ -112,7 +125,7 @@ __*return*__ | `boolean` | *always true: aurelia prevents the default action (li
 
 ![modifier: public](images/badges/modifier-public.png)
 
-Defines the logic triggered when the check all button is clicked.
+Defines the logic triggered when the &quot;select all&quot; checkbox is changed.
 
 Parameters | Type | Description
 --- | --- | ---
@@ -210,10 +223,11 @@ __maxRows__ | `number` | *Maximal number of displayed rows, the page size when p
 Two-way: with a &#x60;{ items, totalCount }&#x60; datasource, the parent reloads the page when the user changes it.*
 __maxHeight__ | `string` | *CSS max height of the table. @type {string}*
 __selectionMode__ | `'none' \| 'single' \| 'multiple'` | *Selection mode. @type {&#x27;none&#x27; | &#x27;single&#x27; | &#x27;multiple&#x27;}*
-__noRowCountHeader__ | `boolean` | *Enable/Disable the row count header. @type {boolean}*
+__noRowCountHeader__ | `boolean` | *Hides the detail bar above the table: row count, selection count and warning. @type {boolean}*
 __fixedRowHeight__ | `boolean` | *Enable/Disable the fixed row height feature. @type {boolean}*
 __noResultText__ | `string` | *Text corresponding to &#x27;no result&#x27;. @type {string}*
 __resultText__ | `string` | *Text corresponding to &#x27;result(s)&#x27;. @type {string}*
+__selectedText__ | `string` | *Text displayed after the number of selected items. @type {string}*
 __warningTemplateText__ | `string` | *Text corresponding to &#x27;only first %s items displayed&#x27; warning. @type {string}*
 __pageSizeText__ | `string` | *Text corresponding to &#x27;items per page&#x27;. @type {string}*
 __disableableRows__ | `boolean` | *Whether we can disable some rows or not. @type {boolean}*
@@ -229,6 +243,7 @@ __allItemsDisplayed__ | `undefined` | *Are all items displayed?*
 __pageSize__ | `undefined` | *Effective &#x60;maxRows&#x60;, a number even when set as a plain attribute.*
 __pageCount__ | `undefined` | *Number of pages.*
 __pages__ | `undefined` | *Page numbers to display: first, last and current ±1, &#x60;undefined&#x60; standing for an ellipsis.*
+__countText__ | `undefined` | *Row count of the detail bar, with the range of the displayed rows when paginated (e.g. &#x60;11–20 sur 120 résultat(s).&#x60;).*
 __notDisplayedWarningText__ | `undefined` | *Warning text regarding items not displayed.*
 ___container__ | `HTMLTemplateElement` | *Html container of the custom element. @type {HTMLTemplateElement}*
 ___tooltips__ | `Tooltip[]` | *Cells tooltips @type {Tooltip[]}*
