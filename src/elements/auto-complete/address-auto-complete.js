@@ -93,6 +93,9 @@ export class AddressAutoComplete {
   @bindable({ defaultBindingMode: bindingMode.toView })
   showIcon = true;
 
+  /** Auto-complete of the city in manual entry, whose search input is labelled "Commune". @type {import('./auto-complete').AutoComplete} */
+  cityAutoComplete;
+
   /** @type {HttpClient} */ _client;
   /** @type {AutoCompleteController<Adresse>} */ addressAutoCompleteController;
   /** @type {AutoCompleteController<Adresse>} */ zipCodeAutoCompleteController;

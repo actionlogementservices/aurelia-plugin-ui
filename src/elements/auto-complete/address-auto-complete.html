@@ -14,7 +14,7 @@
         <p if.bind="item.context" class="fw-light text-end m-0">${item.context}</p>
       </template>
     </auto-complete>
-    <span if.bind="showIcon" class="input-group-text"><i class="bi bi-search"></i></span>
+    <span if.bind="showIcon" class="input-group-text"><i class="bi bi-search" aria-hidden="true"></i></span>
   </div>
   <div class="row" if.bind="isManualEntryEnabled">
     <div class="row mt-2">
@@ -53,7 +53,8 @@
           <div class="form-group">
             <label for="input-adresse-libelleVoie-${uniqueId}" class="col-sm-6 col-form-label">
               Nom de la voie
-              <span class="text-danger">*</span>
+              <span class="text-danger" aria-hidden="true">*</span>
+              <span class="visually-hidden">(obligatoire)</span>
             </label>
             <input
               id="input-adresse-libelleVoie-${uniqueId}"
@@ -70,13 +71,16 @@
       <div class="row">
         <div class="col">
           <div class="form-group">
-            <label for="ac-adresse-commune-${uniqueId}" class="col-auto col-form-label">
+            <!-- labels the search input of the auto-complete, the custom element itself is not labelable -->
+            <label for="searchText-${cityAutoComplete.uniqueId}" class="col-auto col-form-label">
               Commune
-              <span class="text-danger">*</span>
+              <span class="text-danger" aria-hidden="true">*</span>
+              <span class="visually-hidden">(obligatoire)</span>
             </label>
             <div class.bind="showIcon ? 'input-group' : ''">
               <auto-complete
                 id="ac-adresse-commune-${uniqueId}"
+                view-model.ref="cityAutoComplete"
                 class="form-control"
                 selected-item.bind="addressCity"
                 label-key="firstLine"
@@ -87,7 +91,7 @@
                   <p if.bind="item.context" class="fw-light text-end m-0">${item.context}</p>
                 </template>
               </auto-complete>
-              <span if.bind="showIcon" class="input-group-text"><i class="bi bi-search"></i></span>
+              <span if.bind="showIcon" class="input-group-text"><i class="bi bi-search" aria-hidden="true"></i></span>
             </div>
           </div>
         </div>

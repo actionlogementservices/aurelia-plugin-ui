@@ -75,6 +75,7 @@ __disabled__ | `boolean` | *Enable/Disable the custom element to prevent user mo
 __autosize__ | `boolean` | *Autosize width of the dropdown to the parent&#x27;s width. @type {boolean}*
 __manualEntry__ | `boolean` | **
 __showIcon__ | `boolean` | **
+__cityAutoComplete__ | `import('./auto-complete').AutoComplete` | *Auto-complete of the city in manual entry, whose search input is labelled &quot;Commune&quot;. @type {import(&#x27;./auto-complete&#x27;).AutoComplete}*
 __addressAutoCompleteController__ | `AutoCompleteController.<Adresse>` | **
 __zipCodeAutoCompleteController__ | `AutoCompleteController.<Adresse>` | **
 ___client__ | `HttpClient` | **
