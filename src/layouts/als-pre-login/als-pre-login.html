@@ -3,11 +3,15 @@
   <require from="../../assets/icons/pre-login-logo.html"></require>
 
   <div class="vh-100 d-flex flex-column position-relative">
-    <pre-login-logo class="als-logo"></pre-login-logo>
+    <!-- the logo tells the brand: a named image, whose svg content is presentational -->
+    <div class="als-logo" role="img" aria-label="Action Logement">
+      <pre-login-logo></pre-login-logo>
+    </div>
 
     <div class="row g-0 flex-grow-1">
       <div class="col d-flex flex-column justify-content-center align-items-center mx-4 mx-md-2 text-center">
-        <h2 class="fw-semibold pre-login-title">${title}</h2>
+        <!-- the title of the page, sized as a h2 -->
+        <h1 class="h2 fw-semibold pre-login-title">${title}</h1>
         <p class="mt-2 pre-login-subtitle">${subtitle}</p>
         <button class="btn btn-secondary mt-2" click.trigger="handleButtonClick()">Se connecter</button>
         <hr class="border w-50 my-5" />
@@ -20,7 +24,7 @@
         <img
           if.bind="imgPath !==''"
           src.bind="imgPath"
-          alt="décor sur le côté droit de la page"
+          alt=""
           class="position-absolute top-0 start-0 w-100 h-100 object-fit-cover" />
       </div>
     </div>

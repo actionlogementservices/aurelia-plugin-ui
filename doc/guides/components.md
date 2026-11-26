@@ -232,6 +232,8 @@ Set `paginated="true"`: a page size selector (`10`, `20`, `50` or `100`) is disp
 ### `als-pre-login`
 
 Landing page displayed before authentication, with a login button, a help link and an [`als-footer`](#als-footer).
+Its `title` is the `h1` of the page, and the logo an image named "Action Logement"; the side image (`img-path`) is
+decorative.
 
 ![screenshot of the als-pre-login layout component](../screenshot/als-pre-login.png)
 

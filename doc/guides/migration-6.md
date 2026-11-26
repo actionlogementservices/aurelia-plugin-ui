@@ -303,5 +303,8 @@ They need no code change, unless the application styles the same elements.
   it by its name (`getByRole('navigation', { name: 'breadcrumb' })`).
 - **`loading-indicator`**: the bar is an indeterminate progress bar named "Chargement en cours", without the fixed
   `aria-valuenow="50"` and the `title` tooltip.
+- **`als-pre-login`**: the title is a `h1` sized as a `h2` (`.h2`) instead of a `h2`, the logo is wrapped in a
+  `div.als-logo[role="img"]` named "Action Logement", and the side image is decorative (`alt=""`). Check the styles
+  targeting `als-pre-login h2` or `pre-login-logo.als-logo`.
 The deprecated `als-input-number`, `als-input-text`, `als-input-password` and `als-select` are still available in
 6.0.0; see [Deprecated components](./forms.md#deprecated-components) to replace them.
