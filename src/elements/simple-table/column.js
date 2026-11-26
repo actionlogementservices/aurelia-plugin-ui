@@ -98,18 +98,20 @@ export class Column {
   detached() {}
 
   /**
-   * Icon representing the sort order.
-   * @returns {string} bootstrap icon
-   */
-  /**
    * Sort order of the column for the screen readers (`aria-sort` of its header), none when the column is not sorted.
-   * @type {'ascending' | 'descending' | undefined}
+   * @returns {'ascending' | 'descending' | undefined} aria-sort value
    */
   @computedFrom('sortOrder')
   get ariaSort() {
-    return { asc: 'ascending', desc: 'descending' }[this.sortOrder];
+    /** @type {Record<string, 'ascending' | 'descending'>} */
+    const values = { asc: 'ascending', desc: 'descending' };
+    return values[this.sortOrder];
   }
 
+  /**
+   * Icon representing the sort order.
+   * @returns {string} bootstrap icon
+   */
   @computedFrom('sortOrder')
   get sortIcon() {
     if (this.sortOrder === 'asc' && this.sortType === 'text')

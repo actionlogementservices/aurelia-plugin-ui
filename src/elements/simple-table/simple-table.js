@@ -337,7 +337,9 @@ export class SimpleTable {
   selectAllResults() {
     this.selectedItems = /** @type {T[]} */ (this.datasource).filter(item => !this.isRowDisabled(item));
     this.notifySelection();
-    this._taskqueue.queueTask(() => this._container.querySelector('.clear-selection')?.focus());
+    this._taskqueue.queueTask(() =>
+      /** @type {HTMLElement | null} */ (this._container.querySelector('.clear-selection'))?.focus()
+    );
   }
 
   /**
@@ -346,7 +348,9 @@ export class SimpleTable {
   clearSelection() {
     this.selectedItems = [];
     this.notifySelection();
-    this._taskqueue.queueTask(() => this._container.querySelector('th.selection input')?.focus());
+    this._taskqueue.queueTask(() =>
+      /** @type {HTMLElement | null} */ (this._container.querySelector('th.selection input'))?.focus()
+    );
   }
 
   /**

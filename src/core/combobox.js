@@ -72,8 +72,9 @@ function activateOption(input, listbox, option) {
  * @param {boolean} down true to move down, false to move up
  */
 function moveActiveOption(input, listbox, active, down) {
-  /** @type {HTMLElement[]} */
-  const options = [...listbox.querySelectorAll('[role="option"]:not([aria-disabled="true"])')];
+  const options = [...listbox.querySelectorAll('[role="option"]:not([aria-disabled="true"])')].map(
+    option => /** @type {HTMLElement} */ (option)
+  );
   if (options.length === 0) return;
   const index = options.indexOf(/** @type {HTMLElement} */ (active));
   const selected = active

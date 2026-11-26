@@ -144,9 +144,11 @@ export class AlsDropdown {
     const onToggle = event.target === this._toggle;
     if (!keys.includes(event.key) || (onToggle && !event.key.startsWith('Arrow'))) return true;
     if (onToggle) this.show();
-    /** @type {HTMLElement[]} */
     const controls = Array.from(
-      this._menu.querySelectorAll('a[href], button, input, select, textarea, [tabindex]:not([tabindex="-1"])')
+      this._menu.querySelectorAll(
+        'a[href], button, input, select, textarea, [tabindex]:not([tabindex="-1"])'
+      ),
+      control => /** @type {HTMLElement} */ (control)
     ).filter(control => !control.matches(':disabled'));
     if (controls.length === 0) return false;
     const index = controls.indexOf(/** @type {HTMLElement} */ (event.target));
