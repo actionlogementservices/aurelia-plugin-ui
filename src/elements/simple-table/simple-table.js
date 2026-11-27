@@ -8,6 +8,18 @@ import { sortPerKey } from '../../core/sorting';
 /** @typedef {import('types').TableSort} TableSort */
 
 /**
+ * Normalizes a value for the search: text without case nor accents ("Élève" matches "eleve").
+ * @param {any} value value of a cell
+ * @returns {string} normalized text
+ */
+const normalize = value =>
+  String(value ?? '')
+    .normalize('NFD')
+    // the combining accents, separated from their letter by the NFD normalization
+    .replaceAll(/[\u0300-\u036F]/g, '')
+    .toLowerCase();
+
+/**
  * Implements the **`simple-table` custom element** that provides a simple grid with customizable columns.
  * @template T type of items of the data source
  * @category table
@@ -184,16 +196,48 @@ export class SimpleTable {
   @bindable({ defaultBindingMode: bindingMode.twoWay })
   sort;
 
+  /** Displays the search field above the table. @type {boolean} */
+  @bindable({ defaultBindingMode: bindingMode.toView })
+  searchable = false;
+
+  /**
+   * Searched text (two-way), typed in the search field or bound by the parent to its own field. An array datasource is
+   * filtered on the `cell-key` of the columns, without case nor accents; with a `{ items, totalCount }` datasource,
+   * the parent reloads the page filtered when it changes.
+   * @type {string | undefined}
+   */
+  @bindable({ defaultBindingMode: bindingMode.twoWay })
+  search;
+
+  /**
+   * Rule of the search of an array datasource, instead of the `cell-key` of the columns, e.g. for a formatted value.
+   * @type {((item: T, search: string) => boolean) | undefined}
+   */
+  @bindable({ defaultBindingMode: bindingMode.toView })
+  searchFilter;
+
+  /** Label of the search field. @type {string} */
+  @bindable({ defaultBindingMode: bindingMode.toView })
+  searchLabel = 'Rechercher dans le tableau';
+
+  /** Text displayed when the search finds no item. The `{search}` token is replaced by the searched text. @type {string} */
+  @bindable({ defaultBindingMode: bindingMode.toView })
+  noSearchResultText = 'Aucun résultat pour « {search} »';
+
   /** Unique id to identify the custom element instance. @type {string} */ uniqueId = generateUniqueId();
   /** Html container of the custom element. @type {HTMLTemplateElement} */ _container;
   /** Displayed items. @type {T[]} */ items = [];
   /** The total count of items including not displayed one. @type {number} */ totalCount = 0;
   /** Cells tooltips @type {Tooltip[]} */ _tooltips;
+  /** Is the table in the page, a change of `search` coming from the user or the parent, not the initial binding? @type {boolean} */
+  _attached = false;
   /** Count of selectable displayed items @type {number} */ selectableItemCount = this.items.length;
   /** Keys (`value-key`) of the selected items, the data of the application being left untouched @type {Set<any>} */
   selectedKeys = new Set();
   /** Count of selected and selectable displayed items @type {number} */ pageSelectedCount = 0;
   /** Count of selectable items of an array datasource, every page included @type {number} */ totalSelectableCount = 0;
+  /** Items of an array datasource matching the search, every page included @type {T[] | undefined} */ _results;
+  /** Count of the selectable results of an array datasource not selected yet @type {number} */ unselectedResultCount = 0;
 
   /**
    * Creates an instance of the `simple-table` custom element.
@@ -209,6 +253,7 @@ export class SimpleTable {
    * Defines the logic triggered when the custom element is added to the DOM.
    */
   attached() {
+    this._attached = true;
     this.columnsChanged();
   }
 
@@ -226,6 +271,7 @@ export class SimpleTable {
    * Defines the logic triggered when the custom element is removed from the DOM.
    */
   detached() {
+    this._attached = false;
     for (const tooltip of this._tooltips ?? []) tooltip?.dispose();
   }
 
@@ -238,13 +284,15 @@ export class SimpleTable {
     this.removeCellTooltips();
     if (!this.datasource) return; // the datasource is empty
     if (Array.isArray(this.datasource)) {
-      // the datasource is a simple array of items
-      this.totalCount = this.datasource.length;
+      // the datasource is a simple array of items: filtered, sorted, then paginated
+      const filtered = this.filteredItems();
+      this._results = filtered;
+      this.totalCount = filtered.length;
       const comparer = this.sortComparer();
-      const source = comparer ? [...this.datasource].sort(comparer) : this.datasource;
+      const source = comparer ? [...filtered].sort(comparer) : filtered;
       const page = this.paginated ? this.page : 1;
       this.items = source.slice((page - 1) * this.pageSize, page * this.pageSize);
-      this.totalSelectableCount = this.datasource.filter(item => !this.isRowDisabled(item)).length;
+      this.totalSelectableCount = filtered.filter(item => !this.isRowDisabled(item)).length;
       this.calculateSelectableItemCount();
       this.synchronizeSelection();
       this.addCellTooltips();
@@ -259,6 +307,7 @@ export class SimpleTable {
       const comparer = this.sortComparer();
       if (comparer) this.items.sort(comparer);
       // the other pages are not loaded: their rows can't be selected at once
+      this._results = undefined;
       this.totalSelectableCount = 0;
       this.calculateSelectableItemCount();
       this.synchronizeSelection();
@@ -280,6 +329,32 @@ export class SimpleTable {
    */
   calculateSelectableItemCount() {
     this.selectableItemCount = this.items.filter(item => !this.isRowDisabled(item)).length;
+  }
+
+  /**
+   * Items of an array datasource matching the search: the datasource itself without search.
+   * @returns {T[]} matching items
+   */
+  filteredItems() {
+    const datasource = /** @type {T[]} */ (this.datasource);
+    const text = normalize(this.search).trim();
+    if (!text) return datasource;
+    const search = /** @type {string} */ (this.search).trim();
+    /** @type {(item: T) => boolean} */
+    const matches = this.searchFilter
+      ? item => this.searchFilter(item, search)
+      : item => this.columns.some(column => column.cellKey && normalize(item[column.cellKey]).includes(text));
+    return datasource.filter(item => matches(item));
+  }
+
+  /**
+   * Defines the logic triggered when `search` attribute is databound: a new search restarts from the first page
+   * (loaded by the parent with a `{ items, totalCount }` datasource), unlike the initial one, which keeps the page
+   * bound by the parent.
+   */
+  searchChanged() {
+    if (this._attached) this.goToPage(1);
+    this.setDisplayedItems();
   }
 
   /**
@@ -393,11 +468,15 @@ export class SimpleTable {
   }
 
   /**
-   * Selects the selectable rows of every page of an array datasource. The focus goes to the button clearing the
+   * Selects the selectable rows of every page of an array datasource matching the search. The focus goes to the button clearing the
    * selection, which replaces the clicked one.
    */
   selectAllResults() {
-    this.selectedItems = /** @type {T[]} */ (this.datasource).filter(item => !this.isRowDisabled(item));
+    // added to the selection, which may hold rows hidden by the search
+    const results = this.filteredItems().filter(
+      item => !this.isRowDisabled(item) && !this.selectedKeys.has(item[this.valueKey])
+    );
+    this.selectedItems = [...this.selectedItems, ...results];
     this.notifySelection();
     this._taskqueue.queueTask(() =>
       /** @type {HTMLElement | null} */ (this._container.querySelector('.clear-selection'))?.focus()
@@ -451,6 +530,9 @@ export class SimpleTable {
     this.selectedKeys = new Set((this.selectedItems ?? []).filter(v => !isNil(v)).map(v => v[this.valueKey]));
     this.pageSelectedCount = this.items.filter(
       item => this.selectedKeys.has(item[this.valueKey]) && !this.isRowDisabled(item)
+    ).length;
+    this.unselectedResultCount = (this._results ?? []).filter(
+      item => !this.selectedKeys.has(item[this.valueKey]) && !this.isRowDisabled(item)
     ).length;
   }
 
@@ -574,12 +656,13 @@ export class SimpleTable {
   }
 
   /**
-   * Row count of the detail bar, with the range of the displayed rows when paginated (e.g. `11–20 sur 120 résultat(s).`).
+   * Row count of the detail bar, with the range of the displayed rows when they are on several pages (e.g.
+   * `11–20 sur 120 résultat(s).`).
    * @returns {string} row count text
    */
   @computedFrom('items', 'totalCount', 'page', 'maxRows', 'paginated', 'resultText')
   get countText() {
-    if (!this.paginated) return `${this.totalCount} ${this.resultText}`;
+    if (!this.paginated || this.pageCount === 1) return `${this.totalCount} ${this.resultText}`;
     const first = (this.page - 1) * this.pageSize + 1;
     return `${first}–${first + this.items.length - 1} sur ${this.totalCount} ${this.resultText}`;
   }
@@ -594,7 +677,7 @@ export class SimpleTable {
     'totalSelectableCount',
     'selectableItemCount',
     'pageSelectedCount',
-    'selectedItems'
+    'unselectedResultCount'
   )
   get canSelectAllResults() {
     return (
@@ -602,7 +685,7 @@ export class SimpleTable {
       this.selectableItemCount > 0 &&
       this.pageSelectedCount === this.selectableItemCount &&
       this.totalSelectableCount > this.selectableItemCount &&
-      this.selectedItems.length < this.totalSelectableCount
+      this.unselectedResultCount > 0
     );
   }
 
@@ -615,6 +698,16 @@ export class SimpleTable {
     const text =
       this.totalSelectableCount < this.totalCount ? this.selectAllSelectableText : this.selectAllText;
     return text.replace('{count}', this.totalSelectableCount.toString());
+  }
+
+  /**
+   * Text of the empty table: telling the search when there is one.
+   * @returns {string} text of the empty table
+   */
+  @computedFrom('search', 'noResultText', 'noSearchResultText')
+  get emptyText() {
+    const search = this.search?.trim();
+    return search ? this.noSearchResultText.replace('{search}', search) : this.noResultText;
   }
 
   /**

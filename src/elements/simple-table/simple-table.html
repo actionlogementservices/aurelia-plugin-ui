@@ -4,6 +4,18 @@
   <slot></slot>
   <!-- title of the table, naming it (aria-labelledby): above the detail bar, which a <caption> would come below -->
   <div if.bind="caption && !hideCaption" id="caption-${uniqueId}" class="fw-semibold fs-5 px-2 mb-1">${caption}</div>
+  <!-- search field, labelled like the page size selector; the search is debounced, e.g. for a server reloading -->
+  <div if.bind="searchable" class="px-2 mb-2">
+    <label class="d-inline-flex align-items-center gap-2 small">
+      <span class="text-body-secondary">${searchLabel}</span>
+      <input
+        type="search"
+        class="form-control form-control-sm w-auto"
+        value.bind="search & debounce:300"
+        disabled.bind="disabled"
+        aria-controls="grid-${uniqueId}" />
+    </label>
+  </div>
   <!-- detail bar, aligned with the content of the cells (padding of the bootstrap cells) -->
   <div if.bind="!noRowCountHeader" class="d-flex flex-wrap align-items-baseline column-gap-3 px-2 mb-2">
     <!-- announced by the screen readers when the count changes (filter, page) or the rows are loading -->
@@ -13,6 +25,8 @@
         ${loadingText}
       </span>
       <span if.bind="!loading && items.length > 0" class="fw-semibold">${countText}</span>
+      <!-- a search without result, told by the empty table, which is not announced -->
+      <span if.bind="!loading && items.length == 0 && search" class="visually-hidden">${emptyText}</span>
     </span>
     <!-- tells the screen readers that the button selecting every page appeared before the table, above the focus -->
     <span role="status" class="visually-hidden">
@@ -121,7 +135,7 @@
           </td>
         </tr>
         <!-- no result text -->
-        <tr if.bind="items.length == 0" class="table-info"><td colspan="100%">${noResultText}</td></tr>
+        <tr if.bind="items.length == 0" class="table-info"><td colspan="100%">${emptyText}</td></tr>
       </tbody>
     </table>
   </div>

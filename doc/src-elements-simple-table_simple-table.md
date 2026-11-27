@@ -6,6 +6,21 @@
 
 [Source file](../src/elements/simple-table/simple-table.js)
 
+## Functions
+
+### `normalize(value) ► string`
+
+![modifier: private](images/badges/modifier-private.png)
+
+Normalizes a value for the search: text without case nor accents (&quot;Élève&quot; matches &quot;eleve&quot;).
+
+Parameters | Type | Description
+--- | --- | ---
+__value__ | `any` | *value of a cell*
+__*return*__ | `string` | *normalized text*
+
+---
+
 # Class `SimpleTable`
 
 Implements the **&#x60;simple-table&#x60; custom element** that provides a simple grid with customizable columns.
@@ -77,6 +92,28 @@ __*return*__ | `boolean` | *true when the row can&#x27;t be selected*
 ![modifier: public](images/badges/modifier-public.png)
 
 Calculate the number of selectable displayed items.
+
+---
+
+### `filteredItems() ► Array.<T>`
+
+![modifier: public](images/badges/modifier-public.png)
+
+Items of an array datasource matching the search: the datasource itself without search.
+
+Parameters | Type | Description
+--- | --- | ---
+__*return*__ | `Array.<T>` | *matching items*
+
+---
+
+### `searchChanged()`
+
+![modifier: public](images/badges/modifier-public.png)
+
+Defines the logic triggered when &#x60;search&#x60; attribute is databound: a new search restarts from the first page
+(loaded by the parent with a &#x60;{ items, totalCount }&#x60; datasource), unlike the initial one, which keeps the page
+bound by the parent.
 
 ---
 
@@ -182,7 +219,7 @@ __*return*__ | `boolean` | *let event propagates*
 
 ![modifier: public](images/badges/modifier-public.png)
 
-Selects the selectable rows of every page of an array datasource. The focus goes to the button clearing the
+Selects the selectable rows of every page of an array datasource matching the search. The focus goes to the button clearing the
 selection, which replaces the clicked one.
 
 ---
@@ -323,6 +360,13 @@ With a &#x60;{ items, totalCount }&#x60; datasource, the parent loads the page i
 __sort__ | `TableSort` | *Sort of the rows: the &#x60;cell-key&#x60; of the sorted column and the order (two-way), initialized from the &#x60;sort-order&#x60;
 of a column. An array datasource is sorted as a whole; with a &#x60;{ items, totalCount }&#x60; datasource, the parent
 reloads the page sorted when it changes (the displayed page being sorted in memory meanwhile).*
+__searchable__ | `boolean` | *Displays the search field above the table. @type {boolean}*
+__search__ | `string` | *Searched text (two-way), typed in the search field or bound by the parent to its own field. An array datasource is
+filtered on the &#x60;cell-key&#x60; of the columns, without case nor accents; with a &#x60;{ items, totalCount }&#x60; datasource,
+the parent reloads the page filtered when it changes.*
+__searchFilter__ | `((item: T, search: string) => boolean) \| undefined` | *Rule of the search of an array datasource, instead of the &#x60;cell-key&#x60; of the columns, e.g. for a formatted value.*
+__searchLabel__ | `string` | *Label of the search field. @type {string}*
+__noSearchResultText__ | `search` | *Text displayed when the search finds no item. The &#x60;{search}&#x60; token is replaced by the searched text. @type {string}*
 __uniqueId__ | `string` | *Unique id to identify the custom element instance. @type {string}*
 __items__ | `T[]` | *Displayed items. @type {T[]}*
 __totalCount__ | `number` | *The total count of items including not displayed one. @type {number}*
@@ -330,14 +374,20 @@ __selectableItemCount__ | `number` | *Count of selectable displayed items @type 
 __selectedKeys__ | `Set<any>` | *Keys (&#x60;value-key&#x60;) of the selected items, the data of the application being left untouched @type {Set&lt;any&gt;}*
 __pageSelectedCount__ | `number` | *Count of selected and selectable displayed items @type {number}*
 __totalSelectableCount__ | `number` | *Count of selectable items of an array datasource, every page included @type {number}*
+__unselectedResultCount__ | `number` | *Count of the selectable results of an array datasource not selected yet @type {number}*
+__datasource__ | `Array.<T>` | **
 __allItemsDisplayed__ | `undefined` | *Are all items displayed?*
 __pageSize__ | `undefined` | *Effective &#x60;maxRows&#x60;, a number even when set as a plain attribute.*
 __pageCount__ | `undefined` | *Number of pages.*
 __pages__ | `undefined` | *Page numbers to display: first, last and current ±1, &#x60;undefined&#x60; standing for an ellipsis.*
-__countText__ | `undefined` | *Row count of the detail bar, with the range of the displayed rows when paginated (e.g. &#x60;11–20 sur 120 résultat(s).&#x60;).*
+__countText__ | `undefined` | *Row count of the detail bar, with the range of the displayed rows when they are on several pages (e.g.
+&#x60;11–20 sur 120 résultat(s).&#x60;).*
 __canSelectAllResults__ | `undefined` | *Can the rows of every page be selected at once? Once the selectable rows of the page are all selected, with an
 array datasource whose other pages hold selectable rows not selected yet.*
 __selectAllButtonText__ | `undefined` | *Text of the button selecting the rows of every page, telling that the disabled rows are left out.*
+__emptyText__ | `undefined` | *Text of the empty table: telling the search when there is one.*
 __notDisplayedWarningText__ | `undefined` | *Warning text regarding items not displayed.*
 ___container__ | `HTMLTemplateElement` | *Html container of the custom element. @type {HTMLTemplateElement}*
 ___tooltips__ | `Tooltip[]` | *Cells tooltips @type {Tooltip[]}*
+___attached__ | `boolean` | *Is the table in the page, a change of &#x60;search&#x60; coming from the user or the parent, not the initial binding? @type {boolean}*
+___results__ | `T[] \| undefined` | *Items of an array datasource matching the search, every page included @type {T[] | undefined}*

@@ -140,6 +140,25 @@ property, and the content of the element, where `item` is the current row, repla
 
 In a column template, `parentRef` is the viewmodel bound to `parent-ref`, and `metadata` the value bound to `metadata`.
 
+### Search
+
+With `searchable="true"`, a search field is displayed above the table. The searched text is the two-way `search`
+attribute, which the application can also bind to its own field instead of `searchable`.
+
+- An array `datasource` is filtered on the `cell-key` of the columns, the text being searched without case nor accents
+  ("eleve" finds "Élève"). A column without `cell-key` is not searched; when a template displays another value than
+  the raw one (e.g. a formatted date), give the rule with `search-filter`: a `(item, search) => boolean` function.
+- With a `{ items, totalCount }` `datasource`, the table does not filter the page: bind `search` and reload, like the
+  sort. The typed text is debounced (300 ms).
+- A new search restarts from the first page. The row count of the detail bar, announced by the screen readers, counts
+  the results, and the empty table tells the searched text ("Aucun résultat pour « xxx »"), also announced.
+- The selection is kept while the search hides rows: "Effacer la sélection" is then offered, and "Sélectionner les N
+  résultats" adds the results of the search to the selection.
+
+```html
+<simple-table datasource.bind="contracts" searchable="true" search.bind="searchedText">
+```
+
 ### Title and loading
 
 Give the table a title with `caption`: it is displayed above the table and names it for the screen readers
@@ -156,8 +175,8 @@ are not disabled, so that they keep the keyboard focus.
 
 ### Detail bar
 
-Above the table, aligned with the content of the cells, a bar displays the row count (the range of the page when
-paginated, e.g. `11–20 sur 120 résultat(s).`), the number of selected rows, and a warning when not all the rows are
+Above the table, aligned with the content of the cells, a bar displays the row count (the range of the page when the
+rows are on several pages, e.g. `11–20 sur 120 résultat(s).`), the number of selected rows, and a warning when not all the rows are
 displayed. The row count is a status, announced by the screen readers when it changes. Hide the bar with
 `no-row-count-header="true"`.
 
@@ -240,6 +259,11 @@ A click on the header of a `sortable` column sorts the rows by its `cell-key`, a
 | `page` | Current page, 1-based (two-way binding) | Any number > 0 | `1` |
 | `page-size-text` | Label of the page size selector | Any string | `Éléments par page` |
 | `page-sizes` | Page sizes offered by the page size selector | Array of numbers | `[10, 20, 50, 100]` |
+| `searchable` | Displays the search field | `true` or `false` | `false` |
+| `search` | Searched text (two-way) | Any string | |
+| `search-filter` | Search rule of an array datasource, instead of the `cell-key` of the columns | `(item, search) => boolean` | |
+| `search-label` | Label of the search field | Any string | `Rechercher dans le tableau` |
+| `no-search-result-text` | Text of the empty table after a search. The `{search}` token is replaced by the searched text | Any string | `Aucun résultat pour « {search} »` |
 | `caption` | Title of the table, displayed above it and naming it | Any string | |
 | `hide-caption` | Hides the caption, which still names the table | `true` or `false` | `false` |
 | `loading` | The parent loads the rows: the table is busy and tells the wait | `true` or `false` | `false` |

@@ -599,6 +599,8 @@
                   selected-items.bind="selectedItems"
                   sort.bind="tableSort"
                   caption="Effectifs"
+                  searchable="true"
+                  search.bind="tableSearch"
                   loading.bind="tableLoading"
                   selection-mode="multiple"
                   disableable-rows="true"
@@ -660,7 +662,7 @@
                     </button>
                   </column>
                 </simple-table>
-                <p class="mt-2">SORT = ${tableSort.key} ${tableSort.order}</p>
+                <p class="mt-2">SORT = ${tableSort.key} ${tableSort.order} | SEARCH = ${tableSearch}</p>
                 <button class="btn btn-secondary" click.trigger="simulateTableLoading()">Simulate loading</button>
               </div>
             </div>

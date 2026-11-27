@@ -473,3 +473,138 @@ describe('simple-table accessibility', () => {
     expect(name.hasAttribute('aria-sort')).toBe(false);
   });
 });
+
+describe('simple-table search', () => {
+  let component;
+  afterEach(() => component?.dispose());
+
+  const people = ['Élodie Martin', 'Bruno Petit', 'Éloïse Durand', 'Chloé Leroy', 'Paul Elouan'].map(
+    (name, id) => ({
+      id,
+      name
+    })
+  );
+  const names = () =>
+    [...document.querySelectorAll('simple-table tbody td:last-child')].map(td => td.textContent.trim());
+  const status = () => document.querySelector('simple-table [role="status"]').textContent.trim();
+  const field = () => document.querySelector('simple-table input[type="search"]');
+  const type = async text => {
+    field().value = text;
+    field().dispatchEvent(new window.Event('input', { bubbles: true }));
+    // debounced
+    await flush(350);
+  };
+
+  /**
+   * Stages a simple-table with an id and a name column.
+   * @param {string} bindings table attributes
+   * @param {object} context binding context
+   * @returns {Promise<any>} the staged component
+   */
+  const stagePeople = async (bindings, context) => {
+    const staged = StageComponent.withResources([
+      PLATFORM.moduleName('elements/simple-table/simple-table'),
+      PLATFORM.moduleName('elements/simple-table/column')
+    ])
+      .inView(
+        `<simple-table ${bindings}><column header="Id" cell-key="id"></column><column header="Nom" cell-key="name"></column></simple-table>`
+      )
+      .boundTo(context);
+    await staged.create(bootstrap);
+    await flush();
+    return staged;
+  };
+
+  test('a table without search has no field, and displays every row', async () => {
+    component = await stagePeople('datasource.bind="ds"', { ds: people });
+    expect(field()).toBeNull();
+    expect(names()).toEqual(people.map(person => person.name));
+    expect(status()).toBe('5 résultat(s).');
+  });
+
+  test('filters the rows on the cell-keys, without case nor accents, from the first page', async () => {
+    const context = { ds: people, search: undefined, page: 1 };
+    component = await stagePeople(
+      'datasource.bind="ds" searchable="true" search.bind="search" paginated="true" max-rows="2" page.bind="page"',
+      context
+    );
+    expect(field().closest('label').textContent).toContain('Rechercher dans le tableau');
+    document.querySelector('simple-table [aria-label="Page suivante"]').click();
+    await flush();
+    expect(context.page).toBe(2);
+
+    await type('ELO');
+    expect(context.search).toBe('ELO');
+    expect(context.page).toBe(1);
+    expect(names()).toEqual(['Élodie Martin', 'Éloïse Durand']);
+    expect(status()).toBe('1–2 sur 3 résultat(s).');
+
+    // a single page: the count without range
+    await type('Bruno');
+    expect(status()).toBe('1 résultat(s).');
+
+    await type('zzz');
+    expect(document.querySelector('simple-table tbody').textContent.trim()).toBe(
+      'Aucun résultat pour « zzz »'
+    );
+    // announced by the screen readers, the empty table not being a status
+    expect(status()).toBe('Aucun résultat pour « zzz »');
+
+    await type('');
+    expect(status()).toBe('1–2 sur 5 résultat(s).');
+  });
+
+  test('applies the search-filter rule of the application', async () => {
+    const context = { ds: people, search: 'b', byId: (person, search) => String(person.id) === search };
+    component = await stagePeople(
+      'datasource.bind="ds" search.bind="search" search-filter.bind="byId"',
+      context
+    );
+    expect(names()).toEqual(['Aucun résultat pour « b »']);
+    context.search = '3';
+    await flush();
+    expect(names()).toEqual(['Chloé Leroy']);
+  });
+
+  test('keeps the selection hidden by the search, and selects every result of the search', async () => {
+    const context = { ds: people, search: undefined, selected: [] };
+    component = await stagePeople(
+      'datasource.bind="ds" searchable="true" search.bind="search" selection-mode="multiple" value-key="id" selected-items.bind="selected" paginated="true" max-rows="2"',
+      context
+    );
+    document.querySelectorAll('simple-table td.selection input')[1].click(); // Bruno Petit
+    await flush();
+    await type('elo');
+    expect(context.selected.map(person => person.name)).toEqual(['Bruno Petit']);
+    // the selection goes beyond the displayed rows
+    const buttons = () =>
+      [...document.querySelectorAll('simple-table button.btn-link')].map(b => b.textContent.trim());
+    expect(buttons()).toContain('Effacer la sélection');
+
+    document.querySelector('simple-table th.selection input').click();
+    await flush();
+    [...document.querySelectorAll('simple-table button.btn-link')]
+      .find(button => button.textContent.trim() === 'Sélectionner les 3 résultats')
+      .click();
+    await flush();
+    // added to the selection, the row hidden by the search included
+    expect(context.selected.map(person => person.name)).toEqual([
+      'Bruno Petit',
+      'Élodie Martin',
+      'Éloïse Durand',
+      'Paul Elouan'
+    ]);
+  });
+
+  test('a { items, totalCount } datasource is not filtered in memory: the parent reloads it', async () => {
+    const context = { ds: { items: people.slice(0, 2), totalCount: 5 }, search: undefined, page: 2 };
+    component = await stagePeople(
+      'datasource.bind="ds" searchable="true" search.bind="search" paginated="true" max-rows="2" page.bind="page"',
+      context
+    );
+    await type('elo');
+    expect(context.search).toBe('elo');
+    expect(context.page).toBe(1);
+    expect(names()).toEqual(['Élodie Martin', 'Bruno Petit']);
+  });
+});
