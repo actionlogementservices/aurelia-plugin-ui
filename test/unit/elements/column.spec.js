@@ -60,6 +60,15 @@ describe('column', () => {
     expect(text('tbody td')).toBe('7');
   });
 
+  test('the templates are only rendered in the table, not in the hidden column', async () => {
+    component = await stage(
+      '<column header="Id"><template replace-part="header"><i data-bs-toggle="tooltip" title="h">H</i></template><b data-bs-toggle="tooltip" title="c">${item.id}</b></column>'
+    );
+    expect(document.querySelector('simple-table > column').innerHTML).not.toContain('data-bs-toggle');
+    // one tooltip for the header, one for the cell
+    expect(component.viewModel._tooltips).toHaveLength(2);
+  });
+
   test('a sortable column header is a button showing the sort icon', async () => {
     component = await stage(
       '<column header="Id" cell-key="id" sortable="true" sort-type="numeric"></column>'

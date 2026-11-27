@@ -15,7 +15,8 @@
 Creates the cell and header template instructions.
 A &#x60;&lt;template replace-part&#x3D;&quot;header&quot;&gt;&#x60; child, if present, defines the header content (allowing
 arbitrary html/bindings, e.g. an icon with a bootstrap tooltip). Any other remaining content
-defines the cell template, as before.
+defines the cell template, as before. The column is then emptied: its hidden content would be compiled and bound
+outside of any row (no &#x60;item&#x60;), its tooltips included.
 
 Parameters | Type | Description
 --- | --- | ---

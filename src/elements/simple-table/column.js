@@ -22,7 +22,8 @@ import {
  * Creates the cell and header template instructions.
  * A `<template replace-part="header">` child, if present, defines the header content (allowing
  * arbitrary html/bindings, e.g. an icon with a bootstrap tooltip). Any other remaining content
- * defines the cell template, as before.
+ * defines the cell template, as before. The column is then emptied: its hidden content would be compiled and bound
+ * outside of any row (no `item`), its tooltips included.
  * @param {ViewCompiler} _compile unused
  * @param {ViewResources} _resources unused
  * @param {HTMLElement} element the column inner element that defines the header and cell templates
@@ -39,6 +40,7 @@ function retrieveTemplates(_compile, _resources, element, instruction) {
   if (cellTemplate !== '') {
     instruction.template = new InlineViewStrategy(`<template>${cellTemplate}</template>`);
   }
+  element.innerHTML = '';
   return true;
 }
 
