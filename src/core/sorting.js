@@ -22,8 +22,11 @@ export const safeString = (object, key) =>
  * @param {Intl.CollatorOptions} sortingOptions sorting options
  * @returns {(a: Record<string, any>, b: Record<string, any>) => number} sorting function
  */
-export const ascendantPerKey = (key, sortingOptions) => (a, b) =>
-  safeString(a, key).localeCompare(safeString(b, key), undefined, sortingOptions);
+export const ascendantPerKey = (key, sortingOptions) => {
+  // one collator for the whole sort: localeCompare with options builds one per comparison
+  const { compare } = new Intl.Collator(undefined, sortingOptions);
+  return (a, b) => compare(safeString(a, key), safeString(b, key));
+};
 
 /**
  * Sorts objects descendantly by the specified key.
@@ -31,8 +34,10 @@ export const ascendantPerKey = (key, sortingOptions) => (a, b) =>
  * @param {Intl.CollatorOptions} sortingOptions sorting options
  * @returns {(a: Record<string, any>, b: Record<string, any>) => number} sorting function
  */
-export const descendantPerKey = (key, sortingOptions) => (a, b) =>
-  safeString(b, key).localeCompare(safeString(a, key), undefined, sortingOptions);
+export const descendantPerKey = (key, sortingOptions) => {
+  const { compare } = new Intl.Collator(undefined, sortingOptions);
+  return (a, b) => compare(safeString(b, key), safeString(a, key));
+};
 
 /**
  * Sorts objects by the specified key and sorting options.

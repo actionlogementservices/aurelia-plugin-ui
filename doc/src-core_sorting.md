@@ -44,8 +44,11 @@ __*return*__ | `(a: Record<string, any>, b: Record<string, any>) => number` | *s
 #### Value
 
 ```javascript
-(key, sortingOptions) => (a, b) =>
-  safeString(a, key).localeCompare(safeString(b, key), undefined, sortingOptions)
+(key, sortingOptions) => {
+  // one collator for the whole sort: localeCompare with options builds one per comparison
+  const { compare } = new Intl.Collator(undefined, sortingOptions);
+  return (a, b) => compare(safeString(a, key), safeString(b, key));
+}
 ```
 
 ---
@@ -65,8 +68,10 @@ __*return*__ | `(a: Record<string, any>, b: Record<string, any>) => number` | *s
 #### Value
 
 ```javascript
-(key, sortingOptions) => (a, b) =>
-  safeString(b, key).localeCompare(safeString(a, key), undefined, sortingOptions)
+(key, sortingOptions) => {
+  const { compare } = new Intl.Collator(undefined, sortingOptions);
+  return (a, b) => compare(safeString(b, key), safeString(a, key));
+}
 ```
 
 ---
